@@ -1,4 +1,4 @@
-# cs446-project
+# cs446-project: \<project-name\>
 
 # Group 6
 
