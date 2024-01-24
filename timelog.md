@@ -13,3 +13,4 @@ Date | Amanda | Cindy | Katherine | Reyna | Joanne | Anthony | Task
 01/24/2024 | | | | 1 | | | Project proposal outline
 01/24/2024 | | | | | 1 | | Project proposal outline
 01/24/2024 | | | | | | 1 | Project proposal outline
+01/24/2024 | | | 1.5 | | | | Project proposal intro draft
