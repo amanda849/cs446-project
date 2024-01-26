@@ -18,3 +18,4 @@ Date | Amanda | Cindy | Katherine | Reyna | Joanne | Anthony | Task
 01/24/2024 | | | | 1 | | | Population of Users and Stakeholders analysis
 01/25/2024 | 1 | | | | | | Project proposal functional requirements and user scenarios
 01/25/2024 | | | | | 1 | | Project proposal functional requirements and user scenarios
+01/25/2024 | | | | |  | 1 | Designing UI Mockup ctd
