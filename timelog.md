@@ -12,3 +12,4 @@ Date | Amanda | Cindy | Katherine | Reyna | Joanne | Anthony | Task
 01/26/2024 | 2 | 2 | 2 | 2 | 2 | 2 | Discuss and refine project proposal, user scenario diagrams and presentation
 01/28/2024 | 1 | 1 | 1 | 1 | 1 | 1 | Practice project proposal presentation
 02/02/2024 | 0.5 | 0.5 | 0.5 | 0.5 | 0.5 | 0.5 | Project proposal final review
+02/07/2024 | 1 | 1 | 1 | 1 | 1 | 1 | Planning out implementation (ticket creation)
