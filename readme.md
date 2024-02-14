@@ -1,4 +1,4 @@
-# cs446-project: \<project-name\>
+# cs446-project: Splash
 
 # Group 6
 
