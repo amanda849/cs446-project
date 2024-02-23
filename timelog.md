@@ -18,3 +18,4 @@ Date | Amanda | Cindy | Katherine | Reyna | Joanne | Anthony | Task
 02/19/2024 | | | | 2 | | | Adding basic structure for bowel logs and adding functionality (and researching MVVM examples)
 02/21/2024 | | | | | | 2.5 | Setting up fragments & updating the navbar (and lots of googling)
 02/22/2024 | | 2 | | | | | Adding editing and deleting functionality (also trying to understand MVVM and project architecture)
+02/22/2024 | | | | | | 1.5 | Starting UI elements for adding functionality (colour picker)
