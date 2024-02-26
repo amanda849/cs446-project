@@ -19,3 +19,4 @@ Date | Amanda | Cindy | Katherine | Reyna | Joanne | Anthony | Task
 02/21/2024 | | | | | | 2.5 | Setting up fragments & updating the navbar (and lots of googling)
 02/22/2024 | | 2 | | | | | Adding editing and deleting functionality (also trying to understand MVVM and project architecture)
 02/22/2024 | | | | | | 1.5 | Starting UI elements for adding functionality (colour picker)
+02/26/2024 | 1 | 1 | 1 | 1 | 1 | 1 | Discuss overall program architecture, refined tickets and distributed work
