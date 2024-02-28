@@ -6,8 +6,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlin.concurrent.thread
-import cs486.splash.model.BowelLog
-import cs486.splash.model.BowelLogRepo
+import cs486.splash.models.BowelLog
+import cs486.splash.models.BowelLogRepo
 
 data class BowelContentUiState(
     val bowelLogs: List<BowelLog> = emptyList(),

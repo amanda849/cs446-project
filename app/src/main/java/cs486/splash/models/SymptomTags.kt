@@ -1,4 +1,4 @@
-package cs486.splash.model
+package cs486.splash.models
 
 data class SymptomTags(
     var bloating : Boolean = false,

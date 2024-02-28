@@ -1,4 +1,4 @@
-package cs486.splash.ui.dashboard
+package cs486.splash.views.dashboard
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

@@ -1,4 +1,4 @@
-package cs486.splash.model
+package cs486.splash.models
 
 import androidx.annotation.ColorInt
 import java.util.Date
