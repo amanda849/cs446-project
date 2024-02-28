@@ -1,4 +1,4 @@
-package cs486.splash.model
+package cs486.splash.models
 
 /**
  * Temporarily the object that serves as storage holding the bowel logs. To be updated with
