@@ -2,6 +2,7 @@ package cs486.splash.models
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.firestore.FirebaseFirestore
 
 class AuthenticationException(message: String? = null, cause: Throwable? = null) :
     RuntimeException(message, cause)
@@ -12,7 +13,6 @@ class AuthenticationException(message: String? = null, cause: Throwable? = null)
 object UserRepository {
     private val firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
     private var user: FirebaseUser? = firebaseAuth.currentUser
-
     init {
         firebaseAuth.addAuthStateListener {
             user = it.currentUser
