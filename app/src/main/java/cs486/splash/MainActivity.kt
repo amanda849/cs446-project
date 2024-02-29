@@ -32,14 +32,5 @@ class MainActivity : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
-
-
-//        // Logic for signing out
-//        binding.signOutBtn.setOnClickListener {
-//            UserRepository.userSignOut()
-//
-//            val intent = Intent(this, SignInActivity::class.java)
-//            startActivity(intent)
-//        }
     }
 }
