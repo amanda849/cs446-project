@@ -1,6 +1,7 @@
 package cs486.splash
 
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -8,11 +9,11 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import cs486.splash.databinding.ActivityMainBinding
+import cs486.splash.models.BowelLogRepository
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    //private lateinit var firebaseAuth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,5 +33,21 @@ class MainActivity : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+
+        /** used for testing purposes (please delete if not in use)
+        binding.submitBtn.setOnClickListener {
+            val t = binding.test.text.toString()
+            val map = HashMap<String, String>()
+            map["test"] = t
+            binding.test.setText("")
+
+            //BowelLogRepository.testGet()
+
+            //BowelLogRepository.deleteBowelLog("w1st74EGcXTJdDCfWkSe")
+
+            //BowelLogRepository.testAdd(map)
+            BowelLogRepository.testEdit("qqQTLZgUD894h56gi6QV", map)
+        }**/
+
     }
 }

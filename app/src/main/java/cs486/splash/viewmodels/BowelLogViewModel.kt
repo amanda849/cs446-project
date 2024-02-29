@@ -1,20 +1,21 @@
 package cs486.splash.viewmodels
 
 import androidx.lifecycle.ViewModel
+import com.google.firebase.firestore.DocumentSnapshot
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlin.concurrent.thread
 import cs486.splash.models.BowelLog
-import cs486.splash.models.BowelLogRepo
+import cs486.splash.models.BowelLogRepository
 
 
 /**
  * Holds a immutable copy of the model's state
  */
 data class BowelContentUiState(
-    val bowelLogs: Map<String, BowelLog> = mapOf<String, BowelLog>()
+    val bowelLogs: List<DocumentSnapshot> = emptyList()
 )
 
 /**
@@ -27,35 +28,38 @@ class BowelLogViewModel : ViewModel() {
     init {
         thread {
             _uiState.update { currentState ->
-                currentState.copy(bowelLogs = BowelLogRepo.fetchAllBowelLogs())
+                currentState.copy(bowelLogs = BowelLogRepository.fetchAllBowelLogs())
             }
         }
     }
-
+/** Need to be modified
     /**
      * Adds [bowelLog]
      */
     fun addNewBowelLog(bowelLog: BowelLog) {
+        /*
         _uiState.update { currentState ->
-            currentState.copy(bowelLogs = BowelLogRepo.addNewBowelLog(bowelLog))
-        }
+            currentState.copy(bowelLogs = BowelLogRepository.addNewBowelLog(bowelLog))
+        }*/
     }
 
     /**
      * Edits [bowelLog]
      */
     fun editBowelLog(bowelLog: BowelLog) {
+        /*
         _uiState.update { currentState ->
-            currentState.copy(bowelLogs = BowelLogRepo.editBowelLog(bowelLog))
-        }
+            currentState.copy(bowelLogs = BowelLogRepository.editBowelLog(bowelLog))
+        }*/
     }
 
     /**
      * Deletes the bowel log with id [bowelLogId]
      */
     fun deleteBowelLog(bowelLogId: String) {
+        /*
         _uiState.update { currentState ->
-            currentState.copy(bowelLogs = BowelLogRepo.deleteBowelLog(bowelLogId))
-        }
-    }
+            currentState.copy(bowelLogs = BowelLogRepository.deleteBowelLog(bowelLogId))
+        }*/
+    }**/
 }

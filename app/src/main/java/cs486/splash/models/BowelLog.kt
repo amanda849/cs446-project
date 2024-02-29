@@ -1,6 +1,7 @@
 package cs486.splash.models
 
 import androidx.annotation.ColorInt
+import com.google.firebase.Timestamp
 import java.util.Date
 
 /**
@@ -24,10 +25,25 @@ class BowelLog(
     var texture: String = "",
     val timeStarted: Date,
     var timeEnded: Date,
-    var location: String,
+    var location: String,  // This can be turned into a geo point (latitude & longitude) in firestore
     var symptoms: SymptomTags,
     var factors: FactorTags,
     val timeCreated: Date,
     var timeModified: Date
 ) {
+    // Return type of this likely should be changed to Map
+    // This is likely redundant see https://firebase.google.com/docs/firestore/manage-data/add-data for how to add an object directly to firestore
+    fun toHashMap(): HashMap<String, Any> {
+        return hashMapOf(
+            "colour" to color,
+            "texture" to texture,
+            "timeStared" to Timestamp(timeStarted),
+            "timeEnded" to Timestamp(timeEnded),
+            "location" to location,
+            "symptoms" to symptoms.toString(),
+            "factors" to factors.toString(),
+            "timeCreated" to Timestamp(timeCreated),
+            "timeModified" to Timestamp(timeModified),
+        )
+    }
 }
