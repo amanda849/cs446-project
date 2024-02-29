@@ -22,3 +22,4 @@ Date | Amanda | Cindy | Katherine | Reyna | Joanne | Anthony | Task
 02/26/2024 | 1 | 1 | 1 | 1 | 1 | 1 | Discuss overall program architecture, refined tickets and distributed work
 02/28/2024 |  | 4 |  |  |  |  | Configured and added user authentication using Firebase with boilerplate UI.
 02/28/2024 |  | | 1 |  |  |  | Configured and added user authentication using Firebase with boilerplate UI.
+02/28/2024 | | | | 1 | | | Researching Firebase database implementation
