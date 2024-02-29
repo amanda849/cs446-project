@@ -1,16 +1,13 @@
 package cs486.splash
 
-import android.content.Intent
 import android.os.Bundle
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import com.google.firebase.auth.FirebaseAuth
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import cs486.splash.databinding.ActivityMainBinding
-import cs486.splash.models.UserRepository
 
 class MainActivity : AppCompatActivity() {
 
@@ -37,12 +34,12 @@ class MainActivity : AppCompatActivity() {
         navView.setupWithNavController(navController)
 
 
-        // Logic for signing out
-        binding.signOutBtn.setOnClickListener {
-            UserRepository.userSignOut()
-
-            val intent = Intent(this, SignInActivity::class.java)
-            startActivity(intent)
-        }
+//        // Logic for signing out
+//        binding.signOutBtn.setOnClickListener {
+//            UserRepository.userSignOut()
+//
+//            val intent = Intent(this, SignInActivity::class.java)
+//            startActivity(intent)
+//        }
     }
 }
