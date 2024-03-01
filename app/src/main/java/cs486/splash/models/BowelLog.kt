@@ -1,7 +1,10 @@
 package cs486.splash.models
 
+import android.util.Log
 import androidx.annotation.ColorInt
 import com.google.firebase.Timestamp
+import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.getField
 import java.util.Date
 
 /**
@@ -37,7 +40,7 @@ class BowelLog(
         return hashMapOf(
             "colour" to color,
             "texture" to texture,
-            "timeStared" to Timestamp(timeStarted),
+            "timeStarted" to Timestamp(timeStarted),
             "timeEnded" to Timestamp(timeEnded),
             "location" to location,
             "symptoms" to symptoms.toString(),
@@ -45,5 +48,25 @@ class BowelLog(
             "timeCreated" to Timestamp(timeCreated),
             "timeModified" to Timestamp(timeModified),
         )
+    }
+    companion object {
+        fun DocumentSnapshot.toBowelLog(): BowelLog? {
+            return try {
+                val colour = getField<Int>("colour")!!
+                val texture = getString("texture")!!
+                val timeStarted = getTimestamp("timeStarted")!!.toDate()
+                val timeEnded = getTimestamp("timeEnded")!!.toDate()
+                val location = getString("location")!!
+                val symptoms = SymptomTags(getString("symptoms")!!)
+                val factors = FactorTags(getString("factors")!!)
+                val timeCreated = getTimestamp("timeCreated")!!.toDate()
+                val timeModified = getTimestamp("timeModified")!!.toDate()
+                BowelLog(id, colour, texture, timeStarted, timeEnded, location, symptoms, factors, timeCreated, timeModified)
+            } catch (e: Exception) {
+                Log.e(TAG, "Error converting bowel log", e)
+                null
+            }
+        }
+        private const val TAG = "User"
     }
 }
