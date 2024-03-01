@@ -67,6 +67,7 @@ class BowelLog(
                 null
             }
         }
-        private const val TAG = "User"
+
+        private const val TAG = "BOWEL_LOG_CONVERSION"
     }
 }

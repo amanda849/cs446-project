@@ -1,24 +1,17 @@
 package cs486.splash
 
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import cs486.splash.databinding.ActivityMainBinding
-import cs486.splash.models.BowelLog
-import cs486.splash.models.FactorTags
-import cs486.splash.models.SymptomTags
-import cs486.splash.viewmodels.BowelLogViewModel
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    val blvm : BowelLogViewModel = BowelLogViewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,6 +33,7 @@ class MainActivity : AppCompatActivity() {
         navView.setupWithNavController(navController)
 
         // used for testing purposes (please delete if not in use)
+        /*
         binding.submitBtn.setOnClickListener {
             val t = binding.test.text.toString()
             val map = HashMap<String, String>()
@@ -57,10 +51,10 @@ class MainActivity : AppCompatActivity() {
 
             val tempLog = BowelLog("hi", 1, "Running a test", java.util.Date(), java.util.Date(), "",
                 SymptomTags(), FactorTags(), java.util.Date(), java.util.Date())
-            blvm.addNewBowelLog(tempLog)
-            blvm.getAllBowelLogs().observe(this, documentObserver)
+            blvm.deleteBowelLog("Fri Mar 01 13:37:54 EST 2024")
+            blvm.bowelLogs.observe(this, documentObserver)
             // BowelLogRepository.testEdit("qqQTLZgUD894h56gi6QV", map)
         }
-
+        */
     }
 }

@@ -1,23 +1,14 @@
 package cs486.splash.viewmodels
 
 import android.util.Log
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.EventListener
+import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.QuerySnapshot
 import cs486.splash.models.BowelLog
 import cs486.splash.models.BowelLog.Companion.toBowelLog
 import cs486.splash.models.BowelLogRepository
-
-
-/**
- * Holds a immutable copy of the model's state
- */
-data class BowelContentUiState(
-    val bowelLogs: List<DocumentSnapshot> = emptyList()
-)
 
 /**
  * Layer that facilitates communication between View and Model
@@ -32,13 +23,17 @@ class BowelLogViewModel : ViewModel() {
         getAllBowelLogs()
     }
 
-    fun getAllBowelLogs() : LiveData<List<BowelLog>> {
-        bowelLogRepository.fetchAllBowelLogs().addSnapshotListener(EventListener<QuerySnapshot> { value, e ->
+    /**
+     * Ties bowelLogs to the state of the bowelLogRepository for the current user/collection
+     * Do not call this again as it will tie another listener
+     */
+    private fun getAllBowelLogs() : ListenerRegistration {
+        return bowelLogRepository.fetchAllBowelLogs().addSnapshotListener(EventListener<QuerySnapshot> addSnapshotListener@{ value, e ->
             if (e != null) {
                 Log.w(TAG, "Listen failed.", e)
-                return@EventListener
-            }
+                return@addSnapshotListener
 
+            }
             val bowelLogList : MutableList<BowelLog> = mutableListOf()
             for (documentSnapshot in value!!) {
                 val logItem = documentSnapshot.toBowelLog()
@@ -49,7 +44,6 @@ class BowelLogViewModel : ViewModel() {
             }
             bowelLogs.value = bowelLogList
         })
-        return bowelLogs
     }
 
     /**
@@ -63,19 +57,13 @@ class BowelLogViewModel : ViewModel() {
      * Edits [bowelLog]
      */
     fun editBowelLog(bowelLog: BowelLog) {
-        /*
-        _uiState.update { currentState ->
-            currentState.copy(bowelLogs = BowelLogRepository.editBowelLog(bowelLog))
-        }*/
+        bowelLogRepository.editBowelLog(bowelLog)
     }
 
     /**
      * Deletes the bowel log with id [bowelLogId]
      */
     fun deleteBowelLog(bowelLogId: String) {
-        /*
-        _uiState.update { currentState ->
-            currentState.copy(bowelLogs = BowelLogRepository.deleteBowelLog(bowelLogId))
-        }*/
+        bowelLogRepository.deleteBowelLog(bowelLogId)
     }
 }

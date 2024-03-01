@@ -19,7 +19,7 @@ class BowelLogRepository {
     // Problem with that is how to deal with when user changes?
 
     /**
-     * Returns the bowel logs
+     * Returns the collectionReference for livedata
      */
     fun fetchAllBowelLogs(): CollectionReference {
         return bowelLogsDb.collection(UserRepository.getUser()!!.uid)
@@ -29,7 +29,7 @@ class BowelLogRepository {
      * Returns the bowel logs after adding [bowelLog] to the repo
      */
     fun addNewBowelLog(bowelLog: BowelLog) : Task<Void> {
-        return bowelLogsDb.collection(UserRepository.getUser()!!.uid).document(bowelLog.timeCreated.toString())
+        return bowelLogsDb.collection(UserRepository.getUser()!!.uid).document()
             .set(bowelLog.toHashMap())
             .addOnSuccessListener {
                 Log.i(TAG, "addNewBowelLog: added log")
