@@ -8,5 +8,12 @@
     <string name="title_add">Add</string>
     <string name="title_content">Content</string>
     <string name="title_profile">Profile</string>
+    <string name="sign_in">Sign In</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="don_t_have_an_account_sign_up">Don\'t have an account? Sign Up!</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="have_an_account_sign_in">Have an account? Sign In!</string>
+    <string name="sign_out">Sign Out</string>
     <string name="add_prompt">Add a new poop for today:</string>
 </resources>

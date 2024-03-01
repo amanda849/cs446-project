@@ -15,3 +15,13 @@ Date | Amanda | Cindy | Katherine | Reyna | Joanne | Anthony | Task
 02/07/2024 | 1 | 1 | 1 | 1 | 1 | 1 | Planning out implementation (ticket creation)
 02/12/2024 | 0.5 | 0.5 | 0.5 | 0.5 | 0.5 | 0.5 | Buddy team eval brainstorming
 02/16/2024 | 0.5 | 0.5 | 0.5 | 0.5 | 0.5 | 0.5 | Review and refine buddy team eval
+02/19/2024 | | | | 2 | | | Adding basic structure for bowel logs and adding functionality (and researching MVVM examples)
+02/21/2024 | | | | | | 2.5 | Setting up fragments & updating the navbar (and lots of googling)
+02/22/2024 | | 2 | | | | | Adding editing and deleting functionality (also trying to understand MVVM and project architecture)
+02/22/2024 | | | | | | 1.5 | Starting UI elements for adding functionality (colour picker)
+02/26/2024 | 1 | 1 | 1 | 1 | 1 | 1 | Discuss overall program architecture, refined tickets and distributed work
+02/28/2024 |  | 4 |  |  |  |  | Configured and added user authentication using Firebase with boilerplate UI.
+02/28/2024 |  | | 1 |  |  |  | Cleaned up user authentication UI. 
+02/28/2024 | | | | 1 | | | Researching Firebase database implementation
+02/28/2024 |  | 5 |  |  |  |  | Configured Firestore, modified BowelLogRepository to be connected to Firestore. 
+02/29/2024 | | | | 3 | | | Updating viewmodel and model implementations with Firestore

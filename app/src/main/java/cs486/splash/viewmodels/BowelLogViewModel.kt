@@ -1,33 +1,69 @@
 package cs486.splash.viewmodels
 
+import android.util.Log
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
-import kotlin.concurrent.thread
-import cs486.splash.model.BowelLog
-import cs486.splash.model.BowelLogRepo
+import com.google.firebase.firestore.EventListener
+import com.google.firebase.firestore.ListenerRegistration
+import com.google.firebase.firestore.QuerySnapshot
+import cs486.splash.models.BowelLog
+import cs486.splash.models.BowelLog.Companion.toBowelLog
+import cs486.splash.models.BowelLogRepository
 
-data class BowelContentUiState(
-    val bowelLogs: List<BowelLog> = emptyList(),
-)
-
+/**
+ * Layer that facilitates communication between View and Model
+ */
 class BowelLogViewModel : ViewModel() {
-    private val _uiState = MutableStateFlow(BowelContentUiState())
-    val uiState: StateFlow<BowelContentUiState> = _uiState.asStateFlow()
+    val TAG = "BOWEL_LOG_VIEW_MODEL"
+    var bowelLogs : MutableLiveData<List<BowelLog>> = MutableLiveData()
+
+    private val bowelLogRepository: BowelLogRepository = BowelLogRepository()
 
     init {
-        thread {
-            _uiState.update { currentState ->
-                currentState.copy(bowelLogs = BowelLogRepo.fetchAllBowelLogs())
-            }
-        }
+        getAllBowelLogs()
     }
 
+    /**
+     * Ties bowelLogs to the state of the bowelLogRepository for the current user/collection
+     * Do not call this again as it will tie another listener
+     */
+    private fun getAllBowelLogs() : ListenerRegistration {
+        return bowelLogRepository.fetchAllBowelLogs().addSnapshotListener(EventListener<QuerySnapshot> addSnapshotListener@{ value, e ->
+            if (e != null) {
+                Log.w(TAG, "Listen failed.", e)
+                return@addSnapshotListener
+
+            }
+            val bowelLogList : MutableList<BowelLog> = mutableListOf()
+            for (documentSnapshot in value!!) {
+                val logItem = documentSnapshot.toBowelLog()
+                logItem?.let {
+                    // not null
+                    bowelLogList.add(logItem)
+                }
+            }
+            bowelLogs.value = bowelLogList
+        })
+    }
+
+    /**
+     * Adds [bowelLog]
+     */
     fun addNewBowelLog(bowelLog: BowelLog) {
-        _uiState.update { currentState ->
-            currentState.copy(bowelLogs = BowelLogRepo.addNewBowelLog(bowelLog))
-        }
+        bowelLogRepository.addNewBowelLog(bowelLog)
+    }
+
+    /**
+     * Edits [bowelLog]
+     */
+    fun editBowelLog(bowelLog: BowelLog) {
+        bowelLogRepository.editBowelLog(bowelLog)
+    }
+
+    /**
+     * Deletes the bowel log with id [bowelLogId]
+     */
+    fun deleteBowelLog(bowelLogId: String) {
+        bowelLogRepository.deleteBowelLog(bowelLogId)
     }
 }
