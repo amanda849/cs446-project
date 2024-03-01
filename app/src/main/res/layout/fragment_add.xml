@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".ui.add.AddFragment">
 
-    <TextView
+    <!--TextView
         android:id="@+id/text_add"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -18,5 +18,38 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent" /-->
+
+    <ScrollView
+        android:layout_width="395dp"
+        android:layout_height="715dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/add_prompt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/add_prompt" />
+
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Colour:" />
+
+            <androidx.compose.ui.platform.ComposeView
+                android:id="@+id/colour_picker"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </LinearLayout>
+    </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>
