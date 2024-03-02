@@ -25,3 +25,4 @@ Date | Amanda | Cindy | Katherine | Reyna | Joanne | Anthony | Task
 02/28/2024 | | | | 1 | | | Researching Firebase database implementation
 02/28/2024 |  | 5 |  |  |  |  | Configured Firestore, modified BowelLogRepository to be connected to Firestore. 
 02/29/2024 | | | | 3 | | | Updating viewmodel and model implementations with Firestore
+03/01/2024 | | | | | | 4 | finished base of add functionality (incl. components)
