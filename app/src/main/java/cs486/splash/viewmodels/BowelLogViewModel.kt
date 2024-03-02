@@ -55,8 +55,7 @@ class BowelLogViewModel : ViewModel() {
     fun addNewBowelLog(color: Int, texture: String, timeStarted: Date, timeEnded: Date,
                        location: String, symptomTags: String, factorTags: String) {
         val currentDate = Date()
-        val bowelLog = BowelLog(/*TODO:figure out how id is populated*/
-            "", color, texture, timeStarted, timeEnded, location,
+        val bowelLog = BowelLog("", color, texture, timeStarted, timeEnded, location,
             SymptomTags(symptomTags), FactorTags(factorTags), currentDate, currentDate)
         bowelLogRepository.addNewBowelLog(bowelLog)
     }

@@ -13,8 +13,8 @@ import java.util.Date
  * @property id String                      the unique ID of each bowel log
  * @property color Int                      the color integer of the bowel movement
  * @property texture String                 the string indicating the texture of bowel movement
- * @property timeStarted Date              the timestamp on which the bowel movement is started
- * @property timeEnded Date               the timestamp on which the bowel movement is ended
+ * @property timeStarted Date               the timestamp on which the bowel movement is started
+ * @property timeEnded Date                 the timestamp on which the bowel movement is ended
  * @property location String                the string describing where the bowel movement occurred
  * @property symptoms SymptomTags           the symptoms experienced / noted for this bowel movement
  * @property factors FactorTags             the factors suspected for this bowel movement
