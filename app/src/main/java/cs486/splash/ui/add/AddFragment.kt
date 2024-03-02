@@ -43,6 +43,10 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import cs486.splash.R
 import cs486.splash.databinding.FragmentAddBinding
+import cs486.splash.shared.Colour
+import cs486.splash.shared.FactorTags
+import cs486.splash.shared.SymptomTags
+import cs486.splash.shared.Texture
 import cs486.splash.viewmodels.BowelLogViewModel
 import java.text.DateFormat
 import java.text.SimpleDateFormat
@@ -114,8 +118,8 @@ class AddFragment : Fragment() {
             var startTime = Date() // current day
             var endTime = Date()
             bowelLogViewModel.addNewBowelLog(
-                colorInt,
-                textureStr,
+                Colour.valueOf(colorInt.toInt()),
+                Texture.valueOf(textureStr),
                 startTime.apply {
                     hours = binding.timeStart.text.toString().split(':')[0].toInt()
                     minutes = binding.timeStart.text.toString().split(':')[1].toInt()
@@ -125,8 +129,8 @@ class AddFragment : Fragment() {
                     minutes = binding.timeEnd.text.toString().split(':')[1].toInt()
                 },
                 binding.location.text.toString(),
-                symptoms,
-                factors
+                SymptomTags(symptoms),
+                FactorTags(factors)
             )
             Log.d("AddLog", "Added new BowelLog.")
             findNavController().navigate(R.id.action_navigation_add_to_navigation_calendar)
