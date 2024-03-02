@@ -9,8 +9,10 @@ import com.google.firebase.firestore.QuerySnapshot
 import cs486.splash.models.BowelLog
 import cs486.splash.models.BowelLog.Companion.toBowelLog
 import cs486.splash.models.BowelLogRepository
-import cs486.splash.models.FactorTags
-import cs486.splash.models.SymptomTags
+import cs486.splash.shared.Colour
+import cs486.splash.shared.FactorTags
+import cs486.splash.shared.SymptomTags
+import cs486.splash.shared.Texture
 import java.util.Date
 
 /**
@@ -52,19 +54,19 @@ class BowelLogViewModel : ViewModel() {
     /**
      * Adds a bowel log
      */
-    fun addNewBowelLog(color: Int, texture: String, timeStarted: Date, timeEnded: Date,
-                       location: String, symptomTags: String, factorTags: String) {
+    fun addNewBowelLog(color: Colour, texture: Texture, timeStarted: Date, timeEnded: Date,
+                       location: String, symptomTags: SymptomTags, factorTags: FactorTags) {
         val currentDate = Date()
         val bowelLog = BowelLog("", color, texture, timeStarted, timeEnded, location,
-            SymptomTags(symptomTags), FactorTags(factorTags), currentDate, currentDate)
+            symptomTags, factorTags, currentDate, currentDate)
         bowelLogRepository.addNewBowelLog(bowelLog)
     }
 
     /**
      * Edits bowel log with id [id]
      */
-    fun editBowelLog(id: String, color: Int, texture: String, timeStarted: Date, timeEnded: Date,
-                     location: String, symptomTags: String, factorTags: String) {
+    fun editBowelLog(id: String, color: Colour, texture: Texture, timeStarted: Date, timeEnded: Date,
+                     location: String, symptomTags: SymptomTags, factorTags: FactorTags) {
         val currentDate = Date()
         for (bowelLog in bowelLogs.value!!) {
             if (bowelLog.id == id) {
@@ -73,8 +75,8 @@ class BowelLogViewModel : ViewModel() {
                 bowelLog.timeStarted = timeStarted
                 bowelLog.timeEnded = timeEnded
                 bowelLog.location = location
-                bowelLog.symptoms = SymptomTags(symptomTags)
-                bowelLog.factors = FactorTags(factorTags)
+                bowelLog.symptoms = symptomTags
+                bowelLog.factors = factorTags
                 bowelLog.timeModified = currentDate
 
                 bowelLogRepository.editBowelLog(bowelLog)
@@ -100,4 +102,6 @@ class BowelLogViewModel : ViewModel() {
     fun deleteBowelLog(bowelLogId: String) {
         bowelLogRepository.deleteBowelLog(bowelLogId)
     }
+
+
 }
