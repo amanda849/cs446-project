@@ -1,10 +1,7 @@
 package cs486.splash.ui.add
 
-import android.graphics.drawable.Drawable
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -40,12 +37,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import cs486.splash.R
 import cs486.splash.databinding.FragmentAddBinding
-import cs486.splash.models.SymptomTags
 import cs486.splash.viewmodels.BowelLogViewModel
+import java.text.DateFormat
+import java.text.SimpleDateFormat
+import java.util.Date
 
 class AddFragment : Fragment() {
 
@@ -64,7 +65,7 @@ class AddFragment : Fragment() {
         _binding = FragmentAddBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        var colorInt: Int
+        var colorInt: Int = 0
         binding.colourPicker.apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
@@ -75,7 +76,7 @@ class AddFragment : Fragment() {
             }
         }
 
-        var textureStr: String
+        var textureStr: String = "Solid"
         binding.texturePicker.apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
@@ -86,7 +87,7 @@ class AddFragment : Fragment() {
             }
         }
 
-        var symptoms: String
+        var symptoms: String = "fatigue: false, urgency: false, bloating: false, nausea: false, other: false, pain: false, cramps: false"
         binding.symptomPicker.apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
@@ -97,7 +98,7 @@ class AddFragment : Fragment() {
             }
         }
 
-        var factors: String
+        var factors: String = "fiber: false, other: false, diet: false, water: false, workout: false"
         binding.factorPicker.apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
@@ -106,6 +107,29 @@ class AddFragment : Fragment() {
                     Log.d("AddLog", "Factors changed to: $factors")
                 }
             }
+        }
+
+        binding.addButton.setOnClickListener {
+            // date things to pre-format
+            var startTime = Date() // current day
+            var endTime = Date()
+            bowelLogViewModel.addNewBowelLog(
+                colorInt,
+                textureStr,
+                startTime.apply {
+                    hours = binding.timeStart.text.toString().split(':')[0].toInt()
+                    minutes = binding.timeStart.text.toString().split(':')[1].toInt()
+                },
+                endTime.apply {
+                    hours = binding.timeEnd.text.toString().split(':')[0].toInt()
+                    minutes = binding.timeEnd.text.toString().split(':')[1].toInt()
+                },
+                binding.location.text.toString(),
+                symptoms,
+                factors
+            )
+            Log.d("AddLog", "Added new BowelLog.")
+            findNavController().navigate(R.id.action_navigation_add_to_navigation_calendar)
         }
 
         return root
