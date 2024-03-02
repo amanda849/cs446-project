@@ -21,7 +21,11 @@
         android:id="@+id/navigation_add"
         android:name="cs486.splash.ui.add.AddFragment"
         android:label="@string/title_add"
-        tools:layout="@layout/fragment_add" />
+        tools:layout="@layout/fragment_add" >
+        <action
+            android:id="@+id/action_navigation_add_to_navigation_calendar"
+            app:destination="@id/navigation_calendar" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_content"
