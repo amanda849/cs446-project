@@ -26,7 +26,7 @@ class BowelLog(
     @ColorInt
     var color: Int = -1,
     var texture: String = "",
-    val timeStarted: Date,
+    var timeStarted: Date,
     var timeEnded: Date,
     var location: String,  // This can be turned into a geo point (latitude & longitude) in firestore
     var symptoms: SymptomTags,

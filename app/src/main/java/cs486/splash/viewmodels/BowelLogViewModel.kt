@@ -9,6 +9,9 @@ import com.google.firebase.firestore.QuerySnapshot
 import cs486.splash.models.BowelLog
 import cs486.splash.models.BowelLog.Companion.toBowelLog
 import cs486.splash.models.BowelLogRepository
+import cs486.splash.models.FactorTags
+import cs486.splash.models.SymptomTags
+import java.util.Date
 
 /**
  * Layer that facilitates communication between View and Model
@@ -47,17 +50,49 @@ class BowelLogViewModel : ViewModel() {
     }
 
     /**
-     * Adds [bowelLog]
+     * Adds a bowel log
      */
-    fun addNewBowelLog(bowelLog: BowelLog) {
+    fun addNewBowelLog(color: Int, texture: String, timeStarted: Date, timeEnded: Date,
+                       location: String, symptomTags: String, factorTags: String) {
+        val currentDate = Date()
+        val bowelLog = BowelLog(/*TODO:figure out how id is populated*/
+            "", color, texture, timeStarted, timeEnded, location,
+            SymptomTags(symptomTags), FactorTags(factorTags), currentDate, currentDate)
         bowelLogRepository.addNewBowelLog(bowelLog)
     }
 
     /**
-     * Edits [bowelLog]
+     * Edits bowel log with id [id]
      */
-    fun editBowelLog(bowelLog: BowelLog) {
-        bowelLogRepository.editBowelLog(bowelLog)
+    fun editBowelLog(id: String, color: Int, texture: String, timeStarted: Date, timeEnded: Date,
+                     location: String, symptomTags: String, factorTags: String) {
+        val currentDate = Date()
+        for (bowelLog in bowelLogs.value!!) {
+            if (bowelLog.id == id) {
+                bowelLog.color = color
+                bowelLog.texture = texture
+                bowelLog.timeStarted = timeStarted
+                bowelLog.timeEnded = timeEnded
+                bowelLog.location = location
+                bowelLog.symptoms = SymptomTags(symptomTags)
+                bowelLog.factors = FactorTags(factorTags)
+                bowelLog.timeModified = currentDate
+
+                bowelLogRepository.editBowelLog(bowelLog)
+            }
+        }
+    }
+
+    /**
+     * Returns the bowel log with id [bowelLogId]
+     */
+    fun getBowelLog(bowelLogId: String) : BowelLog? {
+        for (bowelLog in bowelLogs.value!!) {
+            if (bowelLog.id == bowelLogId) {
+                return bowelLog
+            }
+        }
+        return null
     }
 
     /**
