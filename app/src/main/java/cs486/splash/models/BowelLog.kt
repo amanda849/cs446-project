@@ -1,18 +1,21 @@
 package cs486.splash.models
 
 import android.util.Log
-import androidx.annotation.ColorInt
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.getField
+import cs486.splash.shared.Colour
+import cs486.splash.shared.FactorTags
+import cs486.splash.shared.SymptomTags
+import cs486.splash.shared.Texture
 import java.util.Date
 
 /**
  * A container class that represents each entry of a BowelLog
  *
  * @property id String                      the unique ID of each bowel log
- * @property color Int                      the color integer of the bowel movement
- * @property texture String                 the string indicating the texture of bowel movement
+ * @property color Colour                   the color integer of the bowel movement
+ * @property texture Texture                the string indicating the texture of bowel movement
  * @property timeStarted Date               the timestamp on which the bowel movement is started
  * @property timeEnded Date                 the timestamp on which the bowel movement is ended
  * @property location String                the string describing where the bowel movement occurred
@@ -23,9 +26,8 @@ import java.util.Date
  */
 class BowelLog(
     var id: String,
-    @ColorInt
-    var color: Int = -1,
-    var texture: String = "",
+    var color: Colour,
+    var texture: Texture,
     var timeStarted: Date,
     var timeEnded: Date,
     var location: String,  // This can be turned into a geo point (latitude & longitude) in firestore
@@ -38,8 +40,8 @@ class BowelLog(
     // This is likely redundant see https://firebase.google.com/docs/firestore/manage-data/add-data for how to add an object directly to firestore
     fun toHashMap(): HashMap<String, Any> {
         return hashMapOf(
-            "colour" to color,
-            "texture" to texture,
+            "colour" to color.toColorInt(),
+            "texture" to texture.toString(),
             "timeStarted" to Timestamp(timeStarted),
             "timeEnded" to Timestamp(timeEnded),
             "location" to location,
@@ -52,8 +54,8 @@ class BowelLog(
     companion object {
         fun DocumentSnapshot.toBowelLog(): BowelLog? {
             return try {
-                val colour = getField<Int>("colour")!!
-                val texture = getString("texture")!!
+                val colour = Colour.valueOf(getField<Int>("colour")!!)
+                val texture = Texture.valueOf(getString("texture")!!.uppercase())
                 val timeStarted = getTimestamp("timeStarted")!!.toDate()
                 val timeEnded = getTimestamp("timeEnded")!!.toDate()
                 val location = getString("location")!!
