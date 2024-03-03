@@ -67,7 +67,7 @@ dependencies {
     // Material Design 3
     implementation("androidx.compose.material3:material3")
     // or Material Design 2
-    //implementation("androidx.compose.material:material")
+    implementation("androidx.compose.material:material")
 
     implementation("androidx.compose.ui:ui-tooling-preview")
     debugImplementation("androidx.compose.ui:ui-tooling")
@@ -79,8 +79,9 @@ dependencies {
     // Import the Firebase BoM
     implementation(platform("com.google.firebase:firebase-bom:32.7.2"))
     // TODO: Add the dependencies for Firebase products you want to use
-    // When using the BoM, don't specify versions in Firebase dependencies
-    // https://firebase.google.com/docs/android/setup#available-libraries
     implementation("com.google.firebase:firebase-auth")
     implementation("com.google.firebase:firebase-firestore")
+
+    // Calendar library provided by Kizitonwose under the MIT License
+    implementation("com.kizitonwose.calendar:compose:2.5.0")
 }
