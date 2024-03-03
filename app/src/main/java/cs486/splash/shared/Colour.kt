@@ -16,6 +16,6 @@ enum class Colour(@ColorInt private var c: Int) {
 
     @ColorInt
     fun toColorInt(): Int {
-        return c;
+        return c
     }
 }
