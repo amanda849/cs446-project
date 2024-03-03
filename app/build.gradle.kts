@@ -66,8 +66,6 @@ dependencies {
 
     // Material Design 3
     implementation("androidx.compose.material3:material3")
-    // or Material Design 2
-    implementation("androidx.compose.material:material")
 
     implementation("androidx.compose.ui:ui-tooling-preview")
     debugImplementation("androidx.compose.ui:ui-tooling")
