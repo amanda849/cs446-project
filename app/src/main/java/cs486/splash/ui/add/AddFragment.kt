@@ -126,7 +126,10 @@ class AddFragment : Fragment() {
         binding.datePicker.apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent { 
-                DateTimePickerComponent()
+                DateTimePickerComponent(pickedDate){
+                        pickedDate = it
+                        Log.d("AddLog", "SelectedDate changed to: $it")
+                }
             }
         }
 
@@ -138,10 +141,16 @@ class AddFragment : Fragment() {
                 Colour.valueOf(colorInt.toInt()),
                 Texture.valueOf(textureStr),
                 startTime.apply {
+                    month = pickedDate.time.month
+                    date = pickedDate.time.date
+                    year = pickedDate.time.year
                     hours = binding.timeStart.text.toString().split(':')[0].toInt()
                     minutes = binding.timeStart.text.toString().split(':')[1].toInt()
                 },
                 endTime.apply {
+                    month = pickedDate.time.month
+                    date = pickedDate.time.date
+                    year = pickedDate.time.year
                     hours = binding.timeEnd.text.toString().split(':')[0].toInt()
                     minutes = binding.timeEnd.text.toString().split(':')[1].toInt()
                 },
@@ -314,12 +323,12 @@ fun SelectTags(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DateTimePickerComponent() {
-    val date = remember {
-        Calendar.getInstance().timeInMillis
-    }
+fun DateTimePickerComponent(
+    currentTime : Calendar,
+    onClick: (Calendar) -> Unit
+) {
     val datePickerState = rememberDatePickerState(
-        initialSelectedDateMillis = date
+        initialSelectedDateMillis = currentTime.timeInMillis
     )
     var showDatePicker by remember { mutableStateOf(false) }
     var pickedDate by remember { mutableStateOf(Calendar.getInstance()) }
@@ -359,6 +368,7 @@ fun DateTimePickerComponent() {
                             timeInMillis = datePickerState.selectedDateMillis!! + 86400000
                         }
                         pickedDate = selectedDate
+                        onClick(selectedDate)
                         showDatePicker = false
                     }
                 ) { Text("OK") }
