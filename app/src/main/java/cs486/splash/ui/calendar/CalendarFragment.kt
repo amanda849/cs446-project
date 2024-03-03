@@ -73,8 +73,11 @@ class CalendarFragment : Fragment() {
         _binding = FragmentCalendarBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        binding.textCalendar.apply {
+        binding.calendar.apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+            setContent {
+                CalendarPage()
+            }
         }
 
         return root
@@ -237,7 +240,7 @@ private fun Day(
             .background(
                 color = when {
                     isSelected -> colorResource(R.color.example_1_selection_color)
-                    isToday -> colorResource(id = R.color.white)
+                    isToday -> colorResource(id = R.color.white_light)
                     else -> Color.Transparent
                 },
             )
@@ -250,8 +253,8 @@ private fun Day(
     ) {
         val textColor = when (day.position) {
             // Color.Unspecified will use the default text color from the current theme
-            DayPosition.MonthDate -> if (isSelected) colorResource(R.color.example_1_bg) else Color.Unspecified
-            DayPosition.InDate, DayPosition.OutDate -> colorResource(R.color.white)
+            DayPosition.MonthDate -> if (isSelected) colorResource(R.color.example_1_bg) else Color.White
+            DayPosition.InDate, DayPosition.OutDate -> colorResource(R.color.white_light)
         }
         Text(
             text = day.date.dayOfMonth.toString(),
