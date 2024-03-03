@@ -27,10 +27,11 @@
             android:orientation="vertical"
             android:padding="8dp">
 
-            <TextView
+            <EditText
                 android:id="@+id/user_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:inputType="text"
                 android:text="John Doe"
                 android:textAlignment="center"
                 android:textSize="16sp"
@@ -70,7 +71,15 @@
                 android:id="@+id/info_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Personal Info"
+                android:text="@string/profile_info_title"
+                android:textSize="16sp" />
+
+            <EditText
+                android:id="@+id/user_birthdate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="date"
+                android:hint="@string/profile_bday_prompt"
                 android:textSize="16sp" />
 
         </LinearLayout>
@@ -97,7 +106,7 @@
                 android:id="@+id/health_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Health Details"
+                android:text="@string/profile_health_title"
                 android:textSize="16sp" />
 
         </LinearLayout>

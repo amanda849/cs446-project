@@ -16,4 +16,7 @@
     <string name="have_an_account_sign_in">Have an account? Sign In!</string>
     <string name="sign_out">Sign Out</string>
     <string name="add_prompt">Add a new poop for today:</string>
+    <string name="profile_info_title">Personal Info</string>
+    <string name="profile_health_title">Health Details</string>
+    <string name="profile_bday_prompt">date of birth (yy/mm/dd)</string>
 </resources>
