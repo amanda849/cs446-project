@@ -174,25 +174,4 @@ class BowelLogViewModel : ViewModel() {
         updateAnalysisDataMonth(currDate)
         updateAnalysisDataYear(currDate)
     }
-
-    /**
-     * Returns the analysis data from the past week
-     */
-    fun getAnalysisDataWeek() : AnalysisData {
-        return weekAnalysisData
-    }
-
-    /**
-     * Returns the analysis data from the past calendar month
-     */
-    fun getAnalysisDataMonth() : AnalysisData {
-        return monthAnalysisData
-    }
-
-    /**
-     * Returns the analysis data from the past calendar year
-     */
-    fun getAnalysisDataYear() : AnalysisData {
-        return yearAnalysisData
-    }
 }
