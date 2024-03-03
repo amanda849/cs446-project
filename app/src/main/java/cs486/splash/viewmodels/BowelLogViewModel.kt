@@ -15,6 +15,8 @@ import cs486.splash.shared.FactorTags
 import cs486.splash.shared.SymptomTags
 import cs486.splash.shared.Texture
 import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.ZoneId
 import java.util.Date
 
 /**
@@ -113,7 +115,7 @@ class BowelLogViewModel : ViewModel() {
      * Creates a map of all bowel logs keyed by date format dd/MM/yyyy
      */
     fun orderBowelLogsByDate() : Map<String, List<BowelLog>> {
-        var collectedLogs : MutableMap<String, MutableList<BowelLog>> = mutableMapOf<String, MutableList<BowelLog>>()
+        val collectedLogs : MutableMap<String, MutableList<BowelLog>> = mutableMapOf<String, MutableList<BowelLog>>()
         for (bowelLog in bowelLogs.value!!) {
             val dateString = SimpleDateFormat("dd/MM/yyyy").format(bowelLog.timeStarted)
             if (collectedLogs.containsKey(dateString)) {
@@ -131,9 +133,14 @@ class BowelLogViewModel : ViewModel() {
         val dateString = SimpleDateFormat("dd/MM/yyyy").format(date)
         if (bowelLogsByDate.containsKey(dateString)){
             return bowelLogsByDate[dateString]
-        } else {
-         return null
         }
+
+        return null
+    }
+
+    fun getBowelLogsOnLocalDate(date : LocalDate?) : List<BowelLog>? {
+        if (date == null) return null
+        return getBowelLogsOnDate(Date.from(date.atStartOfDay(ZoneId.systemDefault()).toInstant()))
     }
 
 

@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
@@ -15,6 +16,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.Text
@@ -41,6 +43,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.kizitonwose.calendar.compose.CalendarState
 import com.kizitonwose.calendar.compose.ContentHeightMode
@@ -56,12 +59,11 @@ import com.kizitonwose.calendar.core.previousMonth
 import com.kizitonwose.calendar.core.yearMonth
 import cs486.splash.R
 import cs486.splash.databinding.FragmentCalendarBinding
+import cs486.splash.models.BowelLog
 import cs486.splash.viewmodels.BowelLogViewModel
 import kotlinx.coroutines.launch
 import java.time.DayOfWeek
 import java.time.LocalDate
-import java.time.ZoneId
-import java.util.Date
 
 class CalendarFragment : Fragment() {
 
@@ -80,12 +82,16 @@ class CalendarFragment : Fragment() {
         _binding = FragmentCalendarBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        binding.calendar.apply {
-            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
-            setContent {
-                CalendarPage(bowelLogViewModel)
+        val updateLogsByDayObserver = Observer<List<BowelLog>> { listOfLogs ->
+            binding.calendar.apply {
+                setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+                setContent {
+                    CalendarPage(bowelLogViewModel)
+                }
             }
         }
+
+        bowelLogViewModel.bowelLogs.observe(viewLifecycleOwner, updateLogsByDayObserver)
 
         return root
     }
@@ -95,6 +101,7 @@ class CalendarFragment : Fragment() {
         _binding = null
     }
 }
+
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun CalendarPage(bowelLogViewModel : BowelLogViewModel) {
@@ -108,8 +115,7 @@ fun CalendarPage(bowelLogViewModel : BowelLogViewModel) {
         derivedStateOf {
             val date = selection?.date
             if (date == null) emptyList()
-            else bowelLogViewModel.getBowelLogsOnDate(
-                Date.from(selection?.date?.atStartOfDay(ZoneId.systemDefault())?.toInstant())).orEmpty()
+            else bowelLogViewModel.getBowelLogsOnLocalDate(date).orEmpty()
         }
     }
     StatusBarColorUpdateEffect(color = colorResource(id = R.color.example_1_bg_light))
@@ -155,13 +161,15 @@ fun CalendarPage(bowelLogViewModel : BowelLogViewModel) {
                     .testTag("Calendar"),
                 state = state,
                 dayContent = { day ->
+                    val logsOnDate = bowelLogViewModel.getBowelLogsOnLocalDate(day.date).orEmpty()
+                    val color = if (logsOnDate.isNotEmpty()) {
+                        Color(logsOnDate[0].color.toColorLong())
+                    } else {
+                        Color.Transparent
+                    }
                     Day(
                         day = day,
-                        color = when {
-                            logsInSelectedDate.value.isNotEmpty() ->
-                                Color(logsInSelectedDate.value[0].color.toColorInt())
-                            else -> null
-                        },
+                        poopColor = color,
                         isSelected = selection == day,
                         isToday = day.position == DayPosition.MonthDate && day.date == today,
                     ) { clicked ->
@@ -246,7 +254,7 @@ private fun MonthFooter() {
 @Composable
 private fun Day(
     day: CalendarDay,
-    color: Color?,
+    poopColor: Color,
     isSelected: Boolean,
     isToday: Boolean,
     onClick: (CalendarDay) -> Unit,
@@ -260,7 +268,6 @@ private fun Day(
                 color = when {
                     isSelected -> colorResource(R.color.example_1_selection_color)
                     isToday -> colorResource(id = R.color.white_light)
-                    color != null -> color
                     else -> Color.Transparent
                 },
             )
@@ -281,5 +288,19 @@ private fun Day(
             color = textColor,
             fontSize = 15.sp,
         )
+        Column(
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .fillMaxWidth()
+                .padding(bottom = 8.dp),
+            verticalArrangement = Arrangement.spacedBy(6.dp),
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(5.dp)
+                    .background(poopColor),
+            )
+        }
     }
 }
