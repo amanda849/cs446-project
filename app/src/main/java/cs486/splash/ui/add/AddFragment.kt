@@ -15,6 +15,8 @@ import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -23,8 +25,13 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDialog
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateMapOf
@@ -48,9 +55,10 @@ import cs486.splash.shared.FactorTags
 import cs486.splash.shared.SymptomTags
 import cs486.splash.shared.Texture
 import cs486.splash.viewmodels.BowelLogViewModel
-import java.text.DateFormat
 import java.text.SimpleDateFormat
+import java.util.Calendar
 import java.util.Date
+
 
 class AddFragment : Fragment() {
 
@@ -63,6 +71,7 @@ class AddFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+
         val bowelLogViewModel =
             ViewModelProvider(this).get(BowelLogViewModel::class.java)
 
@@ -113,6 +122,17 @@ class AddFragment : Fragment() {
             }
         }
 
+        var pickedDate = Calendar.getInstance()
+        binding.datePicker.apply {
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+            setContent { 
+                DateTimePickerComponent(pickedDate){
+                        pickedDate = it
+                        Log.d("AddLog", "SelectedDate changed to: $it")
+                }
+            }
+        }
+
         binding.addButton.setOnClickListener {
             // date things to pre-format
             var startTime = Date() // current day
@@ -121,10 +141,16 @@ class AddFragment : Fragment() {
                 Colour.entries[colorInt],
                 Texture.valueOf(textureStr.uppercase()),
                 startTime.apply {
+                    month = pickedDate.time.month
+                    date = pickedDate.time.date
+                    year = pickedDate.time.year
                     hours = binding.timeStart.text.toString().split(':')[0].toInt()
                     minutes = binding.timeStart.text.toString().split(':')[1].toInt()
                 },
                 endTime.apply {
+                    month = pickedDate.time.month
+                    date = pickedDate.time.date
+                    year = pickedDate.time.year
                     hours = binding.timeEnd.text.toString().split(':')[0].toInt()
                     minutes = binding.timeEnd.text.toString().split(':')[1].toInt()
                 },
@@ -143,7 +169,6 @@ class AddFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
-
 }
 
 // map of symptoms to str helpers (& vice versa)
@@ -157,8 +182,6 @@ fun mapstrToMap(str: String): Map<String, Boolean> {
 fun mapToMapStr(map: Map<String, Boolean>): String {
     return map.map {it.key + ": " + it.value.toString()}.joinToString()
 }
-
-
 
 val colorsDef: List<Color> = listOf(
     Color(0xFF9C6644),
@@ -297,3 +320,70 @@ fun SelectTags(
         }
     }
 }
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun DateTimePickerComponent(
+    currentTime : Calendar,
+    onClick: (Calendar) -> Unit
+) {
+    val datePickerState = rememberDatePickerState(
+        initialSelectedDateMillis = currentTime.timeInMillis
+    )
+    var showDatePicker by remember { mutableStateOf(false) }
+    var pickedDate by remember { mutableStateOf(Calendar.getInstance()) }
+    val sdf = SimpleDateFormat("yyyy-MM-dd")
+
+    Row(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        horizontalArrangement = Arrangement.Start,
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+
+        Text(text = sdf.format(pickedDate.time), modifier = Modifier.padding(start = 16.dp, end = 16.dp))
+
+        Button(
+            onClick = {
+                showDatePicker = true //changing the visibility state
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(end = 16.dp),
+        ) {
+            Text(text = "Date Picker")
+        }
+    }
+
+    // date picker component
+    if (showDatePicker) {
+        DatePickerDialog(
+            onDismissRequest = {},
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        val selectedDate = Calendar.getInstance().apply {
+                            // Add one 1 day cause for some reason date picker is off
+                            timeInMillis = datePickerState.selectedDateMillis!! + 86400000
+                        }
+                        pickedDate = selectedDate
+                        onClick(selectedDate)
+                        showDatePicker = false
+                    }
+                ) { Text("OK") }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = {
+                        showDatePicker = false
+                    }
+                ) { Text("Cancel") }
+            }
+        )
+        {
+            DatePicker(state = datePickerState)
+        }
+    }
+}
+
