@@ -27,3 +27,6 @@ Date | Amanda | Cindy | Katherine | Reyna | Joanne | Anthony | Task
 02/29/2024 | | | | 4 | | | Updating viewmodel and model implementations with Firestore
 03/01/2024 | | | | | | 4 | finished base of add functionality (incl. components)
 02/28/2024 |  | | 5 |  |  |  | built analysis page
+03/02/2024 | 2 | | |  |  |  | Create shared folder with enums and common utility
+03/02/2024 | 5 | | |  |  |  | Implement analysis backend
+
