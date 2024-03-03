@@ -40,7 +40,7 @@ class BowelLog(
     // This is likely redundant see https://firebase.google.com/docs/firestore/manage-data/add-data for how to add an object directly to firestore
     fun toHashMap(): HashMap<String, Any> {
         return hashMapOf(
-            "colour" to color.toColorInt(),
+            "colour" to color.toColorLong(),
             "texture" to texture.toString(),
             "timeStarted" to Timestamp(timeStarted),
             "timeEnded" to Timestamp(timeEnded),
@@ -54,7 +54,7 @@ class BowelLog(
     companion object {
         fun DocumentSnapshot.toBowelLog(): BowelLog? {
             return try {
-                val colour = Colour.valueOf(getField<Int>("colour")!!)
+                val colour = Colour.valueOf(getField<Long>("colour")!!)
                 val texture = Texture.valueOf(getString("texture")!!.uppercase())
                 val timeStarted = getTimestamp("timeStarted")!!.toDate()
                 val timeEnded = getTimestamp("timeEnded")!!.toDate()
