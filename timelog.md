@@ -30,5 +30,7 @@ Date | Amanda | Cindy | Katherine | Reyna | Joanne | Anthony | Task
 03/02/2024 | 2 | | |  |  |  | Create shared folder with enums and common utility
 03/02/2024 | 5 | | |  |  |  | Implement analysis backend
 03/02/2024 | | | | | 4 | | Initial layout for profile page UI
+03/02/2024 | | | | 6 | | | Initial Calendar view research/layout + adding datepicker to add fragment
 03/03/2024 | 1 | | |  |  |  | Debug viewmodel and model enum errors
+03/03/2024 | | | | 5 | | | Calender view complete + debugging
 
