@@ -56,7 +56,6 @@ import com.kizitonwose.calendar.core.previousMonth
 import com.kizitonwose.calendar.core.yearMonth
 import cs486.splash.R
 import cs486.splash.databinding.FragmentCalendarBinding
-import cs486.splash.models.BowelLog
 import cs486.splash.viewmodels.BowelLogViewModel
 import kotlinx.coroutines.launch
 import java.time.DayOfWeek
@@ -107,8 +106,10 @@ fun CalendarPage(bowelLogViewModel : BowelLogViewModel) {
     val daysOfWeek = remember { daysOfWeek() }
     val logsInSelectedDate = remember {
         derivedStateOf {
-            val date = Date.from(selection?.date?.atStartOfDay(ZoneId.systemDefault())?.toInstant())
-            if (date == null) emptyList() else bowelLogViewModel.getBowelLogsOnDate(date).orEmpty()
+            val date = selection?.date
+            if (date == null) emptyList()
+            else bowelLogViewModel.getBowelLogsOnDate(
+                Date.from(selection?.date?.atStartOfDay(ZoneId.systemDefault())?.toInstant())).orEmpty()
         }
     }
     StatusBarColorUpdateEffect(color = colorResource(id = R.color.example_1_bg_light))
@@ -282,8 +283,3 @@ private fun Day(
         )
     }
 }
-
-fun getAveragePoopColorDay(listOfLogs : List<BowelLog>) {
-
-}
-

@@ -125,7 +125,9 @@ class BowelLogViewModel : ViewModel() {
         return collectedLogs
     }
 
-    fun getBowelLogsOnDate(date : Date) : List<BowelLog>? {
+    fun getBowelLogsOnDate(date : Date?) : List<BowelLog>? {
+        if (date == null) return null
+
         val dateString = SimpleDateFormat("dd/MM/yyyy").format(date)
         if (bowelLogsByDate.containsKey(dateString)){
             return bowelLogsByDate[dateString]
