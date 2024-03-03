@@ -21,9 +21,13 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -52,9 +56,13 @@ import com.kizitonwose.calendar.core.previousMonth
 import com.kizitonwose.calendar.core.yearMonth
 import cs486.splash.R
 import cs486.splash.databinding.FragmentCalendarBinding
+import cs486.splash.models.BowelLog
+import cs486.splash.viewmodels.BowelLogViewModel
 import kotlinx.coroutines.launch
 import java.time.DayOfWeek
 import java.time.LocalDate
+import java.time.ZoneId
+import java.util.Date
 
 class CalendarFragment : Fragment() {
 
@@ -67,8 +75,8 @@ class CalendarFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val calendarViewModel =
-            ViewModelProvider(this).get(CalendarViewModel::class.java)
+        val bowelLogViewModel =
+            ViewModelProvider(this).get(BowelLogViewModel::class.java)
 
         _binding = FragmentCalendarBinding.inflate(inflater, container, false)
         val root: View = binding.root
@@ -76,7 +84,7 @@ class CalendarFragment : Fragment() {
         binding.calendar.apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
-                CalendarPage()
+                CalendarPage(bowelLogViewModel)
             }
         }
 
@@ -90,13 +98,19 @@ class CalendarFragment : Fragment() {
 }
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun CalendarPage() {
+fun CalendarPage(bowelLogViewModel : BowelLogViewModel) {
     val today = remember { LocalDate.now() }
     val currentMonth = remember(today) { today.yearMonth }
     val startMonth = remember { currentMonth.minusMonths(500) }
     val endMonth = remember { currentMonth.plusMonths(500) }
-    val selections = remember { mutableStateListOf<CalendarDay>() }
+    var selection by remember { mutableStateOf<CalendarDay?>(null) }
     val daysOfWeek = remember { daysOfWeek() }
+    val logsInSelectedDate = remember {
+        derivedStateOf {
+            val date = Date.from(selection?.date?.atStartOfDay(ZoneId.systemDefault())?.toInstant())
+            if (date == null) emptyList() else bowelLogViewModel.getBowelLogsOnDate(date).orEmpty()
+        }
+    }
     StatusBarColorUpdateEffect(color = colorResource(id = R.color.example_1_bg_light))
     Column(
         modifier = Modifier
@@ -113,6 +127,10 @@ fun CalendarPage() {
         )
         val coroutineScope = rememberCoroutineScope()
         val visibleMonth = rememberFirstVisibleMonthAfterScroll(state)
+        LaunchedEffect(visibleMonth) {
+            // Clear selection if we scroll to a new month.
+            selection = null
+        }
         // Draw light content on dark background.
         CompositionLocalProvider(LocalContentColor provides darkColorScheme().onSurface) {
             SimpleCalendarTitle(
@@ -138,14 +156,15 @@ fun CalendarPage() {
                 dayContent = { day ->
                     Day(
                         day = day,
-                        isSelected = selections.contains(day),
+                        color = when {
+                            logsInSelectedDate.value.isNotEmpty() ->
+                                Color(logsInSelectedDate.value[0].color.toColorInt())
+                            else -> null
+                        },
+                        isSelected = selection == day,
                         isToday = day.position == DayPosition.MonthDate && day.date == today,
                     ) { clicked ->
-                        if (selections.contains(clicked)) {
-                            selections.remove(clicked)
-                        } else {
-                            selections.add(clicked)
-                        }
+                        selection = clicked
                     }
                 },
                 // The month body is only needed for ui test tag.
@@ -161,10 +180,8 @@ fun CalendarPage() {
                 monthHeader = {
                     MonthHeader(daysOfWeek = daysOfWeek)
                 },
-                monthFooter = { month ->
-                    val count = month.weekDays.flatten()
-                        .count { selections.contains(it) }
-                    MonthFooter(selectionCount = count)
+                monthFooter = {
+                    MonthFooter()
                 },
             )
         }
@@ -214,7 +231,7 @@ private fun MonthHeader(daysOfWeek: List<DayOfWeek>) {
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-private fun MonthFooter(selectionCount: Int) {
+private fun MonthFooter() {
     Box(
         Modifier
             .fillMaxWidth()
@@ -228,6 +245,7 @@ private fun MonthFooter(selectionCount: Int) {
 @Composable
 private fun Day(
     day: CalendarDay,
+    color: Color?,
     isSelected: Boolean,
     isToday: Boolean,
     onClick: (CalendarDay) -> Unit,
@@ -241,6 +259,7 @@ private fun Day(
                 color = when {
                     isSelected -> colorResource(R.color.example_1_selection_color)
                     isToday -> colorResource(id = R.color.white_light)
+                    color != null -> color
                     else -> Color.Transparent
                 },
             )
@@ -262,5 +281,9 @@ private fun Day(
             fontSize = 15.sp,
         )
     }
+}
+
+fun getAveragePoopColorDay(listOfLogs : List<BowelLog>) {
+
 }
 

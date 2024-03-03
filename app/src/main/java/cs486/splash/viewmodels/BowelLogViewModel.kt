@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.firestore.EventListener
 import com.google.firebase.firestore.ListenerRegistration
+import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.QuerySnapshot
 import cs486.splash.models.BowelLog
 import cs486.splash.models.BowelLog.Companion.toBowelLog
@@ -13,6 +14,7 @@ import cs486.splash.shared.Colour
 import cs486.splash.shared.FactorTags
 import cs486.splash.shared.SymptomTags
 import cs486.splash.shared.Texture
+import java.text.SimpleDateFormat
 import java.util.Date
 
 /**
@@ -21,6 +23,7 @@ import java.util.Date
 class BowelLogViewModel : ViewModel() {
     val TAG = "BOWEL_LOG_VIEW_MODEL"
     var bowelLogs : MutableLiveData<List<BowelLog>> = MutableLiveData()
+    var bowelLogsByDate : Map<String, List<BowelLog>> = mapOf<String, MutableList<BowelLog>>()
 
     private val bowelLogRepository: BowelLogRepository = BowelLogRepository()
 
@@ -33,7 +36,9 @@ class BowelLogViewModel : ViewModel() {
      * Do not call this again as it will tie another listener
      */
     private fun getAllBowelLogs() : ListenerRegistration {
-        return bowelLogRepository.fetchAllBowelLogs().addSnapshotListener(EventListener<QuerySnapshot> addSnapshotListener@{ value, e ->
+        return bowelLogRepository.fetchAllBowelLogs()
+            .orderBy("timeStarted", Query.Direction.DESCENDING)
+            .addSnapshotListener(EventListener<QuerySnapshot> addSnapshotListener@{ value, e ->
             if (e != null) {
                 Log.w(TAG, "Listen failed.", e)
                 return@addSnapshotListener
@@ -48,6 +53,7 @@ class BowelLogViewModel : ViewModel() {
                 }
             }
             bowelLogs.value = bowelLogList
+            bowelLogsByDate = orderBowelLogsByDate()
         })
     }
 
@@ -101,6 +107,31 @@ class BowelLogViewModel : ViewModel() {
      */
     fun deleteBowelLog(bowelLogId: String) {
         bowelLogRepository.deleteBowelLog(bowelLogId)
+    }
+
+    /**
+     * Creates a map of all bowel logs keyed by date format dd/MM/yyyy
+     */
+    fun orderBowelLogsByDate() : Map<String, List<BowelLog>> {
+        var collectedLogs : MutableMap<String, MutableList<BowelLog>> = mutableMapOf<String, MutableList<BowelLog>>()
+        for (bowelLog in bowelLogs.value!!) {
+            val dateString = SimpleDateFormat("dd/MM/yyyy").format(bowelLog.timeStarted)
+            if (collectedLogs.containsKey(dateString)) {
+                collectedLogs[dateString]!!.add(bowelLog)
+            } else {
+                collectedLogs[dateString] = mutableListOf<BowelLog>(bowelLog)
+            }
+        }
+        return collectedLogs
+    }
+
+    fun getBowelLogsOnDate(date : Date) : List<BowelLog>? {
+        val dateString = SimpleDateFormat("dd/MM/yyyy").format(date)
+        if (bowelLogsByDate.containsKey(dateString)){
+            return bowelLogsByDate[dateString]
+        } else {
+         return null
+        }
     }
 
 
