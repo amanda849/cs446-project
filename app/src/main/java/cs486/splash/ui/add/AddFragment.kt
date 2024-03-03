@@ -138,8 +138,8 @@ class AddFragment : Fragment() {
             var startTime = Date() // current day
             var endTime = Date()
             bowelLogViewModel.addNewBowelLog(
-                Colour.valueOf(colorInt.toInt()),
-                Texture.valueOf(textureStr),
+                Colour.entries[colorInt],
+                Texture.valueOf(textureStr.uppercase()),
                 startTime.apply {
                     month = pickedDate.time.month
                     date = pickedDate.time.date
