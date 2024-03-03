@@ -35,6 +35,83 @@ class AnalysisData {
     private var percentageFactors : Map<String, Float> = mapOf()
 
     /**
+     * Returns start date of the time range for which analysis is being computed for
+     */
+    fun getRangeStartDate() : Date {
+        return rangeStartDate
+    }
+
+    /**
+     * Returns end date of the time range for which analysis is being computed for
+     */
+    fun getRangeEndDate() : Date {
+        return rangeEndDate
+    }
+
+    /**
+     * Returns the average number of logs per day
+     */
+    fun getAverageTimesPerDay() : Float {
+        return averageTimesPerDay
+    }
+
+    /**
+     * Returns a list of most common colours
+     */
+    fun getMostCommonColours() : List<Colour> {
+        return mostCommonColours
+    }
+
+    /**
+     * Returns the number of logs with unusual colours
+     */
+    fun getNumUnusualColours() : Int {
+        return numUnusualColours
+    }
+
+    /**
+     * Returns the percentages of logs with each texture
+     */
+    fun getPercentageTextures() : Map<Texture, Float> {
+        return percentageTextures
+    }
+
+    /**
+     * Returns the number of locations
+     */
+    fun getNumLocations() : Int {
+        return numLocations
+    }
+
+    /**
+     * Returns the average duration
+     */
+    fun getAverageDuration() : Int {
+        return averageDuration
+    }
+
+    /**
+     * Returns a list of hours per day (0-23) with the most logs
+     */
+    fun getMostLogsHours() : List<Int> {
+        return mostLogsHours
+    }
+
+    /**
+     * Returns the percentages of logs with each symptom
+     */
+    fun getPercentageSymptoms() : Map<String, Float> {
+        return percentageSymptoms
+    }
+
+    /**
+     * Returns the percentages of logs with each factor
+     */
+    fun getPercentageFactors() : Map<String, Float> {
+        return percentageFactors
+    }
+
+    /**
      * Recompute all analysis attributes for the given [logs]
      * within the range [startDate] to [endDate]
      */
