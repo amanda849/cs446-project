@@ -118,8 +118,8 @@ class AddFragment : Fragment() {
             var startTime = Date() // current day
             var endTime = Date()
             bowelLogViewModel.addNewBowelLog(
-                Colour.valueOf(colorInt.toInt()),
-                Texture.valueOf(textureStr),
+                Colour.entries[colorInt],
+                Texture.valueOf(textureStr.uppercase()),
                 startTime.apply {
                     hours = binding.timeStart.text.toString().split(':')[0].toInt()
                     minutes = binding.timeStart.text.toString().split(':')[1].toInt()
