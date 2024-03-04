@@ -245,7 +245,7 @@ private fun ListView (
                             ) // Rounded corners
                             .padding(16.dp) // Padding around the text inside the box
                             .clickable {
-                                navController.navigate(R.id.navigation_analysis)
+                                navController.navigate(R.id.navigation_poop_view)
                             }
                             .fillMaxWidth(),
                         contentAlignment = Alignment.Center
