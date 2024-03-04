@@ -38,4 +38,10 @@
         android:name="cs486.splash.ui.profile.ProfileFragment"
         android:label="@string/title_profile"
         tools:layout="@layout/fragment_profile" />
+
+<!--    <fragment-->
+<!--        android:id="@+id/navigation_poop_view"-->
+<!--        android:name="cs486.splash.ui.poopview.PoopViewFragment"-->
+<!--        android:label="View"-->
+<!--        tools:layout="@layout/fragment_poop_view"/>-->
 </navigation>
