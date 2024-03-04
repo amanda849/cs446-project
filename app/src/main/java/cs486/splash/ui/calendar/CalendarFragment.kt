@@ -1,6 +1,7 @@
 package cs486.splash.ui.calendar
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,12 +14,16 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.runtime.Composable
@@ -36,6 +41,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
@@ -45,6 +51,7 @@ import androidx.compose.ui.unit.sp
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.Navigation
 import com.kizitonwose.calendar.compose.CalendarState
 import com.kizitonwose.calendar.compose.ContentHeightMode
 import com.kizitonwose.calendar.compose.HorizontalCalendar
@@ -102,7 +109,7 @@ class CalendarFragment : Fragment() {
     }
 }
 
-@OptIn(ExperimentalLayoutApi::class)
+@OptIn(ExperimentalLayoutApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun CalendarPage(bowelLogViewModel : BowelLogViewModel) {
     val today = remember { LocalDate.now() }
@@ -172,7 +179,7 @@ fun CalendarPage(bowelLogViewModel : BowelLogViewModel) {
                         poopColor = color,
                         isSelected = selection == day,
                         isToday = day.position == DayPosition.MonthDate && day.date == today,
-                    ) { clicked ->
+                    ) { clicked: CalendarDay ->
                         selection = clicked
                     }
                 },
@@ -193,6 +200,65 @@ fun CalendarPage(bowelLogViewModel : BowelLogViewModel) {
                     MonthFooter()
                 },
             )
+            Log.d("Calendar", "the selection $selection")
+            if(selection != null) {
+                Log.d("Calendar", "the selection IN THE IF $selection")
+                ModalBottomSheet(onDismissRequest = { selection = null }) {
+//                    ListView(logs = logsInSelectedDate.value)
+                    ListView(logs = listOf(1, 2))
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun ListView (
+//    logs: List<BowelLog>
+    logs: List<Int>
+) {
+    Log.d("Calendar", "in the list view")
+    val context = LocalContext.current
+    val navController = remember {
+        val activity = context.findActivity() // Extension function to find activity from context
+        Navigation.findNavController(activity, R.id.nav_host_fragment_activity_main)
+    }
+    Box(
+        Modifier
+            .fillMaxWidth()
+            .testTag("ListView")
+            .background(colorResource(id = R.color.white))
+            .padding(vertical = 10.dp),
+        contentAlignment = Alignment.Center,
+    ) {
+        Column (modifier = Modifier.padding(16.dp)) {
+            if (logs.isEmpty()) {
+                Log.d("Calendar", "no poops to display")
+                Text("No poops to display")
+            } else {
+                for (i in logs.indices) {
+                    Box(
+                        modifier = Modifier
+                            .background(
+                                color = Color(0xFF9C6644),
+                                shape = RoundedCornerShape(8.dp)
+                            ) // Rounded corners
+                            .padding(16.dp) // Padding around the text inside the box
+                            .clickable {
+                                navController.navigate(R.id.navigation_poop_view)
+                            }
+                            .fillMaxWidth(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = "Poop #${i + 1}",
+                            textAlign = TextAlign.Center,
+                            color = Color.White // Set text color that contrasts well with your background
+                        )
+                    }
+                    Spacer(Modifier.height(10.dp))
+                }
+            }
         }
     }
 }
