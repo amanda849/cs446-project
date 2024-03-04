@@ -31,8 +31,8 @@ class ProfileFragment : Fragment() {
         _binding = FragmentProfileBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val textView: TextView = binding.textProfile
-        profileViewModel.text.observe(viewLifecycleOwner) {
+        val textView: TextView = binding.userEmail
+        profileViewModel.useremail.observe(viewLifecycleOwner) {
             textView.text = it
         }
 
