@@ -33,6 +33,8 @@ Date | Amanda | Cindy | Katherine | Reyna | Joanne | Anthony | Task
 03/02/2024 | | | | 6 | | | Initial Calendar view research/layout + adding datepicker to add fragment
 03/03/2024 | 1 | | |  |  |  | Debug viewmodel and model enum errors
 03/03/2024 | | | | 5 | | | Calender view complete + debugging
+03/03/2024 |  | | 5 |  |  |  | Implemented list view and log view and link to calendar page 
 03/03/2024 | 1 | 1 | 1 | 1 | 1 | 1 | Prepare for demo
 03/07/2024 | 1 | | |  |  |  | Prototype document summary of features implemented
+03/07/2024 |  | | 1 |  |  |  | Prototype document summary of features mocked / simulated
 
