@@ -37,5 +37,6 @@ Date | Amanda | Cindy | Katherine | Reyna | Joanne | Anthony | Task
 03/03/2024 | 1 | 1 | 1 | 1 | 1 | 1 | Prepare for demo
 03/07/2024 | 1 | | |  |  |  | Prototype document summary of features implemented
 03/07/2024 |  | | 1 |  |  |  | Prototype document summary of features mocked / simulated
+03/07/2024 |  | 1| |  |  |  | Prototype document feedback response
 03/08/2024 | 1 | 1 | 1 | 1 | 1 | 1 | Refine prototype document
 
