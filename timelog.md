@@ -44,3 +44,4 @@ Date | Amanda | Cindy | Katherine | Reyna | Joanne | Anthony | Task
 03/19/2024 | 1 | | |  |  |  | D4 Implicit Invocation example
 03/19/2024 | | 2 | |  |  |  | D4 Pipe and Filter example
 03/20/2024 |  | | 1.5 |  |  |  | built analysis page
+03/22/2024 | 0.5 | 0.5 | 0.5 | 0.5 | 0.5 | 0.5 | Going over and editing D4 as a team, general project meeting
