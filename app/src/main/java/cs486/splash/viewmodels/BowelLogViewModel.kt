@@ -18,6 +18,7 @@ import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.ZoneId
 import java.util.Date
+import java.util.Locale
 
 /**
  * Layer that facilitates communication between View and Model
@@ -117,7 +118,7 @@ class BowelLogViewModel : ViewModel() {
     fun orderBowelLogsByDate() : Map<String, List<BowelLog>> {
         val collectedLogs : MutableMap<String, MutableList<BowelLog>> = mutableMapOf<String, MutableList<BowelLog>>()
         for (bowelLog in bowelLogs.value!!) {
-            val dateString = SimpleDateFormat("dd/MM/yyyy").format(bowelLog.timeStarted)
+            val dateString = SimpleDateFormat("dd/MM/yyyy", Locale.CANADA).format(bowelLog.timeStarted)
             if (collectedLogs.containsKey(dateString)) {
                 collectedLogs[dateString]!!.add(bowelLog)
             } else {
@@ -130,7 +131,7 @@ class BowelLogViewModel : ViewModel() {
     fun getBowelLogsOnDate(date : Date?) : List<BowelLog>? {
         if (date == null) return null
 
-        val dateString = SimpleDateFormat("dd/MM/yyyy").format(date)
+        val dateString = SimpleDateFormat("dd/MM/yyyy", Locale.CANADA).format(date)
         if (bowelLogsByDate.containsKey(dateString)){
             return bowelLogsByDate[dateString]
         }
@@ -140,7 +141,7 @@ class BowelLogViewModel : ViewModel() {
 
     fun getBowelLogsOnLocalDate(date : LocalDate?) : List<BowelLog>? {
         if (date == null) return null
-        return getBowelLogsOnDate(Date.from(date.atStartOfDay(ZoneId.systemDefault()).toInstant()))
+        return getBowelLogsOnDate(Date.from(date.atStartOfDay(ZoneId.systemDefault()).toInstant()))?.sortedBy {it.timeStarted}
     }
 
 
