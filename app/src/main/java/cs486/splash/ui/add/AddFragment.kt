@@ -58,6 +58,7 @@ import cs486.splash.viewmodels.BowelLogViewModel
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
+import java.util.Locale
 
 
 class AddFragment : Fragment() {
@@ -133,6 +134,28 @@ class AddFragment : Fragment() {
             }
         }
 
+        var pickedTimeStart = Calendar.getInstance()
+        var pickedTimeEnd = Calendar.getInstance()
+        binding.timePickerStart.apply {
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+            setContent {
+                TimePickerSwitchable(pickedTimeStart){
+                    pickedTimeStart = it
+                    Log.d("AddLog", "SelectedDate changed to: $it")
+                }
+            }
+        }
+
+        binding.timePickerEnd.apply {
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+            setContent {
+                TimePickerSwitchable(pickedTimeEnd){
+                    pickedTimeEnd = it
+                    Log.d("AddLog", "SelectedDate changed to: $it")
+                }
+            }
+        }
+
         binding.addButton.setOnClickListener {
             // date things to pre-format
             var startTime = Date() // current day
@@ -144,15 +167,15 @@ class AddFragment : Fragment() {
                     month = pickedDate.time.month
                     date = pickedDate.time.date
                     year = pickedDate.time.year
-                    hours = binding.timeStart.text.toString().split(':')[0].toInt()
-                    minutes = binding.timeStart.text.toString().split(':')[1].toInt()
+                    hours = pickedTimeStart.time.hours
+                    minutes = pickedTimeStart.time.minutes
                 },
                 endTime.apply {
                     month = pickedDate.time.month
                     date = pickedDate.time.date
                     year = pickedDate.time.year
-                    hours = binding.timeEnd.text.toString().split(':')[0].toInt()
-                    minutes = binding.timeEnd.text.toString().split(':')[1].toInt()
+                    hours = pickedTimeEnd.time.hours
+                    minutes = pickedTimeEnd.time.minutes
                 },
                 binding.location.text.toString(),
                 SymptomTags(symptoms),
@@ -332,7 +355,7 @@ fun DateTimePickerComponent(
     )
     var showDatePicker by remember { mutableStateOf(false) }
     var pickedDate by remember { mutableStateOf(Calendar.getInstance()) }
-    val sdf = SimpleDateFormat("yyyy-MM-dd")
+    val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
 
     Row(
         modifier = Modifier
@@ -342,7 +365,10 @@ fun DateTimePickerComponent(
         verticalAlignment = Alignment.CenterVertically,
     ) {
 
-        Text(text = sdf.format(pickedDate.time), modifier = Modifier.padding(start = 16.dp, end = 16.dp))
+        Text(
+            text = sdf.format(pickedDate.time),
+            modifier = Modifier.padding(start = 16.dp, end = 16.dp)
+        )
 
         Button(
             onClick = {
@@ -386,4 +412,3 @@ fun DateTimePickerComponent(
         }
     }
 }
-

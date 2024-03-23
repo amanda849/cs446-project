@@ -64,19 +64,15 @@
                 android:layout_height="match_parent"
                 android:orientation="horizontal">
 
-                <EditText
-                    android:id="@+id/time_start"
+                <androidx.compose.ui.platform.ComposeView
+                    android:id="@+id/time_picker_start"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:ems="10"
-                    android:inputType="time" />
+                    android:layout_height="wrap_content" />
 
-                <EditText
-                    android:id="@+id/time_end"
+                <androidx.compose.ui.platform.ComposeView
+                    android:id="@+id/time_picker_end"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:ems="10"
-                    android:inputType="time" />
+                    android:layout_height="wrap_content" />
             </LinearLayout>
 
             <TextView
