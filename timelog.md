@@ -47,3 +47,4 @@ Date | Amanda | Cindy | Katherine | Reyna | Joanne | Anthony | Task
 03/22/2024 | 0.5 | 0.5 | 0.5 | 0.5 | 0.5 | 0.5 | Going over and editing D4 as a team, general project meeting
 03/22/2024 | | | | 2 | | | Hooking up calendar dates to display logs + refactoring Add screen to use time pickers
 03/22/2024 | | 3 | |  | | | Added User Profile get and set feature to user Repo & researched on some persistent issues 
+03/22/2024 | | 2 | |  | | | Content repo and content view model 
