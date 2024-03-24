@@ -69,8 +69,10 @@ import cs486.splash.databinding.FragmentCalendarBinding
 import cs486.splash.models.BowelLog
 import cs486.splash.viewmodels.BowelLogViewModel
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
 import java.time.DayOfWeek
 import java.time.LocalDate
+import java.util.Locale
 
 class CalendarFragment : Fragment() {
 
@@ -204,8 +206,7 @@ fun CalendarPage(bowelLogViewModel : BowelLogViewModel) {
             if(selection != null) {
                 Log.d("Calendar", "the selection IN THE IF $selection")
                 ModalBottomSheet(onDismissRequest = { selection = null }) {
-//                    ListView(logs = logsInSelectedDate.value)
-                    ListView(logs = listOf(1, 2))
+                    ListView(logs = logsInSelectedDate.value)
                 }
             }
         }
@@ -214,8 +215,7 @@ fun CalendarPage(bowelLogViewModel : BowelLogViewModel) {
 
 @Composable
 private fun ListView (
-//    logs: List<BowelLog>
-    logs: List<Int>
+ logs: List<BowelLog>
 ) {
     Log.d("Calendar", "in the list view")
     val context = LocalContext.current
@@ -240,7 +240,7 @@ private fun ListView (
                     Box(
                         modifier = Modifier
                             .background(
-                                color = Color(0xFF9C6644),
+                                color = Color(logs[i].color.toColorLong()),
                                 shape = RoundedCornerShape(8.dp)
                             ) // Rounded corners
                             .padding(16.dp) // Padding around the text inside the box
@@ -250,8 +250,9 @@ private fun ListView (
                             .fillMaxWidth(),
                         contentAlignment = Alignment.Center
                     ) {
+                        val sdf = SimpleDateFormat("hh:mm a", Locale.CANADA)
                         Text(
-                            text = "Poop #${i + 1}",
+                            text = "Log at ${sdf.format(logs[i].timeStarted)}",
                             textAlign = TextAlign.Center,
                             color = Color.White // Set text color that contrasts well with your background
                         )
