@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:layout_height="match_parent"
+    tools:context=".ui.onboarding.TermsOfServicesFragment">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:text="TERMS AND SERVICES" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/terms_and_services_content" />
+    </ScrollView>
+
+
+    <Button
+        android:id="@+id/agreeButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Agree" />
+
+    <Button
+        android:id="@+id/disagreeButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Disagree" />
+
+
+
+</LinearLayout>

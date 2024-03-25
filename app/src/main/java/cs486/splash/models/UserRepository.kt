@@ -18,30 +18,29 @@ class AuthenticationException(message: String? = null, cause: Throwable? = null)
 object UserRepository {
     private val firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
     private val fireStore: FirebaseFirestore = FirebaseFirestore.getInstance()
-    private var user: FirebaseUser? = firebaseAuth.currentUser
+
+    private var user: FirebaseUser? = firebaseAuth.currentUser // should be deleted
+
     init {
         firebaseAuth.addAuthStateListener {
             user = it.currentUser
         }
     }
 
-    fun userSignIn(email: String, password: String): FirebaseUser? {
+    fun userSignIn(email: String, password: String) {
         firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener {
             if (!it.isSuccessful) {
                 throw AuthenticationException(it.exception.toString())
             }
         }
-        return user
     }
 
-    fun userSignUp(email: String, password: String): FirebaseUser? {
+    fun userSignUp(email: String, password: String) {
         firebaseAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener {
             if (!it.isSuccessful) {
                 throw AuthenticationException(it.exception.toString())
             }
         }
-
-        return user
     }
 
     fun userSignOut() {
