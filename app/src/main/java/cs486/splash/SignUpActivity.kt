@@ -5,8 +5,9 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
-import cs486.splash.databinding.ActivityMainBinding
 import cs486.splash.databinding.ActivitySignUpBinding
+import cs486.splash.models.UserRepository
+import cs486.splash.shared.UserProfile
 
 class SignUpActivity : AppCompatActivity() {
 
@@ -24,10 +25,12 @@ class SignUpActivity : AppCompatActivity() {
         binding.signUpBtn.setOnClickListener {
             val email = binding.email.text.toString()
             val pass = binding.password.text.toString()
+            //val name = binding.name.text.toString()
 
             firebaseAuth.createUserWithEmailAndPassword(email, pass).addOnCompleteListener{
                 // should also add password validator (i.e. user should have to insert their password twice)
                 if(it.isSuccessful){
+                    //UserRepository.setUserProfile(UserProfile(name))
                     val intent = Intent(this, MainActivity::class.java)
                     startActivity(intent)
                 } else {
@@ -37,6 +40,8 @@ class SignUpActivity : AppCompatActivity() {
                 }
             }
         }
+
+
 
         binding.textView.setOnClickListener {
             val intent = Intent(this, SignInActivity::class.java)

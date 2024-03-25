@@ -55,6 +55,9 @@ dependencies {
     implementation("androidx.navigation:navigation-ui-ktx:2.7.7")
     implementation("androidx.legacy:legacy-support-v4:1.0.0")
     implementation("com.google.firebase:firebase-firestore-ktx:24.10.3")
+    implementation("de.hdodenhof:circleimageview:3.1.0")
+    implementation("androidx.compose.ui:ui-android:1.6.2")
+    implementation("androidx.navigation:navigation-compose:2.7.7")
     testImplementation("junit:junit:4.13.2")
     testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
@@ -66,8 +69,8 @@ dependencies {
 
     // Material Design 3
     implementation("androidx.compose.material3:material3")
-    // or Material Design 2
-    //implementation("androidx.compose.material:material")
+
+    implementation("com.android.support:design:23.1.1")
 
     implementation("androidx.compose.ui:ui-tooling-preview")
     debugImplementation("androidx.compose.ui:ui-tooling")
@@ -79,8 +82,9 @@ dependencies {
     // Import the Firebase BoM
     implementation(platform("com.google.firebase:firebase-bom:32.7.2"))
     // TODO: Add the dependencies for Firebase products you want to use
-    // When using the BoM, don't specify versions in Firebase dependencies
-    // https://firebase.google.com/docs/android/setup#available-libraries
     implementation("com.google.firebase:firebase-auth")
     implementation("com.google.firebase:firebase-firestore")
+
+    // Calendar library provided by Kizitonwose under the MIT License
+    implementation("com.kizitonwose.calendar:compose:2.5.0")
 }

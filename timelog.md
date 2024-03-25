@@ -29,4 +29,22 @@ Date | Amanda | Cindy | Katherine | Reyna | Joanne | Anthony | Task
 02/28/2024 |  | | 5 |  |  |  | built analysis page
 03/02/2024 | 2 | | |  |  |  | Create shared folder with enums and common utility
 03/02/2024 | 5 | | |  |  |  | Implement analysis backend
-
+03/02/2024 | | | | | 4 | | Initial layout for profile page UI
+03/02/2024 | | | | 6 | | | Initial Calendar view research/layout + adding datepicker to add fragment
+03/03/2024 | 1 | | |  |  |  | Debug viewmodel and model enum errors
+03/03/2024 | | | | 5 | | | Calender view complete + debugging
+03/03/2024 |  | | 5 |  |  |  | Implemented list view and log view and link to calendar page 
+03/03/2024 | 1 | 1 | 1 | 1 | 1 | 1 | Prepare for demo
+03/07/2024 | 1 | | |  |  |  | Prototype document summary of features implemented
+03/07/2024 |  | | 1 |  |  |  | Prototype document summary of features mocked / simulated
+03/07/2024 |  | 1| |  |  |  | Prototype document feedback response
+03/07/2024 |  | | |  |  | 1 | Prototype document next steps + chart
+03/08/2024 | 1 | 1 | 1 | 1 | 1 | 1 | Refine prototype document
+03/17/2024 | 1 | 1 | 1 | 1 | 1 | 1 | D4 + D5 initial meeting
+03/19/2024 | 1 | | |  |  |  | D4 Implicit Invocation example
+03/19/2024 | | 2 | |  |  |  | D4 Pipe and Filter example
+03/20/2024 |  | | 1.5 |  |  |  | built analysis page
+03/22/2024 | 0.5 | 0.5 | 0.5 | 0.5 | 0.5 | 0.5 | Going over and editing D4 as a team, general project meeting
+03/22/2024 | | | | 2 | | | Hooking up calendar dates to display logs + refactoring Add screen to use time pickers
+03/23/2024 | | 3 | |  | | | Added User Profile get and set feature to user Repo & researched on some persistent issues 
+03/24/2024 | | 2 | |  | | | Content repo and content view model 

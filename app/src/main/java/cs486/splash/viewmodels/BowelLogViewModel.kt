@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.firestore.EventListener
 import com.google.firebase.firestore.ListenerRegistration
+import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.QuerySnapshot
 import cs486.splash.models.BowelLog
 import cs486.splash.models.BowelLog.Companion.toBowelLog
@@ -17,7 +18,11 @@ import cs486.splash.shared.Texture
 import cs486.splash.shared.getPastMonthBeginDate
 import cs486.splash.shared.getPastWeekBeginDate
 import cs486.splash.shared.getPastYearBeginDate
+import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.ZoneId
 import java.util.Date
+import java.util.Locale
 
 /**
  * Layer that facilitates communication between View and Model
@@ -25,6 +30,7 @@ import java.util.Date
 class BowelLogViewModel : ViewModel() {
     val TAG = "BOWEL_LOG_VIEW_MODEL"
     var bowelLogs : MutableLiveData<List<BowelLog>> = MutableLiveData()
+    var bowelLogsByDate : Map<String, List<BowelLog>> = mapOf<String, MutableList<BowelLog>>()
 
     private var weekAnalysisData : AnalysisData = AnalysisData()
     private var monthAnalysisData : AnalysisData = AnalysisData()
@@ -41,7 +47,9 @@ class BowelLogViewModel : ViewModel() {
      * Do not call this again as it will tie another listener
      */
     private fun getAllBowelLogs() : ListenerRegistration {
-        return bowelLogRepository.fetchAllBowelLogs().addSnapshotListener(EventListener<QuerySnapshot> addSnapshotListener@{ value, e ->
+        return bowelLogRepository.fetchAllBowelLogs()
+            .orderBy("timeStarted", Query.Direction.DESCENDING)
+            .addSnapshotListener(EventListener<QuerySnapshot> addSnapshotListener@{ value, e ->
             if (e != null) {
                 Log.w(TAG, "Listen failed.", e)
                 return@addSnapshotListener
@@ -56,6 +64,7 @@ class BowelLogViewModel : ViewModel() {
                 }
             }
             bowelLogs.value = bowelLogList
+            bowelLogsByDate = orderBowelLogsByDate()
         })
     }
 
@@ -134,12 +143,43 @@ class BowelLogViewModel : ViewModel() {
     }
 
     /**
+     * Creates a map of all bowel logs keyed by date format dd/MM/yyyy
+     */
+    fun orderBowelLogsByDate() : Map<String, List<BowelLog>> {
+        val collectedLogs : MutableMap<String, MutableList<BowelLog>> = mutableMapOf<String, MutableList<BowelLog>>()
+        for (bowelLog in bowelLogs.value!!) {
+            val dateString = SimpleDateFormat("dd/MM/yyyy", Locale.CANADA).format(bowelLog.timeStarted)
+            if (collectedLogs.containsKey(dateString)) {
+                collectedLogs[dateString]!!.add(bowelLog)
+            } else {
+                collectedLogs[dateString] = mutableListOf<BowelLog>(bowelLog)
+            }
+        }
+        return collectedLogs
+    }
+
+    fun getBowelLogsOnDate(date : Date?) : List<BowelLog>? {
+        if (date == null) return null
+
+        val dateString = SimpleDateFormat("dd/MM/yyyy", Locale.CANADA).format(date)
+        if (bowelLogsByDate.containsKey(dateString)){
+            return bowelLogsByDate[dateString]
+        }
+
+        return null
+    }
+
+    fun getBowelLogsOnLocalDate(date : LocalDate?) : List<BowelLog>? {
+        if (date == null) return null
+        return getBowelLogsOnDate(Date.from(date.atStartOfDay(ZoneId.systemDefault()).toInstant()))?.sortedBy {it.timeStarted}
+    }
+
+    /**
      * Update the analysis data for the past week until [d]
      */
     private fun updateAnalysisDataWeek(d : Date) {
         val beginDate = getPastWeekBeginDate(d)
         val logs = getBowelLogsFromDate(beginDate)
-
         weekAnalysisData.update(beginDate, d, logs)
     }
 
