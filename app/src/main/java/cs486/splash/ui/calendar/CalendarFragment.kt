@@ -245,7 +245,11 @@ private fun ListView (
                             ) // Rounded corners
                             .padding(16.dp) // Padding around the text inside the box
                             .clickable {
-                                navController.navigate(R.id.navigation_poop_view)
+                                val poopId = logs[i].id // The ID you want to pass
+                                val bundle = Bundle().apply {
+                                    putString("poopId", poopId)
+                                }
+                                navController.navigate(R.id.navigation_poop_view, bundle)
                             }
                             .fillMaxWidth(),
                         contentAlignment = Alignment.Center

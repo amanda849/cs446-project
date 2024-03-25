@@ -1,6 +1,7 @@
 package cs486.splash.ui.poopview
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -38,6 +39,7 @@ import androidx.navigation.Navigation
 import cs486.splash.R
 import cs486.splash.databinding.FragmentPoopViewBinding
 import cs486.splash.ui.calendar.findActivity
+import cs486.splash.viewmodels.BowelLogViewModel
 
 class PoopViewFragment : Fragment() {
 
@@ -55,13 +57,18 @@ class PoopViewFragment : Fragment() {
         val poopViewViewModel =
             ViewModelProvider(this).get(PoopViewViewModel::class.java)
 
+        val bowelLogViewModel =
+            ViewModelProvider(this).get(BowelLogViewModel::class.java)
+
+        val poopId = arguments?.getString("poopId") ?: throw IllegalStateException("PoopId must be passed to PoopViewFragment")
+
         _binding = FragmentPoopViewBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
         binding.pvContents.apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
-                PoopViewContents()
+                PoopViewContents(poopId, bowelLogViewModel)
             }
         }
         return root
@@ -74,7 +81,10 @@ class PoopViewFragment : Fragment() {
 }
 
 @Composable
-fun PoopViewContents() {
+fun PoopViewContents(
+    poopId: String,
+    bowelLogViewModel: BowelLogViewModel
+) {
     val context = LocalContext.current
     val navController = remember {
         val activity = context.findActivity() // Extension function to find activity from context
@@ -176,8 +186,12 @@ fun PoopViewContents() {
         Box(
             modifier = Modifier
                 .border(width = 2.dp, color = Color.Red, shape = RoundedCornerShape(10.dp))
-                .padding(16.dp) // Padding around the text inside the box
+                .padding(16.dp)
                 .clickable {
+                    Log.d("PoopView", "deleting poop with id $poopId")
+                    bowelLogViewModel.deleteBowelLog(
+                        poopId
+                    )
                     navController.navigate(R.id.navigation_calendar)
                 },
             contentAlignment = Alignment.Center
@@ -185,7 +199,7 @@ fun PoopViewContents() {
             Text(
                 text = "Delete entry",
                 textAlign = TextAlign.Center,
-                color = Color.Red // Set text color that contrasts well with your background
+                color = Color.Red
             )
         }
 
