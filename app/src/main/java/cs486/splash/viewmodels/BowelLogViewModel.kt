@@ -10,10 +10,14 @@ import com.google.firebase.firestore.QuerySnapshot
 import cs486.splash.models.BowelLog
 import cs486.splash.models.BowelLog.Companion.toBowelLog
 import cs486.splash.models.BowelLogRepository
+import cs486.splash.shared.AnalysisData
 import cs486.splash.shared.Colour
 import cs486.splash.shared.FactorTags
 import cs486.splash.shared.SymptomTags
 import cs486.splash.shared.Texture
+import cs486.splash.shared.getPastMonthBeginDate
+import cs486.splash.shared.getPastWeekBeginDate
+import cs486.splash.shared.getPastYearBeginDate
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.ZoneId
@@ -27,6 +31,10 @@ class BowelLogViewModel : ViewModel() {
     val TAG = "BOWEL_LOG_VIEW_MODEL"
     var bowelLogs : MutableLiveData<List<BowelLog>> = MutableLiveData()
     var bowelLogsByDate : Map<String, List<BowelLog>> = mapOf<String, MutableList<BowelLog>>()
+
+    private var weekAnalysisData : AnalysisData = AnalysisData()
+    private var monthAnalysisData : AnalysisData = AnalysisData()
+    private var yearAnalysisData : AnalysisData = AnalysisData()
 
     private val bowelLogRepository: BowelLogRepository = BowelLogRepository()
 
@@ -69,6 +77,9 @@ class BowelLogViewModel : ViewModel() {
         val bowelLog = BowelLog("", color, texture, timeStarted, timeEnded, location,
             symptomTags, factorTags, currentDate, currentDate)
         bowelLogRepository.addNewBowelLog(bowelLog)
+
+        // Update the analysis data when a new log is added
+        updateAnalysisData()
     }
 
     /**
@@ -91,6 +102,9 @@ class BowelLogViewModel : ViewModel() {
                 bowelLogRepository.editBowelLog(bowelLog)
             }
         }
+
+        // Update the analysis data when a new log is updated
+        updateAnalysisData()
     }
 
     /**
@@ -106,10 +120,26 @@ class BowelLogViewModel : ViewModel() {
     }
 
     /**
+     * Returns the list of bowel logs starting from [startDate]
+     */
+    fun getBowelLogsFromDate(startDate: Date) : List<BowelLog> {
+        val logs : MutableList<BowelLog> = mutableListOf()
+        for (bowelLog in bowelLogs.value!!) {
+            if (bowelLog.timeStarted.after(startDate)) {
+                logs += bowelLog
+            }
+        }
+        return logs.toList()
+    }
+
+    /**
      * Deletes the bowel log with id [bowelLogId]
      */
     fun deleteBowelLog(bowelLogId: String) {
         bowelLogRepository.deleteBowelLog(bowelLogId)
+
+        // Update the analysis data when a log is deleted
+        updateAnalysisData()
     }
 
     /**
@@ -144,5 +174,65 @@ class BowelLogViewModel : ViewModel() {
         return getBowelLogsOnDate(Date.from(date.atStartOfDay(ZoneId.systemDefault()).toInstant()))?.sortedBy {it.timeStarted}
     }
 
+    /**
+     * Update the analysis data for the past week until [d]
+     */
+    private fun updateAnalysisDataWeek(d : Date) {
+        val beginDate = getPastWeekBeginDate(d)
+        val logs = getBowelLogsFromDate(beginDate)
+        weekAnalysisData.update(beginDate, d, logs)
+    }
 
+    /**
+     * Update the analysis data for the past calendar month until [d]
+     */
+    private fun updateAnalysisDataMonth(d : Date) {
+        val beginDate = getPastMonthBeginDate(d)
+        val logs = getBowelLogsFromDate(beginDate)
+
+        monthAnalysisData.update(beginDate, d, logs)
+    }
+
+    /**
+     * Update the analysis data for the past calendar year until [d]
+     */
+    private fun updateAnalysisDataYear(d : Date) {
+        val beginDate = getPastYearBeginDate(d)
+        val logs = getBowelLogsFromDate(beginDate)
+
+        yearAnalysisData.update(beginDate, d, logs)
+    }
+
+    /**
+     * Recompute all analysis data for the past week, month and year
+     */
+    private fun updateAnalysisData() {
+        // Get the current date one time for all time ranges
+        val currDate = Date()
+
+        updateAnalysisDataWeek(currDate)
+        updateAnalysisDataMonth(currDate)
+        updateAnalysisDataYear(currDate)
+    }
+
+    /**
+     * Returns the analysis data from the past week
+     */
+    fun getAnalysisDataWeek() : AnalysisData {
+        return weekAnalysisData
+    }
+
+    /**
+     * Returns the analysis data from the past calendar month
+     */
+    fun getAnalysisDataMonth() : AnalysisData {
+        return monthAnalysisData
+    }
+
+    /**
+     * Returns the analysis data from the past calendar year
+     */
+    fun getAnalysisDataYear() : AnalysisData {
+        return yearAnalysisData
+    }
 }
