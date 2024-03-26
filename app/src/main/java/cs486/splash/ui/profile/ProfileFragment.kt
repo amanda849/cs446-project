@@ -10,7 +10,7 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import cs486.splash.R
-import cs486.splash.SignInActivity
+import cs486.splash.OnboardingActivity
 import cs486.splash.databinding.FragmentProfileBinding
 import cs486.splash.models.UserRepository
 
@@ -46,7 +46,7 @@ class ProfileFragment : Fragment() {
         button.setOnClickListener {
             UserRepository.userSignOut()
 
-            val intent = Intent(requireContext(), SignInActivity::class.java)
+            val intent = Intent(requireContext(), OnboardingActivity::class.java)
             startActivity(intent)
         }
     }

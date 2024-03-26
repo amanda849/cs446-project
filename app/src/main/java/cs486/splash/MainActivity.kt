@@ -1,5 +1,6 @@
 package cs486.splash
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
@@ -8,6 +9,7 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import cs486.splash.databinding.ActivityMainBinding
+import cs486.splash.models.UserRepository
 
 class MainActivity : AppCompatActivity() {
 
@@ -15,6 +17,11 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        if (UserRepository.getUser() == null){
+            val intent = Intent(this, OnboardingActivity::class.java)
+            startActivity(intent)
+        }
 
         supportActionBar?.hide() // hides the top status bar thing
 
