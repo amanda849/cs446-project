@@ -49,3 +49,4 @@ Date | Amanda | Cindy | Katherine | Reyna | Joanne | Anthony | Task
 03/23/2024 | | 3 | |  | | | Added User Profile get and set feature to user Repo & researched on some persistent issues 
 03/24/2024 | | 2 | |  | | | Content repo and content view model 
 03/25/2024 | | 6 | |  | | | Basic onboarding flow and auth view model 
+03/26/2024 | 3 | | |  | | | Revising analysis view and linking analysis model (WIP)
