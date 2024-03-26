@@ -43,10 +43,11 @@ Date | Amanda | Cindy | Katherine | Reyna | Joanne | Anthony | Task
 03/17/2024 | 1 | 1 | 1 | 1 | 1 | 1 | D4 + D5 initial meeting
 03/19/2024 | 1 | | |  |  |  | D4 Implicit Invocation example
 03/19/2024 | | 2 | |  |  |  | D4 Pipe and Filter example
-03/20/2024 |  | | 1.5 |  |  |  | built analysis page
+03/20/2024 |  | | 1.5 |  |  |  | D4 client server example
 03/22/2024 | 0.5 | 0.5 | 0.5 | 0.5 | 0.5 | 0.5 | Going over and editing D4 as a team, general project meeting
 03/22/2024 | | | | 2 | | | Hooking up calendar dates to display logs + refactoring Add screen to use time pickers
 03/23/2024 | | 3 | |  | | | Added User Profile get and set feature to user Repo & researched on some persistent issues 
 03/24/2024 | | 2 | |  | | | Content repo and content view model 
 03/25/2024 | | 6 | |  | | | Basic onboarding flow and auth view model 
 03/26/2024 | 5 | | |  | | | Revising analysis view and linking analysis model (WIP)
+03/20/2024 |  | | 2 |  |  |  | worked on deleting logs
