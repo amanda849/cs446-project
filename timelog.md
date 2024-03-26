@@ -35,6 +35,7 @@ Date | Amanda | Cindy | Katherine | Reyna | Joanne | Anthony | Task
 03/03/2024 | | | | 5 | | | Calender view complete + debugging
 03/03/2024 |  | | 5 |  |  |  | Implemented list view and log view and link to calendar page 
 03/03/2024 | 1 | 1 | 1 | 1 | 1 | 1 | Prepare for demo
+03/07/2024 | | | | | 1 | | Prototype document difficulties faced
 03/07/2024 | 1 | | |  |  |  | Prototype document summary of features implemented
 03/07/2024 |  | | 1 |  |  |  | Prototype document summary of features mocked / simulated
 03/07/2024 |  | 1| |  |  |  | Prototype document feedback response
@@ -51,3 +52,4 @@ Date | Amanda | Cindy | Katherine | Reyna | Joanne | Anthony | Task
 03/25/2024 | | 6 | |  | | | Basic onboarding flow and auth view model 
 03/26/2024 | 5 | | |  | | | Revising analysis view and linking analysis model (WIP)
 03/20/2024 |  | | 2 |  |  |  | worked on deleting logs
+03/26/2024 | | | | | 2.5 | | D5 Strategy design pattern example
