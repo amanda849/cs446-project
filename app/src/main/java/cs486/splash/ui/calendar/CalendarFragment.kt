@@ -85,8 +85,7 @@ class CalendarFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val bowelLogViewModel =
-            ViewModelProvider(this).get(BowelLogViewModel::class.java)
+        val bowelLogViewModel = ViewModelProvider(requireActivity()).get(BowelLogViewModel::class.java)
 
         _binding = FragmentCalendarBinding.inflate(inflater, container, false)
         val root: View = binding.root
@@ -245,7 +244,7 @@ private fun ListView (
                             ) // Rounded corners
                             .padding(16.dp) // Padding around the text inside the box
                             .clickable {
-                                val poopId = logs[i].id // The ID you want to pass
+                                val poopId = logs[i].id
                                 val bundle = Bundle().apply {
                                     putString("poopId", poopId)
                                 }

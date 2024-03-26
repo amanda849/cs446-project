@@ -29,7 +29,7 @@ import java.util.Locale
  */
 class BowelLogViewModel : ViewModel() {
     val TAG = "BOWEL_LOG_VIEW_MODEL"
-    var bowelLogs : MutableLiveData<List<BowelLog>> = MutableLiveData()
+    var bowelLogs: MutableLiveData<List<BowelLog>> = MutableLiveData(emptyList())
     var bowelLogsByDate : Map<String, List<BowelLog>> = mapOf<String, MutableList<BowelLog>>()
 
     private var weekAnalysisData : AnalysisData = AnalysisData()
@@ -52,6 +52,7 @@ class BowelLogViewModel : ViewModel() {
             .addSnapshotListener(EventListener<QuerySnapshot> addSnapshotListener@{ value, e ->
             if (e != null) {
                 Log.w(TAG, "Listen failed.", e)
+                bowelLogs.value = emptyList()
                 return@addSnapshotListener
 
             }
