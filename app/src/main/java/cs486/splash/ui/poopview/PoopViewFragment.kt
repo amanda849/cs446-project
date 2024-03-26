@@ -12,6 +12,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -34,12 +36,17 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import cs486.splash.R
 import cs486.splash.databinding.FragmentPoopViewBinding
+import cs486.splash.models.BowelLog
+import cs486.splash.ui.add.texturesDef
 import cs486.splash.ui.calendar.findActivity
 import cs486.splash.viewmodels.BowelLogViewModel
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 class PoopViewFragment : Fragment() {
 
@@ -57,20 +64,23 @@ class PoopViewFragment : Fragment() {
         val poopViewViewModel =
             ViewModelProvider(this).get(PoopViewViewModel::class.java)
 
-        val bowelLogViewModel =
-            ViewModelProvider(this).get(BowelLogViewModel::class.java)
+        val bowelLogViewModel = ViewModelProvider(requireActivity()).get(BowelLogViewModel::class.java)
 
         val poopId = arguments?.getString("poopId") ?: throw IllegalStateException("PoopId must be passed to PoopViewFragment")
 
         _binding = FragmentPoopViewBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        binding.pvContents.apply {
-            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
-            setContent {
-                PoopViewContents(poopId, bowelLogViewModel)
+        val updateLogsObserver = Observer<List<BowelLog>> { listOfLogs ->
+            binding.pvContents.apply {
+                setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+                setContent {
+                    PoopViewContents(poopId, bowelLogViewModel)
+                }
             }
         }
+
+        bowelLogViewModel.bowelLogs.observe(viewLifecycleOwner, updateLogsObserver)
         return root
     }
 
@@ -80,6 +90,7 @@ class PoopViewFragment : Fragment() {
     }
 }
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun PoopViewContents(
     poopId: String,
@@ -90,6 +101,9 @@ fun PoopViewContents(
         val activity = context.findActivity() // Extension function to find activity from context
         Navigation.findNavController(activity, R.id.nav_host_fragment_activity_main)
     }
+
+    val poop = bowelLogViewModel.getBowelLog(poopId)
+        ?: throw IllegalStateException("poopId ${poopId} not valid")
 
     Box(
         Modifier
@@ -109,8 +123,9 @@ fun PoopViewContents(
                 .padding(16.dp), // Padding around the text inside the box
             contentAlignment = Alignment.Center
         ) {
+            val sdf = SimpleDateFormat("hh:mm a", Locale.CANADA)
             Text(
-                text = "Poop #1",
+                text = "Log at ${sdf.format(poop.timeStarted ?: "Log")}",
                 textAlign = TextAlign.Center,
                 color = Color.White // Set text color that contrasts well with your background
             )
@@ -120,14 +135,15 @@ fun PoopViewContents(
 
         Row {
             Text("Time: ", style = TextStyle(fontWeight = FontWeight.Bold))
-            Text("9:26 AM - 9:38 AM")
+            val sdf = SimpleDateFormat("hh:mm a", Locale.CANADA)
+            Text("${sdf.format(poop.timeStarted)} - ${sdf.format(poop.timeEnded)}")
         }
 
         Spacer(modifier = Modifier.height(20.dp))
 
         Row {
             Text("Location: ", style = TextStyle(fontWeight = FontWeight.Bold))
-            Text("Home")
+            Text("${poop.location}")
         }
 
         Spacer(modifier = Modifier.height(20.dp))
@@ -141,47 +157,120 @@ fun PoopViewContents(
         Row (modifier = Modifier.align(Alignment.CenterHorizontally)){
             Column {
                 Image(
-                    painter = painterResource(id = R.drawable.poops_solid),
+                    painter = painterResource(id = texturesDef[poop.texture.toString()] ?: R.drawable.poops_solid),
                     contentDescription = null
                 )
                 Spacer(modifier = Modifier.height(20.dp))
-                Text("Solid")
+                Text("${poop.texture}")
             }
         }
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        Row {
-            Text("Symptoms: ", style = TextStyle(fontWeight = FontWeight.Bold),
-                    modifier = Modifier.align(Alignment.CenterVertically))
+        val symptomsMap = poop.symptoms.toString().split(", ")
+            .map {
+                it.split(": ").let { pair ->
+                    pair[0] to pair[1].toBoolean()
+                }
+            }.toMap()
+
+        val trueSymptoms = symptomsMap.filter { it.value }.keys.toList()
+
+        if (trueSymptoms.isNotEmpty()) {
+
+            Row {
+                Text(
+                    "Symptoms: ", style = TextStyle(fontWeight = FontWeight.Bold),
+                    modifier = Modifier.align(Alignment.CenterVertically)
+                )
+            }
+
+            Spacer(modifier = Modifier.height(20.dp))
+
+            FlowRow (
+                horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.Start),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
+                for (symptom in trueSymptoms) {
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.Start),
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier
+                            .border(
+                                width = 1.dp,
+                                color = Color(0xFFEDE0D4),
+                                shape = RoundedCornerShape(size = 16.dp)
+                            )
+                            .background(
+                                color = Color(0xFFEDE0D4),
+                                shape = RoundedCornerShape(size = 8.dp)
+                            )
+                            .padding(start = 8.dp, top = 8.dp, end = 8.dp, bottom = 8.dp)
+
+                    ) {
+                        Image(
+                            painter = painterResource(id = R.drawable.ic_baseline_check_circle_24),
+                            contentDescription = null
+                        )
+                        Text(text = "${symptom}")
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(20.dp))
+        }
+
+        val factorsMap = poop.factors.toString().split(", ")
+            .map {
+                it.split(": ").let { pair ->
+                    pair[0] to pair[1].toBoolean()
+                }
+            }.toMap()
+
+        val trueFactors = factorsMap.filter { it.value }.keys.toList()
+
+        if (trueFactors.isNotEmpty()) {
+            Row {
+                Text(
+                    "Factors: ", style = TextStyle(fontWeight = FontWeight.Bold),
+                    modifier = Modifier.align(Alignment.CenterVertically)
+                )
+            }
+
+            Spacer(modifier = Modifier.height(20.dp))
+
+            FlowRow (
+                horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.Start),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
+                for (factor in trueFactors) {
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.Start),
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier
+                            .border(
+                                width = 1.dp,
+                                color = Color(0xFFEDE0D4),
+                                shape = RoundedCornerShape(size = 16.dp)
+                            )
+                            .background(
+                                color = Color(0xFFEDE0D4),
+                                shape = RoundedCornerShape(size = 8.dp)
+                            )
+                            .padding(start = 8.dp, top = 8.dp, end = 8.dp, bottom = 8.dp)
+
+                    ) {
+                        Image(
+                            painter = painterResource(id = R.drawable.ic_baseline_check_circle_24),
+                            contentDescription = null
+                        )
+                        Text(text = "${factor}")
+                    }
+                }
+            }
         }
 
         Spacer(modifier = Modifier.height(20.dp))
-
-        Row (
-            horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.Start),
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .border(
-                    width = 1.dp,
-                    color = Color(0xFFEDE0D4),
-                    shape = RoundedCornerShape(size = 16.dp)
-                )
-                .background(
-                    color = Color(0xFFEDE0D4),
-                    shape = RoundedCornerShape(size = 8.dp)
-                )
-                .padding(start = 8.dp, top = 8.dp, end = 8.dp, bottom = 8.dp)
-
-        ) {
-            Image(
-                painter = painterResource(id = R.drawable.ic_baseline_check_circle_24),
-                contentDescription = null
-            )
-            Text (text = "Bloating")
-        }
-
-        Spacer(modifier = Modifier.height(200.dp))
 
         Box(
             modifier = Modifier
