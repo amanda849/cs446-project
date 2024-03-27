@@ -94,6 +94,8 @@ class AnalysisFragment : Fragment() {
         // Default displays on initial load
         genTextureDisplay(binding)
         genColourDisplay(binding)
+        genSymptomsDisplay(binding)
+        genFactorsDisplay(binding)
 
         return root
     }
