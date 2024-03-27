@@ -88,4 +88,10 @@ dependencies {
 
     // Calendar library provided by Kizitonwose under the MIT License
     implementation("com.kizitonwose.calendar:compose:2.5.0")
+
+    // Image loading library provided by Coil Contributors under the Apache License
+    implementation("io.coil-kt:coil-compose:2.6.0")
+
+    // markdown displayer library provided by Jeziellago under the MIT License
+    implementation("com.github.jeziellago:compose-markdown:0.4.1")
 }
