@@ -1,6 +1,7 @@
 package cs486.splash.ui.analysis
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,6 +14,9 @@ import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredSize
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -27,7 +31,11 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.tabs.TabLayout
 import cs486.splash.databinding.FragmentAnalysisBinding
+import cs486.splash.shared.AnalysisData
+import cs486.splash.shared.Colour
+import cs486.splash.shared.Texture
 import cs486.splash.ui.add.texturesDef
+import cs486.splash.viewmodels.BowelLogViewModel
 
 
 class AnalysisFragment : Fragment() {
@@ -42,13 +50,18 @@ class AnalysisFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         val analysisViewModel =
-            ViewModelProvider(this).get(AnalysisViewModel::class.java)
+            ViewModelProvider(this).get(BowelLogViewModel::class.java)
 
         _binding = FragmentAnalysisBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
         val tabLayout = binding.tabLayout
-        val poopAvg = binding.poopAvg
+
+        val analysisDataWeek = analysisViewModel.getAnalysisDataWeek()
+        val analysisDataMonth = analysisViewModel.getAnalysisDataMonth()
+        val analysisDataYear = analysisViewModel.getAnalysisDataYear()
+
+        Log.d("Analysis", "Loaded analysis data " + analysisDataWeek.hasSufficientData().toString())
 
         tabLayout.apply {
             addTab(tabLayout.newTab().setText("Last Week"))
@@ -60,9 +73,9 @@ class AnalysisFragment : Fragment() {
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 // Change TextView content based on selected tab
                 when (tab?.position) {
-                    0 -> poopAvg.text = "1.0"
-                    1 -> poopAvg.text = "2.0"
-                    2 -> poopAvg.text = "3.0"
+                    0 -> updateAnalysisDisplay(binding, analysisDataWeek)
+                    1 -> updateAnalysisDisplay(binding, analysisDataMonth)
+                    2 -> updateAnalysisDisplay(binding, analysisDataYear)
                 }
                 // Update other TextViews similarly
             }
@@ -76,26 +89,9 @@ class AnalysisFragment : Fragment() {
             }
         })
 
-        binding.textureDisplay.apply {
-            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
-            setContent {
-                TextureDisplay()
-            }
-        }
-
-        binding.averageColour.apply {
-            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
-            setContent {
-                RoundedRectangle(Color(0xFF9C6644), "Cape Palliser")
-            }
-        }
-
-        binding.unusualColour.apply {
-            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
-            setContent {
-                RoundedRectangle(Color(0xFF9C5444), "Costa Del Sol")
-            }
-        }
+        // Default displays on initial load
+        genTextureDisplay(binding)
+        genColourDisplay(binding)
 
         return root
     }
@@ -126,38 +122,99 @@ fun RoundedRectangle(
     }
 }
 
+fun genTextureDisplay(
+    binding: FragmentAnalysisBinding,
+    textureValues: Map<Texture, Pair<Int, String>> = mapOf(
+        Texture.SOLID to Pair(0, "0"),
+        Texture.SOFT to Pair(0, "0"),
+        Texture.PEBBLES to Pair(0, "0")
+    )
+) {
+    binding.textureDisplay.apply {
+        setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+        setContent {
+            TextureDisplay(textureValues = textureValues)
+        }
+    }
+}
+
+fun genColourDisplay(
+    binding: FragmentAnalysisBinding,
+    mostCommonColours: List<Colour> = listOf()
+) {
+    binding.mostCommonColours.apply {
+        setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+        setContent {
+            ColourDisplay(mostCommonColours)
+        }
+    }
+}
+
+fun updateAnalysisDisplay(binding: FragmentAnalysisBinding, data: AnalysisData) {
+    binding.poopTotal.text = data.getTimesTotal()
+    binding.poopAvg.text = data.getAverageTimesPerDay()
+    genTextureDisplay(binding, data.getPercentageTextures())
+    genColourDisplay(binding, data.getMostCommonColours())
+    binding.unusualColourNum.text = data.getNumUnusualColours()
+    binding.averageDuration.text = data.getAverageDuration()
+    binding.mostLoggedHours.text = data.getMostLogsHours()
+    binding.poopLocationNum.text = data.getNumLocations()
+}
+
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun TextureDisplay(
-    textures: Map<String, Int> = texturesDef,
-    blobCount: List<Int> = listOf(5, 3, 1),
-    percentageCount: List<Int> = listOf(55, 35, 10)
+    textures: Map<Texture, Int> = texturesDef,
+    textureValues: Map<Texture, Pair<Int, String>>
 ) {
     var index = 0;
     FlowRow(
-        modifier = Modifier.padding(8.dp),
-        horizontalArrangement = Arrangement.spacedBy(16.dp),
+        modifier = Modifier.padding(6.dp),
+        horizontalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         Column {
             for (entry in textures) {
                 Row(
+                    modifier = Modifier.padding(top = 8.dp),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.End
                 ) {
-                    for (i in 0 until blobCount[index]) {
+                    for (i in 0 until textureValues[entry.key]!!.first) {
                         Column {
                             Image(
                                 painter = painterResource(id = entry.value),
-                                contentDescription = null
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .requiredSize(32.dp)
+                                    .padding(end = 3.dp)
                             )
                         }
                     }
-                    Column {
-                        Text(percentageCount[index].toString() + "%")
+                    Column(modifier = Modifier.padding(start = 2.dp)) {
+                        Text(textureValues[entry.key]!!.second)
                     }
                 }
                 index++
             }
+        }
+    }
+}
+
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+fun ColourDisplay(
+    mostCommonColours: List<Colour> = listOf()
+) {
+    FlowRow(
+        modifier = Modifier.padding(8.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
+        for (i in mostCommonColours.indices) {
+            Box(
+                modifier = Modifier
+                    .size(32.dp)
+                    .background(Color(mostCommonColours[i].toColorLong()), CircleShape)
+            )
         }
     }
 }

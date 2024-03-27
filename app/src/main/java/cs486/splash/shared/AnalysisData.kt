@@ -2,37 +2,52 @@ package cs486.splash.shared
 
 import cs486.splash.models.BowelLog
 import java.util.Date
+import kotlin.math.round
 
 /**
  * A class containing all analysis data
  *
  * @property rangeStartDate Date            the starting timestamp of the analysis
  * @property rangeEndDate Date              the ending timestamp of the analysis
+ * @property totalTimes Int                 the total number of entries in the time range
  * @property averageTimesPerDay Float       the average number of logs per day in the time range
  * @property mostCommonColours List         the most common colours of logs in the time range
  * @property numUnusualColours Int          the number of logs with unusual colours in the time range
  * @property percentageTextures Map         the percentage of logs with each texture in the time range
  * @property numLocations Int               the number of locations of logs in the time range
- * @property averageDuration Int            the average number of seconds per log in the time range
+ * @property averageDuration Float          the average number of minutes per log in the time range
  * @property mostLogsHours List             the hours with the most logs in the time range
  * @property percentageSymptoms Map         the percentage of logs with each symptom in the time range
  * @property percentageFactors Map          the percentage of log with each factor in the time range
+ *
+ * @property sufficientData Boolean         whether there is at least one log to perform analysis on
  */
 class AnalysisData {
     // time range
     private var rangeStartDate : Date = Date()
     private var rangeEndDate : Date = Date()
+    private var numDays : Int = 0
 
     // analysis attributes
+    private var totalTimes : Int = 0
     private var averageTimesPerDay : Float = 0F
     private var mostCommonColours : List<Colour> = listOf()
     private var numUnusualColours : Int = 0
     private var percentageTextures : Map<Texture, Float> = mapOf()
     private var numLocations : Int = 0
-    private var averageDuration : Int = 0
+    private var averageDuration : Float = 0F
     private var mostLogsHours : List<Int> = listOf()
     private var percentageSymptoms : Map<String, Float> = mapOf()
     private var percentageFactors : Map<String, Float> = mapOf()
+
+    private var sufficientData : Boolean = false
+
+    /**
+     * Returns true if there is sufficient data
+     */
+    fun hasSufficientData() : Boolean {
+        return sufficientData
+    }
 
     /**
      * Returns start date of the time range for which analysis is being computed for
@@ -49,10 +64,17 @@ class AnalysisData {
     }
 
     /**
-     * Returns the average number of logs per day
+     * Returns the total number of logs as a string
      */
-    fun getAverageTimesPerDay() : Float {
-        return averageTimesPerDay
+    fun getTimesTotal() : String {
+        return totalTimes.toString()
+    }
+
+    /**
+     * Returns the average number of logs per day as a string
+     */
+    fun getAverageTimesPerDay() : String {
+        return "%.2f".format(averageTimesPerDay)
     }
 
     /**
@@ -63,38 +85,44 @@ class AnalysisData {
     }
 
     /**
-     * Returns the number of logs with unusual colours
+     * Returns the number of logs with unusual colours as a string
      */
-    fun getNumUnusualColours() : Int {
-        return numUnusualColours
+    fun getNumUnusualColours() : String {
+        return numUnusualColours.toString()
     }
 
     /**
-     * Returns the percentages of logs with each texture
+     * Returns the number of blobs and the percentages of logs with each texture
      */
-    fun getPercentageTextures() : Map<Texture, Float> {
-        return percentageTextures
+    fun getPercentageTextures() : Map<Texture, Pair<Int, String>> {
+        return percentageTextures.mapValues {
+            Pair((round(it.value / 10)).toInt(), "%.2f".format(it.value) + "%")
+        }
     }
 
     /**
-     * Returns the number of locations
+     * Returns the number of locations as a string
      */
-    fun getNumLocations() : Int {
-        return numLocations
+    fun getNumLocations() : String {
+        return numLocations.toString()
     }
 
     /**
-     * Returns the average duration
+     * Returns the average duration in minutes as a string
      */
-    fun getAverageDuration() : Int {
-        return averageDuration
+    fun getAverageDuration() : String {
+        return "%.2f".format(averageDuration)
     }
 
     /**
-     * Returns a list of hours per day (0-23) with the most logs
+     * Returns a comma delimited list of hours per day (0-23)
+     * with the most logs as a string
+     *
+     * If 3 hours exceeded, returns "several hours of day"
      */
-    fun getMostLogsHours() : List<Int> {
-        return mostLogsHours
+    fun getMostLogsHours() : String {
+        if (mostLogsHours.size > 3) return "several hours of day"
+        return mostLogsHours.joinToString { it -> formatHour(it) }
     }
 
     /**
@@ -116,6 +144,8 @@ class AnalysisData {
      * within the range [startDate] to [endDate]
      */
     fun update(startDate : Date, endDate : Date, logs : List<BowelLog>) {
+        if (logs.isEmpty()) return
+
         // Accumulators
         val timesPerDay : MutableList<Int> = mutableListOf(0)
         val colourCount : MutableMap<Colour, Int> = mutableMapOf(
@@ -132,7 +162,7 @@ class AnalysisData {
             Texture.PEBBLES to 0F
         )
         val locations : MutableSet<String> = mutableSetOf()
-        val durations : MutableList<Int> = mutableListOf()
+        val durations : MutableList<Float> = mutableListOf()
         val hourCount : MutableList<Int> = MutableList(24) {0}
         val symptomsCount : MutableMap<String, Float> = mutableMapOf(
             "bloating" to 0F,
@@ -157,6 +187,7 @@ class AnalysisData {
             // averageTimesPerDay
             if (getDayMidnight(log.timeStarted) != currDay) {
                 timesPerDayIndex++
+                timesPerDay.add(0)
                 currDay = getDayMidnight(log.timeStarted)
             }
             timesPerDay[timesPerDayIndex]++
@@ -171,11 +202,11 @@ class AnalysisData {
             textureCount[log.texture] = textureCount[log.texture]!! + 1
 
             // numLocations
-            locations.add(log.location)
+            locations.add(log.location.lowercase())
 
             // averageDuration
             val duration = log.timeEnded.time - log.timeStarted.time
-            durations.add(duration.toInt())
+            durations.add(duration.toFloat())
 
             // mostLogsHours
             val hour = getHour(log.timeStarted)
@@ -197,10 +228,12 @@ class AnalysisData {
         }
 
         rangeStartDate = startDate
-
         rangeEndDate = endDate
+        numDays = getNumDays(startDate, endDate)
 
-        averageTimesPerDay = timesPerDay.sum().toFloat() / numLogs
+        totalTimes = logs.size
+
+        averageTimesPerDay = timesPerDay.sum().toFloat() / numDays
 
         val maxColourCount = colourCount.maxOf{ it.value }
         mostCommonColours = colourCount.filter{ it.value == maxColourCount }.map{ it.key }
@@ -209,7 +242,7 @@ class AnalysisData {
 
         numLocations = locations.count()
 
-        averageDuration = (durations.sum().toFloat() / numLogs).toInt()
+        averageDuration = ((durations.sum() / numLogs) / 60000)
 
         val maxHourCount = hourCount.max()
         mostLogsHours = hourCount.withIndex().filter{ it.value == maxHourCount }.map{ it.index }
@@ -217,5 +250,7 @@ class AnalysisData {
         percentageSymptoms = symptomsCount.mapValues { (it.value / numLogs) * 100 }.toMap()
 
         percentageFactors = factorsCount.mapValues { (it.value / numLogs) * 100 }.toMap()
+
+        sufficientData = true
     }
 }

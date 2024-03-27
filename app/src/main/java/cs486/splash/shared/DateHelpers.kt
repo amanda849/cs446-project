@@ -41,3 +41,15 @@ fun getPastYearBeginDate(endDate : Date) : Date {
 
     return cal.time
 }
+
+fun getNumDays(startDate : Date, endDate: Date) : Int {
+    val diff: Long = endDate.time - startDate.time
+    val diffDays = diff / (24 * 60 * 60 * 1000) + 1
+    return diffDays.toInt()
+}
+
+fun formatHour(hourIndex : Int) : String {
+    var res = if (hourIndex == 0 || hourIndex == 12) "12:00" else (hourIndex % 12).toString() + ":00"
+    res += if (hourIndex < 12) "am" else "pm"
+    return res
+}
