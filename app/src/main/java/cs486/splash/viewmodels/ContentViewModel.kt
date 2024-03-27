@@ -1,7 +1,9 @@
 package cs486.splash.viewmodels
 
 import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.EventListener
 import com.google.firebase.firestore.QuerySnapshot
@@ -9,7 +11,7 @@ import cs486.splash.models.Content
 import cs486.splash.models.Content.Companion.toContent
 import cs486.splash.models.ContentRepository
 
-class ContentViewModel {
+class ContentViewModel : ViewModel() {
     val TAG = "CONTENT_VIEW_MODEL"
     var contents : MutableLiveData<List<Content>> = MutableLiveData()
 
@@ -39,5 +41,9 @@ class ContentViewModel {
                 }
                 contents.value = contentList
             })
+    }
+
+    fun getContentsList() : LiveData<List<Content>> {
+        return contents
     }
 }
