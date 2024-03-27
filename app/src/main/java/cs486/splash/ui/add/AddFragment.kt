@@ -201,8 +201,6 @@ class AddFragment : Fragment() {
             // show it
             alertDialog.show()
         }
-
-
         return root
     }
 
