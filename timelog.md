@@ -55,6 +55,6 @@ Date | Amanda | Cindy | Katherine | Reyna | Joanne | Anthony | Task
 03/26/2024 |  | | 2 |  |  |  | worked on deleting logs
 03/26/2024 | | | | | 2.5 | | D5 Strategy design pattern example
 03/26/2024 |  | | 3 |  |  |  | implement log view to use actual data and not hard coded
-03/26/2024 | | | | |  | 2.5| D5 Decorator design pattern example
+03/26/2024 | | | | |  | 2.5 | D5 Decorator design pattern example
 03/26/2024 | | | | 3 | | | Bug correction for date/time pickers and re-formatting
-
+03/26/2024 | | | | |  | 2.5 | Starting UI for Contents page
