@@ -266,16 +266,16 @@ fun ColourPicker(
     }
 }
 
-val texturesDef: Map<String, Int> = mapOf(
-    "Solid" to R.drawable.poops_solid,
-    "Soft" to R.drawable.poops_soft,
-    "Pebbles" to R.drawable.poops_pebbles
+val texturesDef: Map<Texture, Int> = mapOf(
+    Texture.SOLID to R.drawable.poops_solid,
+    Texture.SOFT to R.drawable.poops_soft,
+    Texture.PEBBLES to R.drawable.poops_pebbles
 )
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun TexturePicker(
-    textures: Map<String, Int> = texturesDef,
+    textures: Map<Texture, Int> = texturesDef,
     onClick: (String) -> Unit
 ) {
     var texture by remember { mutableStateOf("Solid") }
@@ -294,13 +294,13 @@ fun TexturePicker(
                         shape = RoundedCornerShape(size = 8.dp)
                     )
                     .background(
-                        color = if (texture == entry.key) Color(0xFFEDE0D4) else Color(0x00EDE0D4),
+                        color = if (texture == entry.key.toString()) Color(0xFFEDE0D4) else Color(0x00EDE0D4),
                         shape = RoundedCornerShape(size = 8.dp)
                     )
                     .padding(8.dp)
                     .clickable {
-                        onClick(entry.key)
-                        texture = entry.key
+                        onClick(entry.key.toString())
+                        texture = entry.key.toString()
                     }
 
             ) {
@@ -308,7 +308,7 @@ fun TexturePicker(
                     painter = painterResource(id = entry.value),
                     contentDescription = null
                 )
-                Text(text = entry.key)
+                Text(text = entry.key.toString())
             }
         }
     }
