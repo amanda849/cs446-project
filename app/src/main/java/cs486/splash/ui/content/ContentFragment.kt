@@ -199,8 +199,8 @@ fun ContentCard(
                 )
                 .padding(12.dp)
         ) {
-            Text(content.title)
-            MarkdownText("by **${content.source}**")
+            MarkdownText("**${content.title}**")
+            MarkdownText("by ${content.source}")
         }
     }
 }
