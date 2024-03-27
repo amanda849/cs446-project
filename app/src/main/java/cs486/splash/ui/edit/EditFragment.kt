@@ -1,4 +1,4 @@
-package cs486.splash.ui.poopview
+package cs486.splash.ui.edit
 
 import android.os.Bundle
 import android.util.Log
@@ -22,9 +22,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -46,17 +46,20 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import cs486.splash.R
-import cs486.splash.databinding.FragmentPoopViewBinding
+import cs486.splash.databinding.FragmentEditBinding
 import cs486.splash.models.BowelLog
+import cs486.splash.shared.Colour
+import cs486.splash.ui.add.ColourPicker
+import cs486.splash.ui.add.TexturePicker
 import cs486.splash.ui.add.texturesDef
 import cs486.splash.ui.calendar.findActivity
 import cs486.splash.viewmodels.BowelLogViewModel
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-class PoopViewFragment : Fragment() {
+class EditFragment : Fragment() {
 
-    private var _binding: FragmentPoopViewBinding? = null
+    private var _binding: FragmentEditBinding? = null
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -67,21 +70,21 @@ class PoopViewFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val poopViewViewModel =
-            ViewModelProvider(this).get(PoopViewViewModel::class.java)
+        val editViewModel =
+            ViewModelProvider(this).get(EditViewModel::class.java)
 
         val bowelLogViewModel = ViewModelProvider(requireActivity()).get(BowelLogViewModel::class.java)
 
-        val poopId = arguments?.getString("poopId") ?: throw IllegalStateException("PoopId must be passed to PoopViewFragment")
+        val poopId = arguments?.getString("poopId") ?: throw IllegalStateException("PoopId must be passed to EditFragment")
 
-        _binding = FragmentPoopViewBinding.inflate(inflater, container, false)
+        _binding = FragmentEditBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
         val updateLogsObserver = Observer<List<BowelLog>> { listOfLogs ->
-            binding.pvContents.apply {
+            binding.edit.apply {
                 setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
                 setContent {
-                    PoopViewContents(poopId, bowelLogViewModel)
+                    EditContents(poopId, bowelLogViewModel)
                 }
             }
         }
@@ -98,7 +101,7 @@ class PoopViewFragment : Fragment() {
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun PoopViewContents(
+fun EditContents(
     poopId: String,
     bowelLogViewModel: BowelLogViewModel
 ) {
@@ -114,7 +117,7 @@ fun PoopViewContents(
     Box(
         Modifier
             .fillMaxWidth()
-            .testTag("PoopViewContents")
+            .testTag("EditContents")
             .background(colorResource(id = R.color.white))
             .padding(10.dp),
     ) {
@@ -131,7 +134,7 @@ fun PoopViewContents(
         ) {
             val sdf = SimpleDateFormat("hh:mm a", Locale.CANADA)
             Text(
-                text = "Log at ${sdf.format(poop.timeStarted ?: "Log")}",
+                text = "Log at EDIT EDIT EDIT ${sdf.format(poop.timeStarted ?: "Log")}",
                 textAlign = TextAlign.Center,
                 color = Color.White // Set text color that contrasts well with your background
             )
@@ -149,19 +152,23 @@ fun PoopViewContents(
                     .border(width = 2.dp, color = Color.Black, shape = RoundedCornerShape(10.dp))
                     .padding(16.dp)
                     .clickable {
-                        navController.navigate(R.id.navigation_calendar)
+                        val poopId = poopId
+                        val bundle = Bundle().apply {
+                            putString("poopId", poopId)
+                        }
+                        navController.navigate(R.id.navigation_poop_view, bundle)
                     },
                 contentAlignment = Alignment.Center
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = "Back",
+                        imageVector = Icons.Filled.Clear,
+                        contentDescription = "Cancel",
                         tint = Color.Black
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = "Back",
+                        text = "Cancel",
                         textAlign = TextAlign.Center,
                         color = Color.Black
                     )
@@ -173,23 +180,19 @@ fun PoopViewContents(
                     .border(width = 2.dp, color = Color.Black, shape = RoundedCornerShape(10.dp))
                     .padding(16.dp)
                     .clickable {
-                        val poopId = poopId
-                        val bundle = Bundle().apply {
-                            putString("poopId", poopId)
-                        }
-                        navController.navigate(R.id.navigation_edit, bundle)
+                        navController.navigate(R.id.navigation_calendar)
                     },
                 contentAlignment = Alignment.Center
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(
-                        imageVector = Icons.Filled.Edit,
-                        contentDescription = "Edit",
+                        imageVector = Icons.Filled.Check,
+                        contentDescription = "Save",
                         tint = Color.Black
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = "Edit",
+                        text = "Save",
                         textAlign = TextAlign.Center,
                         color = Color.Black
                     )
@@ -197,7 +200,19 @@ fun PoopViewContents(
             }
         }
 
+        var colorInt: Int = 0
+        ColourPicker(initial = Colour.entries.indexOfFirst { it == poop.color }, onClick = { it ->
+            colorInt = it
+            Log.d("Edit", "Colour changed to: $it")
+        })
+
         Spacer(modifier = Modifier.height(20.dp))
+
+        var textureStr: String = "Solid"
+        TexturePicker(initial = poop.texture.toString(), onClick = { it ->
+            textureStr = it
+            Log.d("AddLog", "Texture changed to: $it")
+        })
 
         Row {
             Text("Time: ", style = TextStyle(fontWeight = FontWeight.Bold))
@@ -344,7 +359,7 @@ fun PoopViewContents(
                 .padding(16.dp)
                 .fillMaxWidth()
                 .clickable {
-                    Log.d("PoopView", "deleting poop with id $poopId")
+                    Log.d("Edit", "deleting poop with id $poopId")
                     bowelLogViewModel.deleteBowelLog(
                         poopId
                     )
