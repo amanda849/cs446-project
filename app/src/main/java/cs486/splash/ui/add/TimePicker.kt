@@ -32,10 +32,14 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Keyboard
 import androidx.compose.material.icons.outlined.Schedule
 import androidx.compose.material3.Button
+import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
@@ -43,6 +47,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TimeInput
 import androidx.compose.material3.TimePicker
+import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -62,6 +67,7 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.zIndex
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
+import java.time.LocalDate
 import java.util.Calendar
 import java.util.Locale
 
@@ -154,10 +160,12 @@ fun TimePickerSwitchable(
     val displayedTime = remember { mutableStateOf(currTime) }
 
     Box(propagateMinConstraints = false) {
-        Button(
-            modifier = Modifier.align(Alignment.Center),
+        OutlinedButton(
+            modifier = Modifier.align(Alignment.CenterStart),
             onClick = { showTimePicker = true }
-        ) { Text("${formatter.format(displayedTime.value.time)}") }
+        ) {
+            Text("${formatter.format(displayedTime.value.time)}")
+        }
         SnackbarHost(hostState = snackState)
     }
 
@@ -276,5 +284,82 @@ fun TimePickerDialog(
                 }
             }
         }
+    }
+}
+
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun DateTimePickerComponent(
+    currentTime : Calendar,
+    onClick: (Calendar) -> Unit
+) {
+    val datePickerState = rememberDatePickerState(
+        initialSelectedDateMillis = currentTime.timeInMillis,
+        selectableDates = PastOrPresentSelectableDates
+    )
+    var showDatePicker by remember { mutableStateOf(false) }
+    var pickedDate by remember { mutableStateOf(Calendar.getInstance()) }
+    val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+
+    OutlinedButton(
+        onClick = {
+            showDatePicker = true //changing the visibility state
+        },
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(end = 30.dp, start = 30.dp),
+    ) {
+        Text(text = "${sdf.format(pickedDate.time)}")
+
+    }
+
+    // date picker component
+    if (showDatePicker) {
+        DatePickerDialog(
+            onDismissRequest = {},
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        if (datePickerState.selectedDateMillis != null) {
+                            val selectedDate = Calendar.getInstance().apply {
+                                // Add one 1 day cause for some reason date picker is off
+                                timeInMillis = datePickerState.selectedDateMillis!! + 86400000
+                            }
+                            pickedDate = selectedDate
+                            onClick(selectedDate)
+                            showDatePicker = false
+                        }
+                    }
+                ) { Text("OK") }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = {
+                        showDatePicker = false
+                    }
+                ) { Text("Cancel") }
+            }
+        )
+        {
+            DatePicker(state = datePickerState)
+        }
+    }
+}
+
+/*
+ * Solution acquired from:
+ * https://stackoverflow.com/questions/77676317/how-to-disable-future-dates-in-android-compose-material3-datepicker
+ */
+@OptIn(ExperimentalMaterial3Api::class)
+object PastOrPresentSelectableDates: SelectableDates {
+    @ExperimentalMaterial3Api
+    override fun isSelectableDate(utcTimeMillis: Long): Boolean {
+        return utcTimeMillis <= System.currentTimeMillis() - 86400000
+    }
+
+    @ExperimentalMaterial3Api
+    override fun isSelectableYear(year: Int): Boolean {
+        return year <= LocalDate.now().year
     }
 }
