@@ -1,5 +1,7 @@
 package cs486.splash.ui.add
 
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -15,8 +17,6 @@ import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -25,13 +25,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
-import androidx.compose.material3.DatePicker
-import androidx.compose.material3.DatePickerDialog
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateMapOf
@@ -55,7 +50,6 @@ import cs486.splash.shared.FactorTags
 import cs486.splash.shared.SymptomTags
 import cs486.splash.shared.Texture
 import cs486.splash.viewmodels.BowelLogViewModel
-import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 
@@ -71,97 +65,142 @@ class AddFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
         val bowelLogViewModel =
-            ViewModelProvider(this).get(BowelLogViewModel::class.java)
+            ViewModelProvider(this)[BowelLogViewModel::class.java]
 
         _binding = FragmentAddBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        var colorInt: Int = 0
-        binding.colourPicker.apply {
-            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
-            setContent {
-                ColourPicker() {
-                    colorInt = it
-                    Log.d("AddLog", "Colour changed to: $it")
+        try {
+            var colorInt: Int = 0
+            binding.colourPicker.apply {
+                setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+                setContent {
+                    ColourPicker() {
+                        colorInt = it
+                        Log.d("AddLog", "Colour changed to: $it")
+                    }
                 }
             }
-        }
 
-        var textureStr: String = "Solid"
-        binding.texturePicker.apply {
-            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
-            setContent {
-                TexturePicker() {
-                    textureStr = it
-                    Log.d("AddLog", "Texture changed to: $it")
+            var textureStr: String = "Solid"
+            binding.texturePicker.apply {
+                setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+                setContent {
+                    TexturePicker() {
+                        textureStr = it
+                        Log.d("AddLog", "Texture changed to: $it")
+                    }
                 }
             }
-        }
 
-        var symptoms: String = "fatigue: false, urgency: false, bloating: false, nausea: false, other: false, pain: false, cramps: false"
-        binding.symptomPicker.apply {
-            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
-            setContent {
-                SelectTags(symptomsDef) {
-                    symptoms = mapToMapStr(it)
-                    Log.d("AddLog", "Symptoms changed to: $symptoms")
+            var symptoms: String = "fatigue: false, urgency: false, bloating: false, nausea: false, other: false, pain: false, cramps: false"
+            binding.symptomPicker.apply {
+                setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+                setContent {
+                    SelectTags(symptomsDef) {
+                        symptoms = mapToMapStr(it)
+                        Log.d("AddLog", "Symptoms changed to: $symptoms")
+                    }
                 }
             }
-        }
 
-        var factors: String = "fiber: false, other: false, diet: false, water: false, workout: false"
-        binding.factorPicker.apply {
-            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
-            setContent {
-                SelectTags(factorsDef) {
-                    factors = mapToMapStr(it)
-                    Log.d("AddLog", "Factors changed to: $factors")
+            var factors: String = "fiber: false, other: false, diet: false, water: false, workout: false"
+            binding.factorPicker.apply {
+                setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+                setContent {
+                    SelectTags(factorsDef) {
+                        factors = mapToMapStr(it)
+                        Log.d("AddLog", "Factors changed to: $factors")
+                    }
                 }
             }
-        }
 
-        var pickedDate = Calendar.getInstance()
-        binding.datePicker.apply {
-            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
-            setContent { 
-                DateTimePickerComponent(pickedDate){
+            var pickedDate = Calendar.getInstance()
+            binding.datePicker.apply {
+                setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+                setContent {
+                    DateTimePickerComponent(pickedDate){
                         pickedDate = it
                         Log.d("AddLog", "SelectedDate changed to: $it")
+                    }
                 }
             }
-        }
 
-        binding.addButton.setOnClickListener {
-            // date things to pre-format
-            var startTime = Date() // current day
-            var endTime = Date()
-            bowelLogViewModel.addNewBowelLog(
-                Colour.entries[colorInt],
-                Texture.valueOf(textureStr.uppercase()),
-                startTime.apply {
-                    month = pickedDate.time.month
-                    date = pickedDate.time.date
-                    year = pickedDate.time.year
-                    hours = binding.timeStart.text.toString().split(':')[0].toInt()
-                    minutes = binding.timeStart.text.toString().split(':')[1].toInt()
-                },
-                endTime.apply {
-                    month = pickedDate.time.month
-                    date = pickedDate.time.date
-                    year = pickedDate.time.year
-                    hours = binding.timeEnd.text.toString().split(':')[0].toInt()
-                    minutes = binding.timeEnd.text.toString().split(':')[1].toInt()
-                },
-                binding.location.text.toString(),
-                SymptomTags(symptoms),
-                FactorTags(factors)
+            var pickedTimeStart = Calendar.getInstance()
+            var pickedTimeEnd = Calendar.getInstance()
+            binding.timePickerStart.apply {
+                setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+                setContent {
+                    TimePickerSwitchable(pickedTimeStart){
+                        pickedTimeStart = it
+                        Log.d("AddLog", "SelectedDate changed to: $it")
+                    }
+                }
+            }
+
+            binding.timePickerEnd.apply {
+                setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+                setContent {
+                    TimePickerSwitchable(pickedTimeEnd){
+                        pickedTimeEnd = it
+                        Log.d("AddLog", "SelectedDate changed to: $it")
+                    }
+                }
+            }
+
+            binding.addButton.setOnClickListener {
+                // date things to pre-format
+                var startTime = Date() // current day
+                var endTime = Date()
+                bowelLogViewModel.addNewBowelLog(
+                    Colour.entries[colorInt],
+                    Texture.valueOf(textureStr.uppercase()),
+                    startTime.apply {
+                        month = pickedDate.time.month
+                        date = pickedDate.time.date
+                        year = pickedDate.time.year
+                        hours = pickedTimeStart.time.hours
+                        minutes = pickedTimeStart.time.minutes
+                    },
+                    endTime.apply {
+                        month = pickedDate.time.month
+                        date = pickedDate.time.date
+                        year = pickedDate.time.year
+                        hours = pickedTimeEnd.time.hours
+                        minutes = pickedTimeEnd.time.minutes
+                    },
+                    binding.location.text.toString(),
+                    SymptomTags(symptoms),
+                    FactorTags(factors)
+                )
+                Log.d("AddLog", "Added new BowelLog.")
+                findNavController().navigate(R.id.action_navigation_add_to_navigation_calendar)
+            }
+        } catch (exception : Throwable) {
+            val alertDialogBuilder: AlertDialog.Builder = AlertDialog.Builder(
+                context
             )
-            Log.d("AddLog", "Added new BowelLog.")
-            findNavController().navigate(R.id.action_navigation_add_to_navigation_calendar)
-        }
+            // set title
+            alertDialogBuilder.setTitle("Error")
 
+            // set dialog message
+            alertDialogBuilder
+                .setMessage(exception.message)
+                .setCancelable(false)
+                .setPositiveButton(
+                    "Yes",
+                    DialogInterface.OnClickListener { dialog, id -> // if this button is clicked, close
+                        // current activity
+                        dialog.dismiss()
+                    })
+
+            // create alert dialog
+            val alertDialog: AlertDialog = alertDialogBuilder.create()
+
+            // show it
+            alertDialog.show()
+        }
         return root
     }
 
@@ -322,70 +361,3 @@ fun SelectTags(
         }
     }
 }
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun DateTimePickerComponent(
-    currentTime : Calendar,
-    onClick: (Calendar) -> Unit
-) {
-    val datePickerState = rememberDatePickerState(
-        initialSelectedDateMillis = currentTime.timeInMillis
-    )
-    var showDatePicker by remember { mutableStateOf(false) }
-    var pickedDate by remember { mutableStateOf(Calendar.getInstance()) }
-    val sdf = SimpleDateFormat("yyyy-MM-dd")
-
-    Row(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        horizontalArrangement = Arrangement.Start,
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-
-        Text(text = sdf.format(pickedDate.time), modifier = Modifier.padding(start = 16.dp, end = 16.dp))
-
-        Button(
-            onClick = {
-                showDatePicker = true //changing the visibility state
-            },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(end = 16.dp),
-        ) {
-            Text(text = "Date Picker")
-        }
-    }
-
-    // date picker component
-    if (showDatePicker) {
-        DatePickerDialog(
-            onDismissRequest = {},
-            confirmButton = {
-                TextButton(
-                    onClick = {
-                        val selectedDate = Calendar.getInstance().apply {
-                            // Add one 1 day cause for some reason date picker is off
-                            timeInMillis = datePickerState.selectedDateMillis!! + 86400000
-                        }
-                        pickedDate = selectedDate
-                        onClick(selectedDate)
-                        showDatePicker = false
-                    }
-                ) { Text("OK") }
-            },
-            dismissButton = {
-                TextButton(
-                    onClick = {
-                        showDatePicker = false
-                    }
-                ) { Text("Cancel") }
-            }
-        )
-        {
-            DatePicker(state = datePickerState)
-        }
-    }
-}
-
