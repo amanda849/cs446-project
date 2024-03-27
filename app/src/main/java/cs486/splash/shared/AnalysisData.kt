@@ -2,7 +2,7 @@ package cs486.splash.shared
 
 import cs486.splash.models.BowelLog
 import java.util.Date
-import kotlin.math.round
+import kotlin.math.roundToInt
 
 /**
  * A class containing all analysis data
@@ -96,7 +96,7 @@ class AnalysisData {
      */
     fun getPercentageTextures() : Map<Texture, Pair<Int, String>> {
         return percentageTextures.mapValues {
-            Pair((round(it.value / 10)).toInt(), "%.2f".format(it.value) + "%")
+            Pair((it.value / 10).roundToInt(), "%.2f".format(it.value) + "%")
         }
     }
 
@@ -128,15 +128,15 @@ class AnalysisData {
     /**
      * Returns the percentages of logs with each symptom
      */
-    fun getPercentageSymptoms() : Map<String, Float> {
-        return percentageSymptoms
+    fun getPercentageSymptoms() : Map<String, String> {
+        return percentageSymptoms.mapValues { "%.2f".format(it.value) + "%" }
     }
 
     /**
      * Returns the percentages of logs with each factor
      */
-    fun getPercentageFactors() : Map<String, Float> {
-        return percentageFactors
+    fun getPercentageFactors() : Map<String, String> {
+        return percentageFactors.mapValues { "%.2f".format(it.value) + "%" }
     }
 
     /**

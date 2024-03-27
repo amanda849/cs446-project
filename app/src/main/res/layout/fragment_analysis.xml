@@ -247,6 +247,44 @@
         </LinearLayout>
 
         <TextView
+            android:id="@+id/symptoms_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Here is a breakdown of your symptoms"
+            android:textSize="16sp"
+            app:layout_constraintStart_toEndOf="@+id/poop_texture"
+            app:layout_constraintTop_toTopOf="@+id/poop_texture" />
+
+        <androidx.compose.ui.platform.ComposeView
+            android:id="@+id/symptoms"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:layout_editor_absoluteX="-7dp">
+        </androidx.compose.ui.platform.ComposeView>
+
+        <TextView
+            android:id="@+id/factors_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Here is a breakdown of your factors"
+            android:textSize="16sp"
+            app:layout_constraintStart_toEndOf="@+id/poop_texture"
+            app:layout_constraintTop_toTopOf="@+id/poop_texture" />
+
+        <androidx.compose.ui.platform.ComposeView
+            android:id="@+id/factors"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:layout_editor_absoluteX="-7dp">
+        </androidx.compose.ui.platform.ComposeView>
+
+        <TextView
             android:id="@+id/you_pooped_location_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

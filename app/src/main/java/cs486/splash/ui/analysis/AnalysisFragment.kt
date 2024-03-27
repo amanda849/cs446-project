@@ -27,6 +27,7 @@ import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.tabs.TabLayout
@@ -125,9 +126,9 @@ fun RoundedRectangle(
 fun genTextureDisplay(
     binding: FragmentAnalysisBinding,
     textureValues: Map<Texture, Pair<Int, String>> = mapOf(
-        Texture.SOLID to Pair(0, "0"),
-        Texture.SOFT to Pair(0, "0"),
-        Texture.PEBBLES to Pair(0, "0")
+        Texture.SOLID to Pair(0, "0.00%"),
+        Texture.SOFT to Pair(0, "0.00%"),
+        Texture.PEBBLES to Pair(0, "0.00%")
     )
 ) {
     binding.textureDisplay.apply {
@@ -150,6 +151,42 @@ fun genColourDisplay(
     }
 }
 
+fun genSymptomsDisplay(
+    binding: FragmentAnalysisBinding,
+    factors: Map<String, String> = mapOf(
+        "bloating" to "0.00%",
+        "cramps" to "0.00%",
+        "pain" to "0.00%",
+        "nausea" to "0.00%",
+        "fatigue" to "0.00%",
+        "urgency" to "0.00%"
+    )
+) {
+    binding.symptoms.apply {
+        setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+        setContent {
+            FactorOrSymptomDisplay(factors)
+        }
+    }
+}
+
+fun genFactorsDisplay(
+    binding: FragmentAnalysisBinding,
+    symptoms: Map<String, String> = mapOf(
+        "workout" to "0.00%",
+        "water" to "0.00%",
+        "diet" to "0.00%",
+        "fiber" to "0.00%"
+    )
+) {
+    binding.factors.apply {
+        setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+        setContent {
+            FactorOrSymptomDisplay(symptoms)
+        }
+    }
+}
+
 fun updateAnalysisDisplay(binding: FragmentAnalysisBinding, data: AnalysisData) {
     binding.poopTotal.text = data.getTimesTotal()
     binding.poopAvg.text = data.getAverageTimesPerDay()
@@ -158,6 +195,8 @@ fun updateAnalysisDisplay(binding: FragmentAnalysisBinding, data: AnalysisData) 
     binding.unusualColourNum.text = data.getNumUnusualColours()
     binding.averageDuration.text = data.getAverageDuration()
     binding.mostLoggedHours.text = data.getMostLogsHours()
+    genSymptomsDisplay(binding, data.getPercentageSymptoms())
+    genFactorsDisplay(binding, data.getPercentageFactors())
     binding.poopLocationNum.text = data.getNumLocations()
 }
 
@@ -203,7 +242,7 @@ fun TextureDisplay(
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun ColourDisplay(
-    mostCommonColours: List<Colour> = listOf()
+    mostCommonColours: List<Colour>
 ) {
     FlowRow(
         modifier = Modifier.padding(8.dp),
@@ -215,6 +254,32 @@ fun ColourDisplay(
                     .size(32.dp)
                     .background(Color(mostCommonColours[i].toColorLong()), CircleShape)
             )
+        }
+    }
+}
+
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+fun FactorOrSymptomDisplay(
+    factOrSymp : Map<String, String>
+) {
+    FlowRow(
+        modifier = Modifier.padding(10.dp),
+        horizontalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        Column {
+            for (entry in factOrSymp) {
+                Row(
+                    modifier = Modifier.padding(top = 8.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.End
+                ) {
+                    Text(
+                        text = entry.key + ": " + entry.value,
+                        fontSize = 30.sp
+                    )
+                }
+            }
         }
     }
 }
