@@ -50,9 +50,11 @@ Date | Amanda | Cindy | Katherine | Reyna | Joanne | Anthony | Task
 03/23/2024 | | 3 | |  | | | Added User Profile get and set feature to user Repo & researched on some persistent issues 
 03/24/2024 | | 2 | |  | | | Content repo and content view model 
 03/25/2024 | | 6 | |  | | | Basic onboarding flow and auth view model 
+03/25/2024 | | | | 3 | | | D5 Singleton design pattern example
 03/26/2024 | 5 | | |  | | | Revising analysis view and linking analysis model (WIP)
 03/26/2024 |  | | 2 |  |  |  | worked on deleting logs
 03/26/2024 | | | | | 2.5 | | D5 Strategy design pattern example
 03/26/2024 |  | | 3 |  |  |  | implement log view to use actual data and not hard coded
 03/26/2024 | | | | |  | 2.5| D5 Decorator design pattern example
+03/26/2024 | | | | 3 | | | Bug correction for date/time pickers and re-formatting
 
