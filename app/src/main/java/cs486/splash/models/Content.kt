@@ -24,7 +24,7 @@ class Content (
 
                 Content(title, url, source, content, imageUrl, datePublished)
             } catch (e: Exception) {
-                Log.e(TAG, "Error converting bowel log", e)
+                Log.e(TAG, "Error converting content", e)
                 null
             }
         }
