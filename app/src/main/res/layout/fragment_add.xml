@@ -7,9 +7,11 @@
     tools:context=".ui.add.AddFragment">
 
     <ScrollView
-        android:layout_width="395dp"
-        android:layout_height="715dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -46,7 +48,8 @@
             <androidx.compose.ui.platform.ComposeView
                 android:id="@+id/texture_picker"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                android:layout_gravity="center"/>
 
             <TextView
                 android:id="@+id/textView5"
@@ -57,26 +60,33 @@
             <androidx.compose.ui.platform.ComposeView
                 android:id="@+id/date_picker"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                android:layout_gravity="center"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:gravity="center">
 
-                <EditText
-                    android:id="@+id/time_start"
+                <androidx.compose.ui.platform.ComposeView
+                    android:id="@+id/time_picker_start"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:ems="10"
-                    android:inputType="time" />
+                    android:layout_margin="10dp" />
 
-                <EditText
-                    android:id="@+id/time_end"
+                <TextView
+                    android:id="@+id/formatText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:ems="10"
-                    android:inputType="time" />
+                    android:layout_margin="10dp"
+                    android:text=":" />
+
+                <androidx.compose.ui.platform.ComposeView
+                    android:id="@+id/time_picker_end"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp" />
             </LinearLayout>
 
             <TextView
