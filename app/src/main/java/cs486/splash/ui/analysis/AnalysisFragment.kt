@@ -25,6 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -276,7 +277,8 @@ fun FactorOrSymptomDisplay(
                 ) {
                     Text(
                         text = entry.key + ": " + entry.value,
-                        fontSize = 30.sp
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold
                     )
                 }
             }
