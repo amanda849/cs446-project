@@ -15,7 +15,7 @@ class Content (
         private const val TAG = "CONTENT_CONVERSION"
         fun DocumentSnapshot.toContent(): Content? {
             return try {
-                val title = getString("title")!!
+                val title = id
                 val url = getString("url")!!
                 val source = getString("source")!!
                 val content = getString("content")!!
