@@ -60,3 +60,4 @@ Date | Amanda | Cindy | Katherine | Reyna | Joanne | Anthony | Task
 03/26/2024 | | | | |  | 2.5 | Starting UI for Contents page
 03/26/2024 | 4 | | |  | | | Linked and updated analysis view and model
 03/26/2024 | | | | |  | 3 | Working on/finishing UI for Contents page
+03/27/2024 |  | | 6 |  |  |  | implement log view to use actual data and not hard coded
