@@ -223,7 +223,7 @@ fun PoopViewContents(
         Row (modifier = Modifier.align(Alignment.CenterHorizontally)){
             Column {
                 Image(
-                    painter = painterResource(id = texturesDef[poop.texture.toString()] ?: R.drawable.poops_solid),
+                    painter = painterResource(id = texturesDef[poop.texture] ?: R.drawable.poops_solid),
                     contentDescription = null
                 )
                 Spacer(modifier = Modifier.height(20.dp))

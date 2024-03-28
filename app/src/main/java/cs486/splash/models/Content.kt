@@ -15,7 +15,7 @@ class Content (
         private const val TAG = "CONTENT_CONVERSION"
         fun DocumentSnapshot.toContent(): Content? {
             return try {
-                val title = getString("title")!!
+                val title = id
                 val url = getString("url")!!
                 val source = getString("source")!!
                 val content = getString("content")!!
@@ -24,7 +24,7 @@ class Content (
 
                 Content(title, url, source, content, imageUrl, datePublished)
             } catch (e: Exception) {
-                Log.e(TAG, "Error converting bowel log", e)
+                Log.e(TAG, "Error converting content", e)
                 null
             }
         }

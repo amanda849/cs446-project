@@ -66,6 +66,7 @@ class BowelLogViewModel : ViewModel() {
             }
             bowelLogs.value = bowelLogList
             bowelLogsByDate = orderBowelLogsByDate()
+            updateAnalysisData()
         })
     }
 
