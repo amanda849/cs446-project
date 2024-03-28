@@ -11,7 +11,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import cs486.splash.R
 import cs486.splash.databinding.FragmentSignUpBinding
-import cs486.splash.viewmodels.AuthViewModel
+import cs486.splash.viewmodels.UserViewModel
 import kotlinx.coroutines.launch
 
 class SignUpFragment : Fragment() {
@@ -23,13 +23,13 @@ class SignUpFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentSignUpBinding.inflate(inflater, container, false)
-        val authViewModel = ViewModelProvider(this)[AuthViewModel::class.java]
+        val userViewModel = ViewModelProvider(this)[UserViewModel::class.java]
 
-        authViewModel.user.observe(viewLifecycleOwner){
+        userViewModel.user.observe(viewLifecycleOwner){
             if(it != null){
                 val fragmentManager = requireActivity().supportFragmentManager
                 val fragmentTransaction = fragmentManager.beginTransaction()
-                fragmentTransaction.replace(R.id.fragmentContainerView, ProfileSetupFragment())
+                fragmentTransaction.replace(R.id.fragmentContainerView, SetupWelcomeFragment())
                 fragmentTransaction.addToBackStack(null)
                 fragmentTransaction.commit()
             }
@@ -50,7 +50,7 @@ class SignUpFragment : Fragment() {
 
             lifecycleScope.launch {
                 try {
-                    authViewModel.signUp(email, pass, confirmPass)
+                    userViewModel.signUp(email, pass, confirmPass)
                 } catch (e: Exception) {
                     // Show AlertDialog when exception is caught
                     AlertDialog.Builder(requireContext())

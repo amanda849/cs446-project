@@ -18,7 +18,7 @@
     <string name="add_prompt">Add a new poop for today:</string>
     <string name="profile_info_title">Personal Info</string>
     <string name="profile_health_title">Health Details</string>
-    <string name="profile_bday_prompt">date of birth (yy/mm/dd)</string>
+    <string name="profile_bday_prompt">Date of birth (yy/mm/dd)</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="terms_and_services_content">

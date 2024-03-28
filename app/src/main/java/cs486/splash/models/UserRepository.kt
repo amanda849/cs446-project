@@ -53,9 +53,9 @@ object UserRepository {
         return user
     }
 
-    fun setUserProfile(userProfile: UserProfile){
+    fun updateUserProfile(updates: Map<String, Any>){
         fireStore.collection("User Profiles").document(user!!.uid)
-            .set(userProfile.toHashMap(), SetOptions.merge())
+            .set(updates, SetOptions.merge())
             .addOnSuccessListener {
                 Log.i(TAG, "setUserProfile: set user profile")
             }
