@@ -53,7 +53,6 @@ import cs486.splash.viewmodels.BowelLogViewModel
 import java.util.Calendar
 import java.util.Date
 
-
 class AddFragment : Fragment() {
 
     private var _binding: FragmentAddBinding? = null
@@ -234,9 +233,10 @@ val colorsDef: List<Color> = listOf(
 @Composable
 fun ColourPicker(
     colours: List<Color> = colorsDef,
-    onClick: (Int) -> Unit
+    initial: Int = 0,
+    onClick: (Int) -> Unit,
 ) {
-    var colour by remember { mutableStateOf(0) }
+    var colour by remember { mutableStateOf(initial) }
     FlowRow(
         modifier = Modifier.padding(8.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -275,10 +275,11 @@ val texturesDef: Map<Texture, Int> = mapOf(
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun TexturePicker(
-    textures: Map<Texture, Int> = texturesDef,
+    textures: Map<String, Int> = texturesDef,
+    initial: String = "Solid",
     onClick: (String) -> Unit
 ) {
-    var texture by remember { mutableStateOf("Solid") }
+    var texture by remember { mutableStateOf(initial) }
     FlowRow(
         modifier = Modifier.padding(8.dp),
         horizontalArrangement = Arrangement.spacedBy(16.dp),
