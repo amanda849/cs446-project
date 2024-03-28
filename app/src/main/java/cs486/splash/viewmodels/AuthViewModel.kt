@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import cs486.splash.models.AuthenticationException
 import cs486.splash.models.UserRepository
 import cs486.splash.shared.UserProfile
 
@@ -21,13 +22,16 @@ class AuthViewModel : ViewModel() {
         }
     }
 
-    fun signIn(email: String, password: String){
+    suspend fun signIn(email: String, password: String){
         UserRepository.userSignIn(email, password)
     }
 
-    fun signUp(email: String, password: String, confirmPassword: String){
-        // TODO: confirm that password and confirmPassword matches
-        UserRepository.userSignUp(email, password)
+    suspend fun signUp(email: String, password: String, confirmPassword: String){
+        if(confirmPassword != password){
+            throw AuthenticationException("The passwords you entered do not match. Please make sure your passwords match exactly.")
+        } else {
+            UserRepository.userSignUp(email, password)
+        }
     }
 
     fun setUserProfile(

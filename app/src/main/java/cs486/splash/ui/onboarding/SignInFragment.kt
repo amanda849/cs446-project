@@ -1,16 +1,20 @@
 package cs486.splash.ui.onboarding
 
+import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import cs486.splash.MainActivity
 import cs486.splash.R
 import cs486.splash.databinding.FragmentSignInBinding
 import cs486.splash.viewmodels.AuthViewModel
+import kotlinx.coroutines.launch
 
 class SignInFragment : Fragment() {
     val TAG = "SIGN_IN_FRAGMENT"
@@ -44,7 +48,22 @@ class SignInFragment : Fragment() {
             val email = binding.email.text.toString()
             val pass = binding.password.text.toString()
 
-            authViewModel.signIn(email, pass)
+            lifecycleScope.launch {
+                try {
+                    authViewModel.signIn(email, pass)
+                } catch (e: Exception) {
+                    // Show AlertDialog when exception is caught
+                    AlertDialog.Builder(requireContext())
+                        .setTitle("Error")
+                        .setMessage("${e.message}")
+                        .setPositiveButton("OK") { dialog, _ ->
+                            dialog.dismiss()
+                        }
+                        .show()
+
+                    Log.e("FRAG", "Exception caught ${e.message}")
+                }
+            }
         }
 
         return binding.root
