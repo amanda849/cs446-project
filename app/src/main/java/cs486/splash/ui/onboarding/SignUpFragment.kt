@@ -1,14 +1,18 @@
 package cs486.splash.ui.onboarding
 
+import android.app.AlertDialog
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import cs486.splash.R
 import cs486.splash.databinding.FragmentSignUpBinding
 import cs486.splash.viewmodels.AuthViewModel
+import kotlinx.coroutines.launch
 
 class SignUpFragment : Fragment() {
     private var _binding: FragmentSignUpBinding? = null
@@ -26,7 +30,7 @@ class SignUpFragment : Fragment() {
                 val fragmentManager = requireActivity().supportFragmentManager
                 val fragmentTransaction = fragmentManager.beginTransaction()
                 fragmentTransaction.replace(R.id.fragmentContainerView, ProfileSetupFragment())
-                fragmentTransaction.addToBackStack(null) // Optional: Add to back stack
+                fragmentTransaction.addToBackStack(null)
                 fragmentTransaction.commit()
             }
         }
@@ -35,7 +39,7 @@ class SignUpFragment : Fragment() {
             val fragmentManager = requireActivity().supportFragmentManager
             val fragmentTransaction = fragmentManager.beginTransaction()
             fragmentTransaction.replace(R.id.fragmentContainerView, SignInFragment())
-            fragmentTransaction.addToBackStack(null) // Optional: Add to back stack
+            fragmentTransaction.addToBackStack(null)
             fragmentTransaction.commit()
         }
 
@@ -44,7 +48,22 @@ class SignUpFragment : Fragment() {
             val pass = binding.password.text.toString()
             val confirmPass = binding.confirmPassword.text.toString()
 
-            authViewModel.signUp(email, pass, confirmPass)
+            lifecycleScope.launch {
+                try {
+                    authViewModel.signUp(email, pass, confirmPass)
+                } catch (e: Exception) {
+                    // Show AlertDialog when exception is caught
+                    AlertDialog.Builder(requireContext())
+                        .setTitle("Error")
+                        .setMessage("${e.message}")
+                        .setPositiveButton("OK") { dialog, _ ->
+                            dialog.dismiss()
+                        }
+                        .show()
+
+                    Log.e("FRAG", "Exception caught ${e.message}")
+                }
+            }
         }
 
         return binding.root

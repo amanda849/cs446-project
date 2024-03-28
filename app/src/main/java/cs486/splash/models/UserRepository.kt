@@ -7,6 +7,7 @@ import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
 import cs486.splash.shared.UserProfile
+import kotlinx.coroutines.tasks.await
 
 
 class AuthenticationException(message: String? = null, cause: Throwable? = null) :
@@ -21,25 +22,26 @@ object UserRepository {
 
     private var user: FirebaseUser? = firebaseAuth.currentUser // should be deleted
 
+    private const val TAG = "USER_REPO"
     init {
         firebaseAuth.addAuthStateListener {
             user = it.currentUser
         }
     }
 
-    fun userSignIn(email: String, password: String) {
-        firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener {
-            if (!it.isSuccessful) {
-                throw AuthenticationException(it.exception.toString())
-            }
+    suspend fun userSignIn(email: String, password: String) {
+        try {
+            firebaseAuth.signInWithEmailAndPassword(email, password).await()
+        } catch (e: Exception) {
+            throw AuthenticationException(e.message?: "Sign up failed. Please try again.")
         }
     }
 
-    fun userSignUp(email: String, password: String) {
-        firebaseAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener {
-            if (!it.isSuccessful) {
-                throw AuthenticationException(it.exception.toString())
-            }
+    suspend fun userSignUp(email: String, password: String) {
+        try {
+            firebaseAuth.createUserWithEmailAndPassword(email, password).await()
+        } catch (e: Exception) {
+            throw AuthenticationException(e.message?: "Sign up failed. Please try again.")
         }
     }
 
@@ -55,10 +57,10 @@ object UserRepository {
         fireStore.collection("User Profiles").document(user!!.uid)
             .set(userProfile.toHashMap(), SetOptions.merge())
             .addOnSuccessListener {
-                Log.i("UserRepository", "setUserProfile: set user profile")
+                Log.i(TAG, "setUserProfile: set user profile")
             }
             .addOnFailureListener{
-                Log.e("UserRepository", "setUserProfile: ${it.message}")
+                Log.e(TAG, "setUserProfile: ${it.message}")
             }
     }
 
