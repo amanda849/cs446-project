@@ -66,6 +66,14 @@ class SignInFragment : Fragment() {
             }
         }
 
+        _binding!!.resetPassword.setOnClickListener {
+            val fragmentManager = requireActivity().supportFragmentManager
+            val fragmentTransaction = fragmentManager.beginTransaction()
+            fragmentTransaction.replace(R.id.fragmentContainerView, ResetPasswordFragment())
+            fragmentTransaction.addToBackStack(null) // Optional: Add to back stack
+            fragmentTransaction.commit()
+        }
+
         return binding.root
     }
 }

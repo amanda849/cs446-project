@@ -29,7 +29,9 @@ class UserViewModel : ViewModel() {
     init {
         FirebaseAuth.getInstance().addAuthStateListener {
             _user.value = it.currentUser
-            getUserProfile()
+            if(it.currentUser != null){
+                getUserProfile()
+            }
         }
     }
 
@@ -62,12 +64,33 @@ class UserViewModel : ViewModel() {
     }
 
     fun getUserProfile() {
-        UserRepository.getUserProfile().get()
-            .addOnSuccessListener { snapshot ->
+        UserRepository.getUserProfile()?.get()
+            ?.addOnSuccessListener { snapshot ->
+                Log.e(TAG, snapshot.toString())
                 _userProfile.value = snapshot.toProfile()
             }
-            .addOnFailureListener { exception ->
+            ?.addOnFailureListener { exception ->
                 Log.w(TAG, "Get failed.", exception)
             }
+    }
+
+    suspend fun resetPassword(email: String){
+        UserRepository.resetPassword(email)
+    }
+
+    suspend fun updatePassword(newPass: String, confirmPass: String){
+        if(confirmPass != newPass){
+            throw AuthenticationException("The passwords you entered do not match. Please make sure your passwords match exactly.")
+        } else {
+            UserRepository.updatePassword(newPass)
+        }
+    }
+
+    suspend fun updateEmail(newEmail: String, confirmEmail: String){
+        if(newEmail != confirmEmail){
+            throw AuthenticationException("The emails you entered do not match. Please make sure your passwords match exactly.")
+        } else {
+            UserRepository.updateEmail(newEmail)
+        }
     }
 }
