@@ -105,7 +105,7 @@ class BowelLogViewModel : ViewModel() {
         }
 
         // Update the analysis data when a new log is updated
-        updateAnalysisData()
+//        updateAnalysisData()
     }
 
     /**

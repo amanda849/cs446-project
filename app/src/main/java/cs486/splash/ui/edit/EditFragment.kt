@@ -21,14 +21,19 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -39,6 +44,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
@@ -49,12 +55,16 @@ import cs486.splash.R
 import cs486.splash.databinding.FragmentEditBinding
 import cs486.splash.models.BowelLog
 import cs486.splash.shared.Colour
+import cs486.splash.shared.FactorTags
+import cs486.splash.shared.SymptomTags
+import cs486.splash.shared.Texture
 import cs486.splash.ui.add.ColourPicker
 import cs486.splash.ui.add.TexturePicker
-import cs486.splash.ui.add.texturesDef
+import cs486.splash.ui.add.TimePickerSwitchable
 import cs486.splash.ui.calendar.findActivity
 import cs486.splash.viewmodels.BowelLogViewModel
 import java.text.SimpleDateFormat
+import java.util.Calendar
 import java.util.Locale
 
 class EditFragment : Fragment() {
@@ -114,6 +124,31 @@ fun EditContents(
     val poop = bowelLogViewModel.getBowelLog(poopId)
         ?: throw IllegalStateException("poopId ${poopId} not valid")
 
+    var colorInt by remember {mutableStateOf(0)}
+    var textureStr by remember {mutableStateOf(poop.texture.toString())}
+    var pickedTimeStart by remember { mutableStateOf(Calendar.getInstance().apply { time = poop.timeStarted }) }
+    var pickedTimeEnd by remember { mutableStateOf(Calendar.getInstance().apply { time = poop.timeEnded }) }
+    var location by remember { mutableStateOf(poop.location) }
+
+    val symptomsMap = poop.symptoms.toString().split(", ")
+        .map {
+            it.split(": ").let { pair ->
+                pair[0] to pair[1].toBoolean()
+            }
+        }.toMap()
+
+    var symptomsList by remember { mutableStateOf(symptomsMap.toList()) }
+
+
+    val factorsMap = poop.factors.toString().split(", ")
+        .map {
+            it.split(": ").let { pair ->
+                pair[0] to pair[1].toBoolean()
+            }
+        }.toMap()
+
+    var factorsList by remember { mutableStateOf(factorsMap.toList()) }
+
     Box(
         Modifier
             .fillMaxWidth()
@@ -134,7 +169,7 @@ fun EditContents(
         ) {
             val sdf = SimpleDateFormat("hh:mm a", Locale.CANADA)
             Text(
-                text = "Log at EDIT EDIT EDIT ${sdf.format(poop.timeStarted ?: "Log")}",
+                text = "Log at ${sdf.format(poop.timeStarted ?: "Log")}",
                 textAlign = TextAlign.Center,
                 color = Color.White // Set text color that contrasts well with your background
             )
@@ -180,7 +215,25 @@ fun EditContents(
                     .border(width = 2.dp, color = Color.Black, shape = RoundedCornerShape(10.dp))
                     .padding(16.dp)
                     .clickable {
-                        navController.navigate(R.id.navigation_calendar)
+                        bowelLogViewModel.editBowelLog(
+                            id = poopId,
+                            color = Colour.entries[colorInt],
+                            texture = Texture.valueOf(textureStr.uppercase()),
+                            timeStarted = pickedTimeStart.time,
+                            timeEnded = pickedTimeEnd.time,
+                            location = location,
+                            symptomTags = SymptomTags(symptomsList.joinToString(separator = ", ") {
+                            "${it.first}: ${it.second}"
+                            }),
+                            factorTags = FactorTags(factorsList.joinToString(separator = ", ") {
+                                "${it.first}: ${it.second}"
+                            }),
+                            )
+                        val poopId = poopId
+                        val bundle = Bundle().apply {
+                            putString("poopId", poopId)
+                        }
+                        navController.navigate(R.id.navigation_poop_view, bundle)
                     },
                 contentAlignment = Alignment.Center
             ) {
@@ -200,117 +253,119 @@ fun EditContents(
             }
         }
 
-        var colorInt: Int = 0
-        ColourPicker(initial = Colour.entries.indexOfFirst { it == poop.color }, onClick = { it ->
-            colorInt = it
-            Log.d("Edit", "Colour changed to: $it")
-        })
+        Row (
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
 
-        Spacer(modifier = Modifier.height(20.dp))
-
-        var textureStr: String = "Solid"
-        TexturePicker(initial = poop.texture.toString(), onClick = { it ->
-            textureStr = it
-            Log.d("AddLog", "Texture changed to: $it")
-        })
-
-        Row {
-            Text("Time: ", style = TextStyle(fontWeight = FontWeight.Bold))
-            val sdf = SimpleDateFormat("hh:mm a", Locale.CANADA)
-            Text("${sdf.format(poop.timeStarted)} - ${sdf.format(poop.timeEnded)}")
+            ColourPicker(
+                initial = Colour.entries.indexOfFirst { it == poop.color },
+                onClick = { it ->
+                    colorInt = it
+                    Log.d("Edit", "Colour changed to: $it")
+                })
         }
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        Row {
-            Text("Location: ", style = TextStyle(fontWeight = FontWeight.Bold))
-            Text("${poop.location}")
+        Row (
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+
+            TexturePicker(initial = poop.texture.toString(), onClick = { it ->
+                textureStr = it
+                Log.d("AddLog", "Texture changed to: $it")
+            })
         }
 
-        Spacer(modifier = Modifier.height(20.dp))
+        Row (
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
 
-        Row {
-            Text("Texture: ", style = TextStyle(fontWeight = FontWeight.Bold))
-        }
+            Box {
+                TimePickerSwitchable(currTime = pickedTimeStart, onClick = { newTime ->
+                    pickedTimeStart = Calendar.getInstance().apply { time = newTime.time }
+                    Log.d("Edit", "SelectedDate changed to: $newTime")
+                })
+            }
 
-        Spacer(modifier = Modifier.height(20.dp))
 
-        Row (modifier = Modifier.align(Alignment.CenterHorizontally)){
-            Column {
-                Image(
-                    painter = painterResource(id = texturesDef[poop.texture.toString()] ?: R.drawable.poops_solid),
-                    contentDescription = null
-                )
-                Spacer(modifier = Modifier.height(20.dp))
-                Text("${poop.texture}")
+            Box {
+                TimePickerSwitchable(currTime = pickedTimeEnd, onClick = { newTime ->
+                    pickedTimeEnd = Calendar.getInstance().apply { time = newTime.time }
+                    Log.d("Edit", "SelectedDate changed to: $newTime")
+                })
             }
         }
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        val symptomsMap = poop.symptoms.toString().split(", ")
-            .map {
-                it.split(": ").let { pair ->
-                    pair[0] to pair[1].toBoolean()
-                }
-            }.toMap()
+        Row (
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            TextField(
+                value = location,
+                onValueChange = { location = it },
+                label = { Text("Location") },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
+            )
+        }
 
-        val trueSymptoms = symptomsMap.filter { it.value }.keys.toList()
+        Spacer(modifier = Modifier.height(20.dp))
 
-        if (trueSymptoms.isNotEmpty()) {
+        Row {
+            Text(
+                "Symptoms: ", style = TextStyle(fontWeight = FontWeight.Bold),
+                modifier = Modifier.align(Alignment.CenterVertically)
+            )
+        }
 
-            Row {
-                Text(
-                    "Symptoms: ", style = TextStyle(fontWeight = FontWeight.Bold),
-                    modifier = Modifier.align(Alignment.CenterVertically)
-                )
-            }
+        Spacer(modifier = Modifier.height(20.dp))
 
-            Spacer(modifier = Modifier.height(20.dp))
-
-            FlowRow (
-                horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.Start),
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-            ) {
-                for (symptom in trueSymptoms) {
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.Start),
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier
-                            .border(
-                                width = 1.dp,
-                                color = Color(0xFFEDE0D4),
-                                shape = RoundedCornerShape(size = 16.dp)
-                            )
-                            .background(
-                                color = Color(0xFFEDE0D4),
-                                shape = RoundedCornerShape(size = 8.dp)
-                            )
-                            .padding(start = 8.dp, top = 8.dp, end = 8.dp, bottom = 8.dp)
-
-                    ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.ic_baseline_check_circle_24),
-                            contentDescription = null
+        FlowRow (
+            horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.Start),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            symptomsList.forEach { symptom ->
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.Start),
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .border(
+                            width = 1.dp,
+                            color = Color(0xFFEDE0D4),
+                            shape = RoundedCornerShape(size = 16.dp)
                         )
-                        Text(text = "${symptom}")
-                    }
+                        .background(
+                            color = Color(0xFFEDE0D4),
+                            shape = RoundedCornerShape(size = 8.dp)
+                        )
+                        .padding(start = 8.dp, top = 8.dp, end = 8.dp, bottom = 8.dp)
+                        .clickable {
+                            symptomsList = symptomsList.map { it ->
+                                if (it.first == symptom.first) it.first to !it.second else it
+                            }
+                        }
+
+                ) {
+                    Image(
+                        painter = painterResource(id = if (symptom.second!!) R.drawable.ic_baseline_check_circle_24 else R.drawable.ic_outline_circle_24),
+                        contentDescription = null
+                    )
+                    Text(text = "${symptom.first}")
                 }
             }
-
-            Spacer(modifier = Modifier.height(20.dp))
         }
 
-        val factorsMap = poop.factors.toString().split(", ")
-            .map {
-                it.split(": ").let { pair ->
-                    pair[0] to pair[1].toBoolean()
-                }
-            }.toMap()
+            Spacer(modifier = Modifier.height(20.dp))
 
-        val trueFactors = factorsMap.filter { it.value }.keys.toList()
-
-        if (trueFactors.isNotEmpty()) {
             Row {
                 Text(
                     "Factors: ", style = TextStyle(fontWeight = FontWeight.Bold),
@@ -324,7 +379,7 @@ fun EditContents(
                 horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.Start),
                 verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
-                for (factor in trueFactors) {
+                factorsList.forEach { factor ->
                     Row(
                         horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.Start),
                         verticalAlignment = Alignment.CenterVertically,
@@ -339,17 +394,21 @@ fun EditContents(
                                 shape = RoundedCornerShape(size = 8.dp)
                             )
                             .padding(start = 8.dp, top = 8.dp, end = 8.dp, bottom = 8.dp)
+                            .clickable {
+                                factorsList = factorsList.map { it ->
+                                    if (it.first == factor.first) it.first to !it.second else it
+                                }
+                            }
 
                     ) {
                         Image(
-                            painter = painterResource(id = R.drawable.ic_baseline_check_circle_24),
+                            painter = painterResource(id = if (factor.second!!) R.drawable.ic_baseline_check_circle_24 else R.drawable.ic_outline_circle_24),
                             contentDescription = null
                         )
-                        Text(text = "${factor}")
+                        Text(text = "${factor.first}")
                     }
                 }
             }
-        }
 
         Spacer(modifier = Modifier.height(20.dp))
 

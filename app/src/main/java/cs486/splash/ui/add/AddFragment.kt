@@ -53,7 +53,6 @@ import cs486.splash.viewmodels.BowelLogViewModel
 import java.util.Calendar
 import java.util.Date
 
-
 class AddFragment : Fragment() {
 
     private var _binding: FragmentAddBinding? = null
