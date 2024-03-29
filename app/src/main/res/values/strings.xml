@@ -21,6 +21,11 @@
     <string name="profile_bday">Date of birth</string>
     <string name="profile_bday_prompt">(dd/mm/yyyy)</string>
     <string name="profile_edit">Edit Profile</string>
+    <string name="save">Save</string>
+    <string name="profile_edit_email">New email</string>
+    <string name="profile_confirm_email">Confirm email</string>
+    <string name="profile_edit_password">New password</string>
+    <string name="profile_confirm_password">Confirm password</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="terms_and_services_content">

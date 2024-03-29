@@ -20,17 +20,18 @@
             android:id="@+id/back_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
             app:fabSize="mini"
             app:backgroundTint="@color/purple_500"
             app:srcCompat="@drawable/ic_chevron_left"
-            app:tint="@color/white"/>
+            app:tint="@color/white" />
 
         <Button
             android:id="@+id/save_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:text="Save"
+            android:text="@string/save"
             app:cornerRadius="6dp"/>
     </RelativeLayout>
 
@@ -83,8 +84,7 @@
                     android:id="@+id/name_field"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="text"
-                    android:hint="Jane Doe" />
+                    android:inputType="text" />
             </com.google.android.material.textfield.TextInputLayout>
 
         </LinearLayout>
@@ -125,7 +125,7 @@
                     android:id="@+id/email_field"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="New email" />
+                    android:hint="@string/profile_edit_email" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -137,7 +137,7 @@
                     android:id="@+id/confirm_email_field"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Confirm email" />
+                    android:hint="@string/profile_confirm_email" />
             </com.google.android.material.textfield.TextInputLayout>
 
         </LinearLayout>
@@ -180,7 +180,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textPassword"
-                    android:hint="New password" />
+                    android:hint="@string/profile_edit_password" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -194,7 +194,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textPassword"
-                    android:hint="Confirm password" />
+                    android:hint="@string/profile_confirm_password" />
             </com.google.android.material.textfield.TextInputLayout>
 
         </LinearLayout>
