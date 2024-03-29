@@ -19,7 +19,7 @@
     <string name="profile_info_title">Personal Info</string>
     <string name="profile_name">Name</string>
     <string name="profile_bday">Date of birth</string>
-    <string name="profile_bday_prompt">(yy/mm/dd)</string>
+    <string name="profile_bday_prompt">(dd/mm/yyyy)</string>
     <string name="profile_edit">Edit Profile</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
