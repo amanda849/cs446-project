@@ -6,7 +6,6 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
-import cs486.splash.shared.UserProfile
 import kotlinx.coroutines.tasks.await
 
 
@@ -53,9 +52,9 @@ object UserRepository {
         return user
     }
 
-    fun setUserProfile(userProfile: UserProfile){
+    fun updateUserProfile(updates: Map<String, Any>){
         fireStore.collection("User Profiles").document(user!!.uid)
-            .set(userProfile.toHashMap(), SetOptions.merge())
+            .set(updates, SetOptions.merge())
             .addOnSuccessListener {
                 Log.i(TAG, "setUserProfile: set user profile")
             }
@@ -64,7 +63,32 @@ object UserRepository {
             }
     }
 
-    fun getUserProfile(): DocumentReference {
+    fun getUserProfile(): DocumentReference? {
+        if(user == null) return null
         return fireStore.collection("User Profiles").document(user!!.uid)
+    }
+
+    suspend fun resetPassword(email: String){
+        try {
+            firebaseAuth.sendPasswordResetEmail(email).await()
+        } catch (e: Exception) {
+            throw AuthenticationException(e.message?: "Reset failed. Please try again.")
+        }
+    }
+
+    suspend fun updatePassword(newPass: String){
+        try {
+            user?.updatePassword(newPass)?.await()
+        } catch (e: Exception) {
+            throw AuthenticationException(e.message?: "Reset failed. Please try again.")
+        }
+    }
+
+    suspend fun updateEmail(newEmail: String){
+        try {
+            user?.verifyBeforeUpdateEmail(newEmail)?.await()
+        } catch (e: Exception) {
+            throw AuthenticationException(e.message?: "Failed to send verification email. Please try again.")
+        }
     }
 }

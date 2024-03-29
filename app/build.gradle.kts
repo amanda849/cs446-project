@@ -94,4 +94,7 @@ dependencies {
 
     // markdown displayer library provided by Jeziellago under the MIT License
     implementation("com.github.jeziellago:compose-markdown:0.4.1")
+
+    // For date picker modal
+    implementation("com.google.android.material:material:1.11.0")
 }

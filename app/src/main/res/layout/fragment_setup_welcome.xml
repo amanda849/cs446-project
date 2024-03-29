@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:layout_height="match_parent"
+    tools:context=".ui.onboarding.SetupWelcomeFragment">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Welcome aboard! Just a few more steps to finish up. Let's get you all set!" />
+
+    <Button
+        android:id="@+id/setupBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Set Up My Profile" />
+
+    <Button
+        android:id="@+id/skipBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Set Up Later in Profile" />
+
+</LinearLayout>

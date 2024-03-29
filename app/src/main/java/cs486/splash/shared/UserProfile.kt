@@ -1,21 +1,30 @@
 package cs486.splash.shared
 
+import android.util.Log
 import com.google.firebase.Timestamp
+import com.google.firebase.firestore.DocumentSnapshot
+import cs486.splash.models.Content
 
 class UserProfile(
     var name: String,
     var birthDate: String,
-    var familyDoctorName: String = "",
-    var familyDoctorPhone: String = "",
-    var familyDoctorEmail: String = ""
 ) {
     fun toHashMap(): HashMap<String, Any> {
         return hashMapOf(
             "name" to name,
             "birthDate" to birthDate,
-            "familyDoctorName" to familyDoctorName,
-            "familyDoctorPhone" to familyDoctorPhone,
-            "familyDoctorEmail" to familyDoctorEmail,
         )
+    }
+
+    companion object {
+        private const val TAG = "PROFILE_CONVERSION"
+        fun DocumentSnapshot.toProfile(): UserProfile? {
+            return try {
+                UserProfile(getString("name")!!, getString("birthDate")!!)
+            } catch (e: Exception) {
+                Log.e(TAG, "Error converting content", e)
+                null
+            }
+        }
     }
 }

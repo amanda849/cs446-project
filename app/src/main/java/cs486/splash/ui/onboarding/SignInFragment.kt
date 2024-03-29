@@ -13,7 +13,7 @@ import androidx.lifecycle.lifecycleScope
 import cs486.splash.MainActivity
 import cs486.splash.R
 import cs486.splash.databinding.FragmentSignInBinding
-import cs486.splash.viewmodels.AuthViewModel
+import cs486.splash.viewmodels.UserViewModel
 import kotlinx.coroutines.launch
 
 class SignInFragment : Fragment() {
@@ -27,9 +27,9 @@ class SignInFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentSignInBinding.inflate(inflater, container, false)
-        val authViewModel = ViewModelProvider(this)[AuthViewModel::class.java]
+        val userViewModel = ViewModelProvider(this)[UserViewModel::class.java]
 
-        authViewModel.user.observe(viewLifecycleOwner){
+        userViewModel.user.observe(viewLifecycleOwner){
             if(it != null){
                 val intent = Intent(activity, MainActivity::class.java)
                 startActivity(intent)
@@ -50,7 +50,7 @@ class SignInFragment : Fragment() {
 
             lifecycleScope.launch {
                 try {
-                    authViewModel.signIn(email, pass)
+                    userViewModel.signIn(email, pass)
                 } catch (e: Exception) {
                     // Show AlertDialog when exception is caught
                     AlertDialog.Builder(requireContext())
@@ -64,6 +64,14 @@ class SignInFragment : Fragment() {
                     Log.e("FRAG", "Exception caught ${e.message}")
                 }
             }
+        }
+
+        _binding!!.resetPassword.setOnClickListener {
+            val fragmentManager = requireActivity().supportFragmentManager
+            val fragmentTransaction = fragmentManager.beginTransaction()
+            fragmentTransaction.replace(R.id.fragmentContainerView, ResetPasswordFragment())
+            fragmentTransaction.addToBackStack(null) // Optional: Add to back stack
+            fragmentTransaction.commit()
         }
 
         return binding.root
