@@ -40,6 +40,14 @@
         tools:layout="@layout/fragment_profile" />
 
     <fragment
+        android:id="@+id/navigation_edit"
+        android:name="cs486.splash.ui.edit.EditFragment"
+        android:label="Edit"
+        tools:layout="@layout/fragment_edit">
+        <argument android:name="poopId" app:argType="string" />
+    </fragment>
+
+    <fragment
         android:id="@+id/navigation_poop_view"
         android:name="cs486.splash.ui.poopview.PoopViewFragment"
         android:label="PoopView"
