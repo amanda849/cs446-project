@@ -65,4 +65,5 @@ Date | Amanda | Cindy | Katherine | Reyna | Joanne | Anthony | Task
 03/27/2024 | 0.5 | 0.5 | 0.5 | 0.5 | 0.5 | 0.5 | Going over and editing D5 as a team, general project meeting
 03/27/2024 |  | 7 |  |  |  |  | Refined onboarding flow (added reset password to signIn). Hooked up Profile with userViewModel. Added change email and password feature to userViewModel.
 03/28/2024 | | | | | 5 | | Basic profile update UI
-03/27/2024 |  | 0.25 |  |  |  |  | Researched firestore security rule and configured it. 
+03/29/2024 |  | 0.25 |  |  |  |  | Researched firestore security rule and configured it. 
+03/29/2024 |  | 3 |  |  |  |  | Connected edit profile to backend.  
