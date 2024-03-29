@@ -63,3 +63,4 @@ Date | Amanda | Cindy | Katherine | Reyna | Joanne | Anthony | Task
 03/27/2024 |  | | 6 |  |  |  | implement editing logs
 03/27/2024 |  | 2 |  |  |  |  | Add error handling to onboarding flow. Corrected content view model bug. 
 03/27/2024 | 0.5 | 0.5 | 0.5 | 0.5 | 0.5 | 0.5 | Going over and editing D5 as a team, general project meeting
+03/27/2024 |  | 7 |  |  |  |  | Refined onboarding flow (added reset password to signIn). Hooked up Profile with userViewModel. Added change email and password feature to userViewModel.
