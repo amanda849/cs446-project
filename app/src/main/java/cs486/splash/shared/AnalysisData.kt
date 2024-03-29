@@ -149,12 +149,16 @@ class AnalysisData {
         // Accumulators
         val timesPerDay : MutableList<Int> = mutableListOf(0)
         val colourCount : MutableMap<Colour, Int> = mutableMapOf(
+            Colour.PALE_BROWN to 0,
+            Colour.YELLOW_BROWN to 0,
             Colour.LIGHT_BROWN to 0,
             Colour.PINKISH_BROWN to 0,
             Colour.BROWN1 to 0,
             Colour.BROWN2 to 0,
             Colour.BROWN3 to 0,
-            Colour.DARK_BROWN to 0
+            Colour.DARK_BROWN to 0,
+            Colour.BLACK to 0,
+            Colour.GREEN to 0,
         )
         val textureCount : MutableMap<Texture, Float> = mutableMapOf(
             Texture.SOLID to 0F,

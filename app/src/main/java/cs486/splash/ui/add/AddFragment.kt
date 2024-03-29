@@ -12,11 +12,13 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -39,6 +41,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -46,12 +49,15 @@ import androidx.navigation.fragment.findNavController
 import cs486.splash.R
 import cs486.splash.databinding.FragmentAddBinding
 import cs486.splash.shared.Colour
+import cs486.splash.shared.colorsDef
 import cs486.splash.shared.FactorTags
 import cs486.splash.shared.SymptomTags
 import cs486.splash.shared.Texture
 import cs486.splash.viewmodels.BowelLogViewModel
+import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
+import java.util.Locale
 
 class AddFragment : Fragment() {
 
@@ -71,6 +77,14 @@ class AddFragment : Fragment() {
         val root: View = binding.root
 
         try {
+
+            binding.titleCompose.apply {
+                setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+                setContent {
+                    Title()
+                }
+            }
+
             var colorInt: Int = 0
             binding.colourPicker.apply {
                 setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
@@ -221,14 +235,27 @@ fun mapToMapStr(map: Map<String, Boolean>): String {
     return map.map {it.key + ": " + it.value.toString()}.joinToString()
 }
 
-val colorsDef: List<Color> = listOf(
-    Color(0xFF9C6644),
-    Color(0xFF9C5444),
-    Color(0xFF7F5539),
-    Color(0xFF6E4428),
-    Color(0xFF744627),
-    Color(0xFF4C2206),
-)
+@Composable
+fun Title() {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(
+                color = Color(Colour.BROWN1.toColorLong()),
+                shape = RoundedCornerShape(8.dp)
+            ) // Rounded corners
+            .padding(16.dp), // Padding around the text inside the box
+        contentAlignment = Alignment.Center
+    ) {
+        val sdf = SimpleDateFormat("hh:mm a", Locale.CANADA)
+        Text(
+            text = "Enter new Log",
+            textAlign = TextAlign.Center,
+            color = Color.White // Set text color that contrasts well with your background
+        )
+    }
+}
+
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun ColourPicker(
@@ -239,7 +266,8 @@ fun ColourPicker(
     var colour by remember { mutableStateOf(initial) }
     FlowRow(
         modifier = Modifier.padding(8.dp),
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        horizontalArrangement = Arrangement.spacedBy(16.dp),
+        verticalArrangement = Arrangement.spacedBy(4.dp)
     ) {
         for (i in colours.indices) {
             // circle button code obtained from: https://stackoverflow.com/questions/74583523/android-jetpack-compose-how-to-create-a-button-with-an-icon-in-it
@@ -275,14 +303,14 @@ val texturesDef: Map<Texture, Int> = mapOf(
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun TexturePicker(
-    textures: Map<String, Int> = texturesDef,
+    textures: Map<Texture, Int> = texturesDef,
     initial: String = "Solid",
     onClick: (String) -> Unit
 ) {
     var texture by remember { mutableStateOf(initial) }
     FlowRow(
         modifier = Modifier.padding(8.dp),
-        horizontalArrangement = Arrangement.spacedBy(16.dp),
+        horizontalArrangement = Arrangement.SpaceEvenly
     ) {
         for (entry in textures) {
             Column(

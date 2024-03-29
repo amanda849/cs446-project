@@ -26,6 +26,13 @@
     <string name="profile_confirm_email">Confirm email</string>
     <string name="profile_edit_password">New password</string>
     <string name="profile_confirm_password">Confirm password</string>
+    <string name="add_colour"><b>Color:</b></string>
+    <string name="add_texture"><b>Texture:</b></string>
+    <string name="add_date"><b>Date:</b></string>
+    <string name="add_time"><b>Time:</b></string>
+    <string name="add_symptom"><b>Symptoms:</b></string>
+    <string name="add_factors"><b>Factors:</b></string>
+    <string name="add_location"><b>Location:</b></string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="terms_and_services_content">

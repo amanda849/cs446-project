@@ -124,7 +124,7 @@ fun EditContents(
     val poop = bowelLogViewModel.getBowelLog(poopId)
         ?: throw IllegalStateException("poopId ${poopId} not valid")
 
-    var colorInt by remember {mutableStateOf(0)}
+    var colorInt by remember {mutableStateOf(Colour.entries.indexOfFirst { it == poop.color })}
     var textureStr by remember {mutableStateOf(poop.texture.toString())}
     var pickedTimeStart by remember { mutableStateOf(Calendar.getInstance().apply { time = poop.timeStarted }) }
     var pickedTimeEnd by remember { mutableStateOf(Calendar.getInstance().apply { time = poop.timeEnded }) }
@@ -253,10 +253,10 @@ fun EditContents(
             }
         }
 
-        Row (
+        FlowRow (
             modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
+            verticalArrangement = Arrangement.spacedBy(4.dp),
+            horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
 
             ColourPicker(
@@ -269,10 +269,9 @@ fun EditContents(
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        Row (
+        FlowRow (
             modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
+            horizontalArrangement = Arrangement.SpaceEvenly
         ) {
 
             TexturePicker(initial = poop.texture.toString(), onClick = { it ->

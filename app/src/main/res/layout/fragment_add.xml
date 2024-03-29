@@ -8,13 +8,12 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_height="0dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="64dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
@@ -22,17 +21,16 @@
             android:layout_height="wrap_content"
             android:orientation="vertical" >
 
-            <TextView
-                android:id="@+id/add_prompt"
+            <androidx.compose.ui.platform.ComposeView
+                android:id="@+id/title_compose"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/add_prompt" />
+                android:layout_height="match_parent" />
 
             <TextView
                 android:id="@+id/textView3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Colour:" />
+                android:text="@string/add_colour" />
 
             <androidx.compose.ui.platform.ComposeView
                 android:id="@+id/colour_picker"
@@ -43,7 +41,7 @@
                 android:id="@+id/textView4"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Texture:" />
+                android:text="@string/add_texture" />
 
             <androidx.compose.ui.platform.ComposeView
                 android:id="@+id/texture_picker"
@@ -55,13 +53,19 @@
                 android:id="@+id/textView5"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Time:" />
+                android:text="@string/add_date" />
 
             <androidx.compose.ui.platform.ComposeView
                 android:id="@+id/date_picker"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"/>
+
+            <TextView
+                android:id="@+id/textView9"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/add_time" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -93,7 +97,7 @@
                 android:id="@+id/textView6"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Location:" />
+                android:text="@string/add_location" />
 
             <EditText
                 android:id="@+id/location"
@@ -107,7 +111,7 @@
                 android:id="@+id/textView7"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Symptoms:" />
+                android:text="@string/add_symptom" />
 
             <androidx.compose.ui.platform.ComposeView
                 android:id="@+id/symptom_picker"
@@ -118,7 +122,7 @@
                 android:id="@+id/textView8"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Symptoms:" />
+                android:text="@string/add_factors" />
 
             <androidx.compose.ui.platform.ComposeView
                 android:id="@+id/factor_picker"
