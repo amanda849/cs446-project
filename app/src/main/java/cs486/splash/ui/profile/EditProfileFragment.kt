@@ -28,7 +28,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import cs486.splash.R
 import cs486.splash.OnboardingActivity
-import cs486.splash.databinding.FragmentProfileBinding
+import cs486.splash.databinding.FragmentEditProfileBinding
 import cs486.splash.models.UserRepository
 import cs486.splash.ui.add.PastOrPresentSelectableDates
 import cs486.splash.ui.onboarding.BirthdaySetupFragment
@@ -38,9 +38,9 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 
-class ProfileFragment : Fragment() {
+class EditProfileFragment : Fragment() {
 
-    private var _binding: FragmentProfileBinding? = null
+    private var _binding: FragmentEditProfileBinding? = null
 
     private val binding get() = _binding!!
 
@@ -51,45 +51,24 @@ class ProfileFragment : Fragment() {
     ): View {
         val userViewModel = ViewModelProvider(this)[UserViewModel::class.java]
 
-        _binding = FragmentProfileBinding.inflate(inflater, container, false)
-
-        userViewModel.userProfile.observe(viewLifecycleOwner){
-            if (it != null) {
-                _binding!!.userName.setText(it.name)
-                _binding!!.userBirthdate.setText(it.birthDate)
-            }
-        }
+        _binding = FragmentEditProfileBinding.inflate(inflater, container, false)
 
         userViewModel.user.observe(viewLifecycleOwner) {
             if (it != null) {
-                _binding!!.userEmail.setText(it.email)
+                _binding!!.emailField.setText(it.email)
             }
         }
 
-        // Edit profile button
-        _binding!!.editProfileBtn.setOnClickListener {
+        // Back to profile page button
+        _binding!!.backBtn.setOnClickListener {
             val fragmentManager = requireActivity().supportFragmentManager
             val fragmentTransaction = fragmentManager.beginTransaction()
-            fragmentTransaction.replace(this.id, EditProfileFragment())
-            fragmentTransaction.addToBackStack(null) // Optional: Add to back stack
+            fragmentTransaction.remove(this)
             fragmentTransaction.commit()
         }
 
         return binding.root
     }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        val signOutBtn: Button = view.findViewById(R.id.signOutBtn)
-        signOutBtn.setOnClickListener {
-            UserRepository.userSignOut()
-
-            val intent = Intent(requireContext(), OnboardingActivity::class.java)
-            startActivity(intent)
-        }
-    }
-
 
     override fun onDestroyView() {
         super.onDestroyView()
