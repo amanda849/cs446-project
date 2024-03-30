@@ -4,6 +4,4 @@
         android:title="Last week" />
     <item android:id="@+id/month_report"
         android:title="Last month" />
-    <item android:id="@+id/year_report"
-        android:title="Last year" />
 </menu>

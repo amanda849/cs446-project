@@ -2,12 +2,15 @@ package cs486.splash.ui.analysis
 
 import android.graphics.*
 import android.graphics.pdf.PdfDocument
+import android.os.Build
 import android.os.Bundle
 import android.os.Environment
+import android.util.DisplayMetrics
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowMetrics
 import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.compose.foundation.Image
@@ -46,6 +49,9 @@ import cs486.splash.ui.add.texturesDef
 import cs486.splash.viewmodels.BowelLogViewModel
 import java.io.File
 import java.io.FileOutputStream
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 
 class AnalysisFragment : Fragment() {
@@ -113,7 +119,6 @@ class AnalysisFragment : Fragment() {
             val popup = PopupMenu(context, reportButton)
             popup.menuInflater.inflate(R.menu.popup_menu, popup.menu)
             popup.setOnMenuItemClickListener { menuItem ->
-                Toast.makeText(context, "Selected " + menuItem.title, Toast.LENGTH_SHORT).show()
                 generatePDF(menuItem.title)
                 true
             }
@@ -129,7 +134,32 @@ class AnalysisFragment : Fragment() {
         _binding = null
     }
 
+    private fun createBitmapFromView(view: View): Bitmap {
+        val specWidth: Int =
+            View.MeasureSpec.makeMeasureSpec(PDF_PAGE_WIDTH, View.MeasureSpec.EXACTLY)
+        val specHeight: Int =
+            View.MeasureSpec.makeMeasureSpec(PDF_PAGE_HEIGHT, View.MeasureSpec.EXACTLY)
+        view.measure(specWidth, specHeight)
+        val requiredWidth: Int = view.measuredWidth
+        val requiredHeight: Int = view.measuredHeight
+        view.layout(0, 0, requiredWidth, requiredHeight)
+        val bitmap = Bitmap.createBitmap(requiredWidth, requiredHeight, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bitmap)
+        view.draw(canvas)
+        return bitmap
+    }
+
     private fun generatePDF(s: CharSequence?) {
+        val inflater = LayoutInflater.from(context)
+        val pdfView = inflater.inflate(R.layout.pdf_template, null)
+
+        val displayMetrics = DisplayMetrics()
+        activity?.windowManager?.defaultDisplay?.getMetrics(displayMetrics)
+
+        pdfView.measure(View.MeasureSpec.makeMeasureSpec(PDF_PAGE_WIDTH, View.MeasureSpec.AT_MOST),
+            View.MeasureSpec.makeMeasureSpec(PDF_PAGE_HEIGHT, View.MeasureSpec.AT_MOST))
+        pdfView.layout(0, 0, displayMetrics.widthPixels, displayMetrics.heightPixels)
+
         val doc = PdfDocument()
         val pageInfo = PdfDocument.PageInfo.Builder(
             PDF_PAGE_WIDTH,
@@ -139,31 +169,38 @@ class AnalysisFragment : Fragment() {
 
         val page = doc.startPage(pageInfo)
         val canvas = page.canvas
-        val title = Paint()
-        title.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.NORMAL))
-        title.textSize = 15f
+        pdfView.draw(canvas)
+        //val title = Paint()
+        //title.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.NORMAL))
+        //title.textSize = 15f
 
-        canvas.drawText("Report for " + s.toString().lowercase(), 209F, 100F, title)
+        //canvas.drawText("Report for " + s.toString().lowercase(), 209F, 100F, title)
 
+        // createBitmapFromView(pdfView.findViewById(R.id.pdf_content)).let{ canvas.drawBitmap(it, 0f, 20f, null) }
         doc.finishPage(page)
 
-        val file = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "Plop Report.pdf")
+        val filename = "Plop_Report_${SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())}.pdf"
+        val file = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), filename)
 
         try {
-            doc.writeTo(FileOutputStream(file))
-            Toast.makeText(context, "PDF file generated...", Toast.LENGTH_SHORT).show()
+            val outputStream = FileOutputStream(file)
+            doc.writeTo(outputStream)
+            outputStream.close()
+            Toast.makeText(context, "PDF file saved to " + file.absolutePath, Toast.LENGTH_SHORT)
+                .show()
         } catch (e: Exception) {
             e.printStackTrace()
-            Toast.makeText(context, "Failed to generate PDF..." + e.message, Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "Failed to generate PDF: " + e.message, Toast.LENGTH_SHORT)
+                .show()
         }
 
         doc.close()
     }
 
-    companion object {
-        /**Dimension For A4 Size Paper (1 inch = 72 points)**/
-        private const val PDF_PAGE_WIDTH = 595 //8.26 Inch
-        private const val PDF_PAGE_HEIGHT = 842 //11.69 Inch
+    /**Dimensions for A4 size paper**/
+    companion object Dimensions {
+        private const val PDF_PAGE_WIDTH = 1080 //8.26 Inch
+        private const val PDF_PAGE_HEIGHT = 1920 //11.69 Inch
         private const val PDF_PAGE_NUMBER = 1
     }
 
