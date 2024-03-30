@@ -123,7 +123,7 @@ fun PoopViewContents(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(
-                    color = Color(0xFF9C6644),
+                    color = Color(poop.color.toColorLong()),
                     shape = RoundedCornerShape(8.dp)
                 ) // Rounded corners
                 .padding(16.dp), // Padding around the text inside the box
