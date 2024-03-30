@@ -1,6 +1,7 @@
 package cs486.splash.models
 
 import android.util.Log
+import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.DocumentReference
@@ -76,19 +77,32 @@ object UserRepository {
         }
     }
 
-    suspend fun updatePassword(newPass: String){
+    suspend fun updatePassword(pass: String, newPass: String){
         try {
+            reauthenticate(pass)
             user?.updatePassword(newPass)?.await()
         } catch (e: Exception) {
             throw AuthenticationException(e.message?: "Reset failed. Please try again.")
         }
     }
 
-    suspend fun updateEmail(newEmail: String){
+    suspend fun updateEmail(pass: String, newEmail: String){
         try {
+            reauthenticate(pass)
             user?.verifyBeforeUpdateEmail(newEmail)?.await()
         } catch (e: Exception) {
             throw AuthenticationException(e.message?: "Failed to send verification email. Please try again.")
+        }
+    }
+
+    suspend fun reauthenticate(pass: String){
+        try{
+            val credential = user?.email?.let { EmailAuthProvider.getCredential(it, pass) }
+            if (credential != null) {
+                user?.reauthenticate(credential)?.await()
+            }
+        } catch (e: Exception) {
+            throw AuthenticationException(e.message?: "Failed to re-authenticate. Please try again.")
         }
     }
 }

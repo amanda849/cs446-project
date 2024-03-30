@@ -17,6 +17,9 @@ import com.google.firebase.firestore.EventListener
 import cs486.splash.shared.UserProfile
 import cs486.splash.shared.UserProfile.Companion.toProfile
 
+class EmptyStringException(message: String? = null, cause: Throwable? = null) :
+    RuntimeException(message, cause)
+
 class UserViewModel : ViewModel() {
     val TAG = "USER_VIEW_MODEL"
 
@@ -53,6 +56,7 @@ class UserViewModel : ViewModel() {
         )
 
         UserRepository.updateUserProfile(updateMap)
+        getUserProfile()
     }
 
     fun setBirthDate(birthDate: String){
@@ -61,12 +65,12 @@ class UserViewModel : ViewModel() {
         )
 
         UserRepository.updateUserProfile(updateMap)
+        getUserProfile()
     }
 
     fun getUserProfile() {
         UserRepository.getUserProfile()?.get()
             ?.addOnSuccessListener { snapshot ->
-                Log.e(TAG, snapshot.toString())
                 _userProfile.value = snapshot.toProfile()
             }
             ?.addOnFailureListener { exception ->
@@ -78,19 +82,23 @@ class UserViewModel : ViewModel() {
         UserRepository.resetPassword(email)
     }
 
-    suspend fun updatePassword(newPass: String, confirmPass: String){
+    suspend fun updatePassword(pass: String, newPass: String, confirmPass: String){
+        if(pass == "" || newPass == "") throw EmptyStringException()
+
         if(confirmPass != newPass){
             throw AuthenticationException("The passwords you entered do not match. Please make sure your passwords match exactly.")
         } else {
-            UserRepository.updatePassword(newPass)
+            UserRepository.updatePassword(pass, newPass)
         }
     }
 
-    suspend fun updateEmail(newEmail: String, confirmEmail: String){
+    suspend fun updateEmail(pass: String, newEmail: String, confirmEmail: String){
+        if(pass == "" || newEmail == "") throw EmptyStringException()
+
         if(newEmail != confirmEmail){
             throw AuthenticationException("The emails you entered do not match. Please make sure your passwords match exactly.")
         } else {
-            UserRepository.updateEmail(newEmail)
+            UserRepository.updateEmail(pass, newEmail)
         }
     }
 }

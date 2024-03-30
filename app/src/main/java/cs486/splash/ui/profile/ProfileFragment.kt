@@ -26,19 +26,18 @@ class ProfileFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         val userViewModel = ViewModelProvider(this)[UserViewModel::class.java]
-
         _binding = FragmentProfileBinding.inflate(inflater, container, false)
 
         userViewModel.user.observe(viewLifecycleOwner) {
             if (it != null) {
-                _binding!!.userEmail.setText(it.email)
+                _binding!!.userEmail.text = it.email
             }
         }
 
         userViewModel.userProfile.observe(viewLifecycleOwner){
             if (it != null) {
-                _binding!!.userName.setText(it.name)
-                _binding!!.userBirthdate.setText(it.birthDate)
+                _binding!!.userName.text = it.name
+                _binding!!.userBirthdate.text = it.birthDate
             }
         }
 
