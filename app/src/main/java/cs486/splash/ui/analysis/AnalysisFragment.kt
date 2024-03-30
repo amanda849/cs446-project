@@ -147,13 +147,14 @@ class AnalysisFragment : Fragment() {
 
         doc.finishPage(page)
 
-        val file = File(Environment.getExternalStorageDirectory(), "Plop Report.pdf")
+        val file = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "Plop Report.pdf")
 
         try {
             doc.writeTo(FileOutputStream(file))
             Toast.makeText(context, "PDF file generated...", Toast.LENGTH_SHORT).show()
         } catch (e: Exception) {
-            Toast.makeText(context, "Failed to generate PDF...", Toast.LENGTH_SHORT).show()
+            e.printStackTrace()
+            Toast.makeText(context, "Failed to generate PDF..." + e.message, Toast.LENGTH_SHORT).show()
         }
 
         doc.close()
