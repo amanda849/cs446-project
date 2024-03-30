@@ -5,16 +5,17 @@ import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.content.DialogInterface
 import android.content.Intent
+import android.graphics.Typeface
 import android.os.Bundle
 import android.text.Html
 import android.text.InputType
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.DatePicker
-import android.widget.EditText
-import android.widget.LinearLayout
+import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
@@ -28,7 +29,6 @@ import cs486.splash.OnboardingActivity
 import cs486.splash.databinding.FragmentProfileBinding
 import cs486.splash.models.AuthenticationException
 import cs486.splash.models.UserRepository
-import cs486.splash.viewmodels.EmptyStringException
 import cs486.splash.viewmodels.UserViewModel
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -103,13 +103,24 @@ class ProfileFragment : Fragment() {
     }
 
     private fun showNameDialog() {
+        val layout = LinearLayout(requireContext())
+        layout.orientation = LinearLayout.VERTICAL
+
+        val titleText = TextView(requireContext())
+        titleText.text = "Change Your Username"
+        titleText.textSize = 20f
+        titleText.setTypeface(null, Typeface.BOLD)
+        titleText.gravity = Gravity.CENTER
+
         val editText = EditText(requireContext())
         editText.hint = "New username"
 
+        layout.addView(titleText)
+        layout.addView(editText)
+
         MaterialAlertDialogBuilder(requireContext())
-            .setTitle(Html.fromHtml("<b>Change your username<b>"))
-            .setView(editText)
-            .setPositiveButton("OK") { _, _ ->
+            .setView(layout)
+            .setPositiveButton("Save") { _, _ ->
                 userViewModel.setUserName(editText.text.toString())
             }
             .setNegativeButton("Cancel") { _, _ -> }
@@ -119,7 +130,7 @@ class ProfileFragment : Fragment() {
     private fun showDatePicker() {
         val builder = MaterialDatePicker.Builder.datePicker()
 
-        builder.setTitleText("Change your birthday")
+        builder.setTitleText("Change Your Birthday")
         // Set the range of selectable dates to be from today's date backward
         val today = MaterialDatePicker.todayInUtcMilliseconds()
         builder.setSelection(today)
@@ -128,9 +139,9 @@ class ProfileFragment : Fragment() {
                 .setValidator(DateValidatorPointBackward.now())
                 .build()
         )
+        builder.setPositiveButtonText("Save")
 
         val picker = builder.build()
-
         picker.addOnPositiveButtonClickListener { selection ->
             val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
             dateFormat.timeZone = TimeZone.getTimeZone("UTC")
@@ -145,25 +156,29 @@ class ProfileFragment : Fragment() {
     private fun showEmailDialog() {
         val layout = LinearLayout(requireContext())
         layout.orientation = LinearLayout.VERTICAL
+
+        val titleText = TextView(requireContext())
+        titleText.text = "Change Your Email"
+        titleText.textSize = 20f
+        titleText.setTypeface(null, Typeface.BOLD)
+        titleText.gravity = Gravity.CENTER
+
         val passwordEditText = EditText(requireContext())
         val emailEditText = EditText(requireContext())
         val emailConfirmationEditText = EditText(requireContext())
-
-
         passwordEditText.hint = "Password"
         passwordEditText.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
         emailEditText.hint = "New email"
         emailConfirmationEditText.hint = "Confirm new email"
 
+        layout.addView(titleText)
         layout.addView(passwordEditText)
         layout.addView(emailEditText)
         layout.addView(emailConfirmationEditText)
 
-
         MaterialAlertDialogBuilder(requireContext())
-            .setTitle(Html.fromHtml("<b>Change your email<b>"))
             .setView(layout)
-            .setPositiveButton("OK") { _, _ ->
+            .setPositiveButton("Save") { _, _ ->
                 changeEmail(
                     passwordEditText.text.toString(),
                     emailEditText.text.toString(),
@@ -205,18 +220,23 @@ class ProfileFragment : Fragment() {
                         dialog.dismiss()
                     }
                     .show()
-            } catch(_: EmptyStringException){}
+            }
         }
     }
 
     private fun showPasswordDialog() {
         val layout = LinearLayout(requireContext())
         layout.orientation = LinearLayout.VERTICAL
+
+        val titleText = TextView(requireContext())
+        titleText.text = "Change Your Password"
+        titleText.textSize = 20f
+        titleText.setTypeface(null, Typeface.BOLD)
+        titleText.gravity = Gravity.CENTER
+
         val currentPasswordEditText = EditText(requireContext())
         val newPasswordEditText = EditText(requireContext())
         val confirmPasswordEditText = EditText(requireContext())
-
-
         currentPasswordEditText.hint = "Current password"
         currentPasswordEditText.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
         newPasswordEditText.hint = "New password"
@@ -224,14 +244,14 @@ class ProfileFragment : Fragment() {
         confirmPasswordEditText.hint = "Confirm new password"
         confirmPasswordEditText.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
 
+        layout.addView(titleText)
         layout.addView(currentPasswordEditText)
         layout.addView(newPasswordEditText)
         layout.addView(confirmPasswordEditText)
 
         MaterialAlertDialogBuilder(requireContext())
-            .setTitle(Html.fromHtml("<b>Change your password<b>"))
             .setView(layout)
-            .setPositiveButton("OK") { _, _ ->
+            .setPositiveButton("Save") { _, _ ->
                 changePassword(
                     currentPasswordEditText.text.toString(),
                     newPasswordEditText.text.toString(),
@@ -272,7 +292,7 @@ class ProfileFragment : Fragment() {
                         dialog.dismiss()
                     }
                     .show()
-            } catch(_: EmptyStringException){}
+            }
         }
     }
 }
