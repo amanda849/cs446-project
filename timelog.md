@@ -67,3 +67,5 @@ Date | Amanda | Cindy | Katherine | Reyna | Joanne | Anthony | Task
 03/28/2024 | | | | | 5 | | Basic profile update UI
 03/29/2024 |  | 0.25 |  |  |  |  | Researched firestore security rule and configured it. 
 03/29/2024 |  | 3 |  |  |  |  | Connected edit profile to backend.  
+03/29/2024 | | | | |  | 1.5 | Graphics and logo design work
+03/29/2024 | | | | |  | 2 | Updating texture, adding in logo and designs, updating colours etc
