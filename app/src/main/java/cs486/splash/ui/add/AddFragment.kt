@@ -96,7 +96,7 @@ class AddFragment : Fragment() {
                 }
             }
 
-            var textureStr: String = "Solid"
+            var textureStr: String = "Pebbles (Hard)"
             binding.texturePicker.apply {
                 setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
                 setContent {
@@ -295,21 +295,26 @@ fun ColourPicker(
 }
 
 val texturesDef: Map<Texture, Int> = mapOf(
-    Texture.SOLID to R.drawable.poops_solid,
-    Texture.SOFT to R.drawable.poops_soft,
-    Texture.PEBBLES to R.drawable.poops_pebbles
+    Texture.PEBBLES to R.drawable.poops_pebbles,
+    Texture.LUMPY to R.drawable.poops_lumpy,
+    Texture.SAUSAGE to R.drawable.poops_sausage,
+    Texture.SMOOTH to R.drawable.poops_soft,
+    Texture.BLOBS to R.drawable.poops_blobs,
+    Texture.MUSHY to R.drawable.poops_mushy,
+    Texture.LIQUID to R.drawable.poops_liquid
 )
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun TexturePicker(
     textures: Map<Texture, Int> = texturesDef,
-    initial: String = "Solid",
+    initial: String = "Pebbles (Hard)",
     onClick: (String) -> Unit
 ) {
     var texture by remember { mutableStateOf(initial) }
     FlowRow(
-        modifier = Modifier.padding(8.dp),
+        verticalArrangement = Arrangement.spacedBy(4.dp),
+        modifier = Modifier.padding(16.dp),
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
         for (entry in textures) {

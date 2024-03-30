@@ -11,11 +11,16 @@
     <TextView
         android:text="@string/sign_in"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        />
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp">
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
@@ -26,7 +31,9 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp">
 
         <EditText
             android:id="@+id/password"
@@ -41,17 +48,21 @@
         android:id="@+id/resetPassword"
         android:text="Forgot password?"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"/>
 
     <Button
         android:id="@+id/signInBtn"
         android:text="@string/sign_in"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:textAllCaps="false"/>
 
     <Button
         android:id="@+id/signUpBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/don_t_have_an_account_sign_up"/>
+        android:text="@string/don_t_have_an_account_sign_up"
+        android:textAllCaps="false"/>
 </LinearLayout>

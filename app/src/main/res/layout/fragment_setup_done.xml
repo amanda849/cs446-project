@@ -11,17 +11,26 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:textAllCaps="false"
         android:text="Nicely done!" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:textAllCaps="false"
         android:text="You are ready to start using Splash!" />
 
     <Button
         android:id="@+id/getStartedBtn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:textAllCaps="false"
         android:text="Get Started" />
 
 </LinearLayout>
