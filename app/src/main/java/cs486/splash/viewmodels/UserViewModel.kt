@@ -17,9 +17,6 @@ import com.google.firebase.firestore.EventListener
 import cs486.splash.shared.UserProfile
 import cs486.splash.shared.UserProfile.Companion.toProfile
 
-class EmptyStringException(message: String? = null, cause: Throwable? = null) :
-    RuntimeException(message, cause)
-
 class UserViewModel : ViewModel() {
     val TAG = "USER_VIEW_MODEL"
 
@@ -83,7 +80,7 @@ class UserViewModel : ViewModel() {
     }
 
     suspend fun updatePassword(pass: String, newPass: String, confirmPass: String){
-        if(pass == "" || newPass == "") throw EmptyStringException()
+        if(pass == "" || newPass == "") throw AuthenticationException("One or more fields were empty. Please fill out all fields.")
 
         if(confirmPass != newPass){
             throw AuthenticationException("The passwords you entered do not match. Please make sure your passwords match exactly.")
@@ -93,7 +90,7 @@ class UserViewModel : ViewModel() {
     }
 
     suspend fun updateEmail(pass: String, newEmail: String, confirmEmail: String){
-        if(pass == "" || newEmail == "") throw EmptyStringException()
+        if(pass == "" || newEmail == "") throw AuthenticationException("One or more fields were empty. Please fill out all fields.")
 
         if(newEmail != confirmEmail){
             throw AuthenticationException("The emails you entered do not match. Please make sure your passwords match exactly.")
