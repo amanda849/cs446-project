@@ -69,3 +69,4 @@ Date | Amanda | Cindy | Katherine | Reyna | Joanne | Anthony | Task
 03/29/2024 |  | 3 |  |  |  |  | Connected edit profile to backend.  
 03/29/2024 | | | | |  | 1.5 | Graphics and logo design work
 03/29/2024 | | | | |  | 2 | Updating texture, adding in logo and designs, updating colours etc
+03/28/2024 | | | | | 6 | | Researched PDF generation, got PDF generation and saving to user's downloads working with dummy PDF
