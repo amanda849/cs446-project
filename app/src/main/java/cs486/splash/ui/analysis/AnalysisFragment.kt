@@ -1,10 +1,15 @@
 package cs486.splash.ui.analysis
 
+import android.graphics.*
+import android.graphics.pdf.PdfDocument
 import android.os.Bundle
+import android.os.Environment
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.PopupMenu
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -32,12 +37,15 @@ import androidx.compose.ui.unit.sp
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.tabs.TabLayout
+import cs486.splash.R
 import cs486.splash.databinding.FragmentAnalysisBinding
 import cs486.splash.shared.AnalysisData
 import cs486.splash.shared.Colour
 import cs486.splash.shared.Texture
 import cs486.splash.ui.add.texturesDef
 import cs486.splash.viewmodels.BowelLogViewModel
+import java.io.File
+import java.io.FileOutputStream
 
 
 class AnalysisFragment : Fragment() {
@@ -97,12 +105,65 @@ class AnalysisFragment : Fragment() {
         genSymptomsDisplay(binding)
         genFactorsDisplay(binding)
 
+
+        // Download PDF report functionality
+        val reportButton = binding.downloadReportBtn
+        reportButton.setOnClickListener{
+            // Pop-up menu to select data for last week, month, or year
+            val popup = PopupMenu(context, reportButton)
+            popup.menuInflater.inflate(R.menu.popup_menu, popup.menu)
+            popup.setOnMenuItemClickListener { menuItem ->
+                Toast.makeText(context, "Selected " + menuItem.title, Toast.LENGTH_SHORT).show()
+                generatePDF(menuItem.title)
+                true
+            }
+
+            popup.show()
+        }
+
         return root
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun generatePDF(s: CharSequence?) {
+        val doc = PdfDocument()
+        val pageInfo = PdfDocument.PageInfo.Builder(
+            PDF_PAGE_WIDTH,
+            PDF_PAGE_HEIGHT,
+            PDF_PAGE_NUMBER
+        ).create()
+
+        val page = doc.startPage(pageInfo)
+        val canvas = page.canvas
+        val title = Paint()
+        title.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.NORMAL))
+        title.textSize = 15f
+
+        canvas.drawText("Report for " + s.toString().lowercase(), 209F, 100F, title)
+
+        doc.finishPage(page)
+
+        val file = File(Environment.getExternalStorageDirectory(), "Plop Report.pdf")
+
+        try {
+            doc.writeTo(FileOutputStream(file))
+            Toast.makeText(context, "PDF file generated...", Toast.LENGTH_SHORT).show()
+        } catch (e: Exception) {
+            Toast.makeText(context, "Failed to generate PDF...", Toast.LENGTH_SHORT).show()
+        }
+
+        doc.close()
+    }
+
+    companion object {
+        /**Dimension For A4 Size Paper (1 inch = 72 points)**/
+        private const val PDF_PAGE_WIDTH = 595 //8.26 Inch
+        private const val PDF_PAGE_HEIGHT = 842 //11.69 Inch
+        private const val PDF_PAGE_NUMBER = 1
     }
 
 }
