@@ -6,6 +6,7 @@ import android.app.DatePickerDialog
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
+import android.text.Html
 import android.text.InputType
 import android.view.LayoutInflater
 import android.view.View
@@ -106,7 +107,7 @@ class ProfileFragment : Fragment() {
         editText.hint = "New username"
 
         MaterialAlertDialogBuilder(requireContext())
-            .setTitle("Change your username")
+            .setTitle(Html.fromHtml("<b>Change your username<b>"))
             .setView(editText)
             .setPositiveButton("OK") { _, _ ->
                 userViewModel.setUserName(editText.text.toString())
@@ -160,7 +161,7 @@ class ProfileFragment : Fragment() {
 
 
         MaterialAlertDialogBuilder(requireContext())
-            .setTitle("Change your email")
+            .setTitle(Html.fromHtml("<b>Change your email<b>"))
             .setView(layout)
             .setPositiveButton("OK") { _, _ ->
                 changeEmail(
@@ -228,7 +229,7 @@ class ProfileFragment : Fragment() {
         layout.addView(confirmPasswordEditText)
 
         MaterialAlertDialogBuilder(requireContext())
-            .setTitle("Change your password")
+            .setTitle(Html.fromHtml("<b>Change your password<b>"))
             .setView(layout)
             .setPositiveButton("OK") { _, _ ->
                 changePassword(
