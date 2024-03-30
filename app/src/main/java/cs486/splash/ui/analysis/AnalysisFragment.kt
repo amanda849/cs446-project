@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.sp
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.tabs.TabLayout
+import cs486.splash.R
 import cs486.splash.databinding.FragmentAnalysisBinding
 import cs486.splash.shared.AnalysisData
 import cs486.splash.shared.Colour
@@ -129,9 +130,13 @@ fun RoundedRectangle(
 fun genTextureDisplay(
     binding: FragmentAnalysisBinding,
     textureValues: Map<Texture, Pair<Int, String>> = mapOf(
-        Texture.SOLID to Pair(0, "0.00%"),
-        Texture.SOFT to Pair(0, "0.00%"),
-        Texture.PEBBLES to Pair(0, "0.00%")
+        Texture.PEBBLES to Pair(0, "0.00%"),
+        Texture.LUMPY to Pair(0, "0.00%"),
+        Texture.SAUSAGE to Pair(0, "0.00%"),
+        Texture.SMOOTH to Pair(0, "0.00%"),
+        Texture.BLOBS to Pair(0, "0.00%"),
+        Texture.MUSHY to Pair(0, "0.00%"),
+        Texture.LIQUID to Pair(0, "0.00%")
     )
 ) {
     binding.textureDisplay.apply {
