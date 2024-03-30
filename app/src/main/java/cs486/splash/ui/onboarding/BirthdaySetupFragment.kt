@@ -48,6 +48,8 @@ class BirthdaySetupFragment : Fragment() {
     private fun showDatePicker() {
         val builder = MaterialDatePicker.Builder.datePicker()
 
+        builder.setTitleText("Set your birthday")
+
         // Set the range of selectable dates to be from today's date backward
         val today = MaterialDatePicker.todayInUtcMilliseconds()
         builder.setSelection(today)
