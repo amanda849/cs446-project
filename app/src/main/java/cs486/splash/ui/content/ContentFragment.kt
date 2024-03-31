@@ -26,6 +26,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
@@ -123,7 +125,11 @@ class ContentFragment : Fragment() {
                                             // got from https://stackoverflow.com/questions/45535272/how-to-link-button-with-website-in-android-studio-using-kotlin
                                             val i = Intent(Intent.ACTION_VIEW, Uri.parse(curr.url))
                                             startActivity(i)
-                                        }
+                                        },
+                                        colors = ButtonColors(
+                                            Color(resources.getColor(R.color.primary)), Color.White,
+                                            Color(resources.getColor(R.color.primary)), Color(resources.getColor(R.color.primary))
+                                        )
                                     ) {
                                         Text("Go to source")
                                     }
