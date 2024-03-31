@@ -1,5 +1,6 @@
 package cs486.splash.shared
 
+import cs486.splash.R
 import cs486.splash.models.BowelLog
 import java.util.Date
 import kotlin.math.roundToInt
@@ -94,9 +95,9 @@ class AnalysisData {
     /**
      * Returns the number of blobs and the percentages of logs with each texture
      */
-    fun getPercentageTextures() : Map<Texture, Pair<Int, String>> {
+    fun getPercentageTextures() : Map<Texture, Pair<Float, String>> {
         return percentageTextures.mapValues {
-            Pair((it.value / 10).roundToInt(), "%.2f".format(it.value) + "%")
+            Pair((it.value / 10), "%.2f".format(it.value) + "%")
         }
     }
 
@@ -146,6 +147,8 @@ class AnalysisData {
     fun update(startDate : Date, endDate : Date, logs : List<BowelLog>) {
         if (logs.isEmpty()) return
 
+        numUnusualColours = 0
+
         // Accumulators
         val timesPerDay : MutableList<Int> = mutableListOf(0)
         val colourCount : MutableMap<Colour, Int> = mutableMapOf(
@@ -161,9 +164,13 @@ class AnalysisData {
             Colour.GREEN to 0,
         )
         val textureCount : MutableMap<Texture, Float> = mutableMapOf(
-            Texture.SOLID to 0F,
-            Texture.SOFT to 0F,
-            Texture.PEBBLES to 0F
+            Texture.PEBBLES to 0F,
+            Texture.LUMPY to 0F,
+            Texture.SAUSAGE to 0F,
+            Texture.SMOOTH to 0F,
+            Texture.BLOBS to 0F,
+            Texture.MUSHY to 0F,
+            Texture.LIQUID to 0F
         )
         val locations : MutableSet<String> = mutableSetOf()
         val durations : MutableList<Float> = mutableListOf()

@@ -38,4 +38,4 @@ enum class Colour(@ColorInt private var c: Long) {
     }
 }
 
-val unusualColours : List<Colour> = listOf(Colour.PINKISH_BROWN)
+val unusualColours : List<Colour> = listOf(Colour.BLACK, Colour.GREEN)

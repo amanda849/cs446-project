@@ -6,7 +6,9 @@
     android:orientation="vertical"
     android:gravity="center"
     android:layout_height="match_parent"
-    tools:context=".ui.onboarding.BirthdaySetupFragment">
+    tools:context=".ui.onboarding.BirthdaySetupFragment"
+    android:layout_marginStart="16dp"
+    android:layout_marginEnd="16dp">
 
     <TextView
         android:layout_width="match_parent"
@@ -26,7 +28,8 @@
         android:id="@+id/nextBtn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Next" />
+        android:text="Next"
+        android:textAllCaps="false"/>
 
 
 </LinearLayout>
