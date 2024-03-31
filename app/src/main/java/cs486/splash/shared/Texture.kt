@@ -1,11 +1,11 @@
 package cs486.splash.shared
 
 enum class Texture(private var t: String) {
-    PEBBLES("Pebbles (Hard)"),
+    PEBBLES("Pebbles"),
     LUMPY("Lumpy"),
     SAUSAGE("Sausage"),
     SMOOTH("Smooth"),
-    BLOBS("Blobs (Soft)"),
+    BLOBS("Blobs"),
     MUSHY("Mushy"),
     LIQUID("Liquid");
     
