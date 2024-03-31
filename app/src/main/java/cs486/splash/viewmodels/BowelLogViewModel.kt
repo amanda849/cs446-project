@@ -66,7 +66,7 @@ class BowelLogViewModel : ViewModel() {
             }
             bowelLogs.value = bowelLogList
             bowelLogsByDate = orderBowelLogsByDate()
-            updateAnalysisData()
+            // updateAnalysisData()
         })
     }
 
@@ -81,7 +81,7 @@ class BowelLogViewModel : ViewModel() {
         bowelLogRepository.addNewBowelLog(bowelLog)
 
         // Update the analysis data when a new log is added
-        updateAnalysisData()
+        // updateAnalysisData()
     }
 
     /**
@@ -141,7 +141,7 @@ class BowelLogViewModel : ViewModel() {
         bowelLogRepository.deleteBowelLog(bowelLogId)
 
         // Update the analysis data when a log is deleted
-        updateAnalysisData()
+        // updateAnalysisData()
     }
 
     /**
@@ -208,7 +208,7 @@ class BowelLogViewModel : ViewModel() {
     /**
      * Recompute all analysis data for the past week, month and year
      */
-    private fun updateAnalysisData() {
+    fun updateAnalysisData() {
         // Get the current date one time for all time ranges
         val currDate = Date()
 

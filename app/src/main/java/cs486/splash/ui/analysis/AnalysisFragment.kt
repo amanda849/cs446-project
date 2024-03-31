@@ -35,13 +35,13 @@ import androidx.compose.ui.unit.sp
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.tabs.TabLayout
-import cs486.splash.R
 import cs486.splash.databinding.FragmentAnalysisBinding
 import cs486.splash.shared.AnalysisData
 import cs486.splash.shared.Colour
 import cs486.splash.shared.Texture
 import cs486.splash.ui.add.texturesDef
 import cs486.splash.viewmodels.BowelLogViewModel
+import kotlinx.coroutines.*
 
 
 class AnalysisFragment : Fragment() {
@@ -63,11 +63,22 @@ class AnalysisFragment : Fragment() {
 
         val tabLayout = binding.tabLayout
 
+        suspend fun updateAnalysis() = analysisViewModel.updateAnalysisData()
+
+        CoroutineScope(Dispatchers.Main).launch(CoroutineExceptionHandler {
+            _, throwable -> Log.e("Analysis", "Error in: ${throwable.localizedMessage}")
+        }) {
+            val res = async { updateAnalysis() }
+            res.await()
+            val analysisDataWeek = analysisViewModel.getAnalysisDataWeek()
+            // display weekly analysis by default on load
+            updateAnalysisDisplay(binding, analysisDataWeek)
+            Log.d("Analysis", "Weekly analysis data loaded: ${analysisDataWeek.hasSufficientData()}")
+        }
+
         val analysisDataWeek = analysisViewModel.getAnalysisDataWeek()
         val analysisDataMonth = analysisViewModel.getAnalysisDataMonth()
         val analysisDataYear = analysisViewModel.getAnalysisDataYear()
-
-        Log.d("Analysis", "Loaded analysis data " + analysisDataWeek.hasSufficientData().toString())
 
         tabLayout.apply {
             addTab(tabLayout.newTab().setText("Last Week"))
@@ -94,12 +105,6 @@ class AnalysisFragment : Fragment() {
                 // Handle tab reselection if needed
             }
         })
-
-        // Default displays on initial load
-        genTextureDisplay(binding)
-        genColourDisplay(binding)
-        genSymptomsDisplay(binding)
-        genFactorsDisplay(binding)
 
         return root
     }
