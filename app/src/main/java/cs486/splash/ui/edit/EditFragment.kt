@@ -287,7 +287,8 @@ fun EditContents(
         ) {
 
             Box {
-                TimePickerSwitchable(currTime = pickedTimeStart, onClick = { newTime ->
+                TimePickerSwitchable(currTime = pickedTimeStart, true, otherTime = pickedTimeEnd,
+                    onClick = { newTime ->
                     pickedTimeStart = Calendar.getInstance().apply { time = newTime.time }
                     Log.d("Edit", "SelectedDate changed to: $newTime")
                 })
@@ -295,7 +296,8 @@ fun EditContents(
 
 
             Box {
-                TimePickerSwitchable(currTime = pickedTimeEnd, onClick = { newTime ->
+                TimePickerSwitchable(currTime = pickedTimeEnd, false, otherTime = pickedTimeStart,
+                    onClick = { newTime ->
                     pickedTimeEnd = Calendar.getInstance().apply { time = newTime.time }
                     Log.d("Edit", "SelectedDate changed to: $newTime")
                 })
