@@ -1,10 +1,19 @@
 package cs486.splash.ui.analysis
 
+import android.graphics.pdf.PdfDocument
 import android.os.Bundle
+import android.os.Environment
+import android.text.SpannableString
+import android.text.SpannableStringBuilder
+import android.text.style.ForegroundColorSpan
+import android.util.DisplayMetrics
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.PopupMenu
+import android.widget.TextView
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -35,12 +44,18 @@ import androidx.compose.ui.unit.sp
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.tabs.TabLayout
+import cs486.splash.R
 import cs486.splash.databinding.FragmentAnalysisBinding
 import cs486.splash.shared.AnalysisData
 import cs486.splash.shared.Colour
 import cs486.splash.shared.Texture
 import cs486.splash.ui.add.texturesDef
 import cs486.splash.viewmodels.BowelLogViewModel
+import java.io.File
+import java.io.FileOutputStream
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 import kotlinx.coroutines.*
 
 
@@ -106,12 +121,170 @@ class AnalysisFragment : Fragment() {
             }
         })
 
+        // Download PDF report functionality
+        val reportButton = binding.downloadReportBtn
+        reportButton.setOnClickListener{
+            // Pop-up menu to select data for last week, month, or year
+            val popup = PopupMenu(context, reportButton)
+            popup.menuInflater.inflate(R.menu.popup_menu, popup.menu)
+            popup.setOnMenuItemClickListener { menuItem ->
+                generatePDF(menuItem.title, analysisDataWeek, analysisDataMonth)
+                true
+            }
+            popup.show()
+        }
+
         return root
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    /** Helper function for PDF formatting */
+    private fun colourToString(colour: Colour): String {
+        return colour.toString().replace("_", " ")
+    }
+
+    /** Sets colour of poop colour string for PDF formatting */
+    private fun colourToSpannableString(colour: Colour): SpannableString {
+        var spannable = SpannableString(colourToString(colour)) // Set text of spannable string as colour
+
+        when (colour) {
+            Colour.BROWN1, Colour.BROWN2, Colour.BROWN3 ->  {
+                spannable = SpannableString("BROWN")
+                spannable.setSpan(ForegroundColorSpan(resources.getColor(R.color.poop_brown)), 0, spannable.length, 0)
+            }
+            Colour.PALE_BROWN -> {
+                spannable.setSpan(ForegroundColorSpan(resources.getColor(R.color.poop_pale_brown)), 0, spannable.length, 0)
+            }
+            Colour.YELLOW_BROWN -> {
+                spannable.setSpan(ForegroundColorSpan(resources.getColor(R.color.poop_yellow_brown)), 0, spannable.length, 0)
+            }
+            Colour.LIGHT_BROWN -> {
+                spannable.setSpan(ForegroundColorSpan(resources.getColor(R.color.poop_light_brown)), 0, spannable.length, 0)
+            }
+            Colour.PINKISH_BROWN -> {
+                spannable.setSpan(ForegroundColorSpan(resources.getColor(R.color.poop_pinkish_brown)), 0, spannable.length, 0)
+            }
+            Colour.DARK_BROWN -> {
+                spannable.setSpan(ForegroundColorSpan(resources.getColor(R.color.poop_dark_brown)), 0, spannable.length, 0)
+            }
+            Colour.BLACK -> {
+                spannable.setSpan(ForegroundColorSpan(resources.getColor(R.color.poop_black)), 0, spannable.length, 0)
+            }
+            Colour.GREEN -> {
+                spannable.setSpan(ForegroundColorSpan(resources.getColor(R.color.poop_green)), 0, spannable.length, 0)
+            }
+        }
+        return spannable
+    }
+
+    /** Updates pdf_template.xml with current analysis values */
+    private fun updatePdfView(view: View, data: AnalysisData) {
+        view.findViewById<TextView>(R.id.poop_total).text = data.getTimesTotal()
+
+        view.findViewById<TextView>(R.id.poop_avg).text = data.getAverageTimesPerDay()
+
+        val textureData = data.getPercentageTextures()
+        val textureString = textureData.map { it.key.toString().lowercase() + ": ${it.value.second}" }.joinToString("\n")
+        view.findViewById<TextView>(R.id.textures).text = textureString
+
+        val colourData = data.getMostCommonColours()
+        val builder = SpannableStringBuilder()
+        val iterator = colourData.listIterator()
+        while (iterator.hasNext()) {
+            val colour = iterator.next()
+            val colourString = colourToSpannableString(colour)
+            builder.append(colourString)
+            if (iterator.hasNext()) {
+                builder.append("\n")
+            }
+        }
+
+        view.findViewById<TextView>(R.id.poop_colours).setText(builder, TextView.BufferType.SPANNABLE)
+
+        view.findViewById<TextView>(R.id.unusual_colour_num).text = data.getNumUnusualColours()
+
+        view.findViewById<TextView>(R.id.average_duration).text = data.getAverageDuration()
+
+        view.findViewById<TextView>(R.id.most_logged_hours).text = data.getMostLogsHours()
+
+        val symptomData = data.getPercentageSymptoms()
+        val symptomString = symptomData.map { "${it.key}: ${it.value}" }.joinToString("\n")
+        view.findViewById<TextView>(R.id.symptoms).text = symptomString
+
+        val factorData = data.getPercentageFactors()
+        val factorString = factorData.map { "${it.key}: ${it.value}" }.joinToString("\n")
+        view.findViewById<TextView>(R.id.factors).text = factorString
+
+        view.findViewById<TextView>(R.id.poop_location_num).text = data.getNumLocations()
+    }
+
+    private fun generatePDF(menuItem: CharSequence?, weekData: AnalysisData, monthData: AnalysisData) {
+        val inflater = LayoutInflater.from(context)
+        val pdfView: View = inflater.inflate(R.layout.pdf_template, null)
+
+        var filename = ""
+        val title = pdfView.findViewById<TextView>(R.id.pdf_title)
+        when (menuItem.toString()) {
+            "Last week" -> {
+                filename = "Splash_Report_Week_of_${SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())}.pdf"
+                title.text = "Your Analysis for the Week of ${SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())}"
+                updatePdfView(pdfView, weekData)
+            }
+            "Last month" -> {
+                filename = "Splash_Report_Month_of_${SimpleDateFormat("yyyy-MM", Locale.getDefault()).format(Date())}.pdf"
+                title.text = "Your Analysis for the Month of ${SimpleDateFormat("yyyy-MM", Locale.getDefault()).format(Date())}"
+                updatePdfView(pdfView, monthData)
+            }
+        }
+
+        // Sizing stuff
+        val displayMetrics = DisplayMetrics()
+        activity?.windowManager?.defaultDisplay?.getMetrics(displayMetrics)
+
+        pdfView.measure(View.MeasureSpec.makeMeasureSpec(PDF_PAGE_WIDTH, View.MeasureSpec.AT_MOST),
+            View.MeasureSpec.makeMeasureSpec(PDF_PAGE_HEIGHT, View.MeasureSpec.AT_MOST))
+        pdfView.layout(0, 0, displayMetrics.widthPixels, displayMetrics.heightPixels)
+
+        // Creating document and drawing to it
+        val doc = PdfDocument()
+        val pageInfo = PdfDocument.PageInfo.Builder(
+            PDF_PAGE_WIDTH,
+            PDF_PAGE_HEIGHT,
+            PDF_PAGE_NUMBER
+        ).create()
+        val page = doc.startPage(pageInfo)
+        val canvas = page.canvas
+        pdfView.draw(canvas)
+
+        doc.finishPage(page)
+
+        // Saving file to user's files
+        val file = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), filename)
+
+        try {
+            val outputStream = FileOutputStream(file)
+            doc.writeTo(outputStream)
+            outputStream.close()
+            Toast.makeText(context, "PDF file saved to " + file.absolutePath, Toast.LENGTH_SHORT)
+                .show()
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Toast.makeText(context, "Failed to generate PDF: " + e.message, Toast.LENGTH_SHORT)
+                .show()
+        }
+
+        doc.close()
+    }
+
+    /** Dimensions for PDF page **/
+    companion object Dimensions {
+        private const val PDF_PAGE_WIDTH = 1080 //8.26 Inch
+        private const val PDF_PAGE_HEIGHT = 1920 //11.69 Inch
+        private const val PDF_PAGE_NUMBER = 1
     }
 
 }
