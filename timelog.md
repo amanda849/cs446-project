@@ -72,3 +72,4 @@ Date | Amanda | Cindy | Katherine | Reyna | Joanne | Anthony | Task
 03/29/2024 | | | | | 6 | | Researched PDF generation, got PDF generation and saving to user's downloads working with dummy PDF
 03/29/2024 | | | | 3 | | | General bug fixing, reformatting for aesthetic purposes and adding more color options
 03/30/2024 | | | | | 5 | | Base layout for analysis report PDF
+03/30/2024 | 1.5 | | | | | | Displaying partial icons for textures in analysis and number of unusual colours changes and fixes
