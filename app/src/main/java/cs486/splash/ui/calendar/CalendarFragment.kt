@@ -333,6 +333,17 @@ private fun Day(
     isToday: Boolean,
     onClick: (CalendarDay) -> Unit,
 ) {
+    val bgColor = when (day.position) {
+        DayPosition.MonthDate ->
+            if (isSelected) {
+                colorResource(R.color.example_1_selection_color)
+            } else if (isToday && poopColor == Color.Transparent) {
+                colorResource(id = R.color.off_white)
+            } else {
+                poopColor
+            }
+        else -> Color.White
+    }
     Box(
         Modifier
             .fillMaxWidth()
@@ -345,11 +356,7 @@ private fun Day(
             .clip(RectangleShape)
             .clip(RoundedCornerShape(13.dp, 13.dp, 13.dp, 13.dp))
             .background(
-                color = when {
-                    isSelected -> colorResource(R.color.example_1_selection_color)
-                    isToday -> colorResource(id = R.color.off_white)
-                    else -> poopColor
-                },
+                color = bgColor,
             )
             // Disable clicks on inDates/outDates
             .clickable(
