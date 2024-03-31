@@ -1,8 +1,6 @@
 package cs486.splash.ui.analysis
 
-import android.graphics.*
 import android.graphics.pdf.PdfDocument
-import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.util.DisplayMetrics
@@ -10,8 +8,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowMetrics
 import android.widget.PopupMenu
+import android.widget.TextView
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -119,7 +117,7 @@ class AnalysisFragment : Fragment() {
             val popup = PopupMenu(context, reportButton)
             popup.menuInflater.inflate(R.menu.popup_menu, popup.menu)
             popup.setOnMenuItemClickListener { menuItem ->
-                generatePDF(menuItem.title)
+                generatePDF(menuItem.title, analysisDataWeek, analysisDataMonth)
                 true
             }
 
@@ -134,24 +132,52 @@ class AnalysisFragment : Fragment() {
         _binding = null
     }
 
-    private fun createBitmapFromView(view: View): Bitmap {
-        val specWidth: Int =
-            View.MeasureSpec.makeMeasureSpec(PDF_PAGE_WIDTH, View.MeasureSpec.EXACTLY)
-        val specHeight: Int =
-            View.MeasureSpec.makeMeasureSpec(PDF_PAGE_HEIGHT, View.MeasureSpec.EXACTLY)
-        view.measure(specWidth, specHeight)
-        val requiredWidth: Int = view.measuredWidth
-        val requiredHeight: Int = view.measuredHeight
-        view.layout(0, 0, requiredWidth, requiredHeight)
-        val bitmap = Bitmap.createBitmap(requiredWidth, requiredHeight, Bitmap.Config.ARGB_8888)
-        val canvas = Canvas(bitmap)
-        view.draw(canvas)
-        return bitmap
+    private fun updatePdfView(view: View, data: AnalysisData) {
+        view.findViewById<TextView>(R.id.poop_total).text = data.getTimesTotal()
+
+        view.findViewById<TextView>(R.id.poop_avg).text = data.getAverageTimesPerDay()
+
+        val textureData = data.getPercentageTextures()
+        val textureString = textureData.map { it.key.toString() + ": ${it.value.second}" }.joinToString("\n")
+        view.findViewById<TextView>(R.id.textures).text = textureString
+
+        //TODO: populate with values from data.getMostCommonColours())
+
+        view.findViewById<TextView>(R.id.unusual_colour_num).text = data.getNumUnusualColours()
+
+        view.findViewById<TextView>(R.id.average_duration).text = data.getAverageDuration()
+
+        view.findViewById<TextView>(R.id.most_logged_hours).text = data.getMostLogsHours()
+
+        val symptomData = data.getPercentageSymptoms()
+        val symptomString = symptomData.map { "${it.key}: ${it.value}" }.joinToString("\n")
+        view.findViewById<TextView>(R.id.symptoms).text = symptomString
+
+        val factorData = data.getPercentageFactors()
+        val factorString = factorData.map { "${it.key}: ${it.value}" }.joinToString("\n")
+        view.findViewById<TextView>(R.id.factors).text = factorString
+
+        view.findViewById<TextView>(R.id.poop_location_num).text = data.getNumLocations()
     }
 
-    private fun generatePDF(s: CharSequence?) {
+    private fun generatePDF(menuItem: CharSequence?, weekData: AnalysisData, monthData: AnalysisData) {
         val inflater = LayoutInflater.from(context)
-        val pdfView = inflater.inflate(R.layout.pdf_template, null)
+        val pdfView: View = inflater.inflate(R.layout.pdf_template, null)
+
+        var filename = ""
+        val title = pdfView.findViewById<TextView>(R.id.pdf_title)
+        when (menuItem.toString()) {
+            "Last week" -> {
+                filename = "Splash_Report_Week_of_${SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())}.pdf"
+                title.text = "Your Analysis for the Week of ${SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())}"
+                updatePdfView(pdfView, weekData)
+            }
+            "Last month" -> {
+                filename = "Splash_Report_Month_of_${SimpleDateFormat("yyyy-MM", Locale.getDefault()).format(Date())}.pdf"
+                title.text = "Your Analysis for the Month of ${SimpleDateFormat("yyyy-MM", Locale.getDefault()).format(Date())}"
+                updatePdfView(pdfView, monthData)
+            }
+        }
 
         val displayMetrics = DisplayMetrics()
         activity?.windowManager?.defaultDisplay?.getMetrics(displayMetrics)
@@ -170,16 +196,9 @@ class AnalysisFragment : Fragment() {
         val page = doc.startPage(pageInfo)
         val canvas = page.canvas
         pdfView.draw(canvas)
-        //val title = Paint()
-        //title.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.NORMAL))
-        //title.textSize = 15f
 
-        //canvas.drawText("Report for " + s.toString().lowercase(), 209F, 100F, title)
-
-        // createBitmapFromView(pdfView.findViewById(R.id.pdf_content)).let{ canvas.drawBitmap(it, 0f, 20f, null) }
         doc.finishPage(page)
 
-        val filename = "Plop_Report_${SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())}.pdf"
         val file = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), filename)
 
         try {

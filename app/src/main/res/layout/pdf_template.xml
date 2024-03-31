@@ -17,23 +17,23 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
-            android:layout_margin="15dp"
+            android:layout_marginTop="15dp"
             android:textAlignment="center"
-            android:textSize="16sp"
-            android:text="Your Analysis"/>
+            android:textSize="11sp"
+            android:textStyle="bold" />
 
             <LinearLayout
                 android:id="@+id/analysis_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="top|center"
+                android:layout_marginTop="15dp"
                 android:orientation="vertical">
 
                 <LinearLayout
-                    android:layout_width="200dp"
-                    android:layout_height="40dp"
+                    android:layout_width="350dp"
+                    android:layout_height="25dp"
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
 
@@ -41,18 +41,16 @@
                         android:id="@+id/you_pooped_total_text1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="You pooped"
-                        android:textSize="16sp"
-                        app:layout_constraintStart_toStartOf="parent"
-                        tools:layout_editor_absoluteY="61dp" />
+                        android:text="You pooped "
+                        android:textSize="10sp"
+                        app:layout_constraintStart_toStartOf="parent" />
 
                     <TextView
                         android:id="@+id/poop_total"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="0"
-                        android:textSize="20sp"
-                        android:paddingStart="5sp"
+                        android:textSize="12sp"
                         android:textStyle="bold"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="@+id/you_pooped_on_avg" />
@@ -60,15 +58,14 @@
                     <TextView
                         android:id="@+id/you_pooped_total_text2"
                         android:layout_width="250dp"
-                        android:layout_height="22dp"
+                        android:layout_height="13dp"
                         android:text=" times total"
-                        android:textSize="16sp" />
-
+                        android:textSize="10sp" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="350dp"
-                    android:layout_height="40dp"
+                    android:layout_height="25dp"
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
 
@@ -76,8 +73,8 @@
                         android:id="@+id/you_pooped_on_avg"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="You pooped an average of"
-                        android:textSize="16sp"
+                        android:text="You pooped an average of "
+                        android:textSize="10sp"
                         app:layout_constraintStart_toStartOf="parent"
                         tools:layout_editor_absoluteY="61dp" />
 
@@ -86,8 +83,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="0.00"
-                        android:textSize="20sp"
-                        android:paddingStart="5sp"
+                        android:textSize="12sp"
                         android:textStyle="bold"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="@+id/you_pooped_on_avg" />
@@ -95,37 +91,64 @@
                     <TextView
                         android:id="@+id/times_per"
                         android:layout_width="118dp"
-                        android:layout_height="22dp"
+                        android:layout_height="13dp"
                         android:text=" times per day"
-                        android:textSize="16sp" />
-
+                        android:textSize="10sp" />
                 </LinearLayout>
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                    android:layout_width="350dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical"
+                    android:paddingTop="4dp"
+                    android:paddingBottom="4dp">
                     <TextView
                         android:id="@+id/poop_texture"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Here is a breakdown of your poop textures"
-                        android:textSize="16sp"
+                        android:textSize="10sp"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/poop_avg" />
-                </LinearLayout>
 
-                <TextView
-                    android:id="@+id/most_common_colours_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Your most common poop colours are"
-                    android:textSize="16sp"
-                    app:layout_constraintStart_toEndOf="@+id/poop_texture"
-                    app:layout_constraintTop_toTopOf="@+id/poop_texture" />
+                    <TextView
+                        android:id="@+id/textures"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Texture: %"
+                        android:textSize="8sp"
+                        android:paddingStart="5dp"/>
+                </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="350dp"
-                    android:layout_height="40dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical"
+                    android:paddingTop="4dp">
+                    <TextView
+                        android:id="@+id/most_common_colours_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Your most common poop colours are"
+                        android:textSize="10sp"
+                        app:layout_constraintStart_toEndOf="@+id/poop_texture"
+                        app:layout_constraintTop_toTopOf="@+id/poop_texture" />
+
+                    <TextView
+                        android:id="@+id/poop_colour"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Brown"
+                        android:textSize="8sp"
+                        android:paddingStart="5dp"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="350dp"
+                    android:layout_height="30dp"
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
 
@@ -133,8 +156,8 @@
                         android:id="@+id/unusual_colour_text1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="You had"
-                        android:textSize="16sp"
+                        android:text="You had "
+                        android:textSize="10sp"
                         app:layout_constraintStart_toEndOf="@+id/poop_texture"
                         app:layout_constraintTop_toTopOf="@+id/poop_texture" />
 
@@ -143,8 +166,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="0"
-                        android:textSize="20sp"
-                        android:paddingStart="5sp"
+                        android:textSize="12sp"
                         android:textStyle="bold"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="@+id/unusual_colour_text1" />
@@ -152,14 +174,14 @@
                     <TextView
                         android:id="@+id/unusual_colour_text2"
                         android:layout_width="500dp"
-                        android:layout_height="22dp"
+                        android:layout_height="13dp"
                         android:text=" unusually coloured poops"
-                        android:textSize="16sp" />
+                        android:textSize="10sp" />
                 </LinearLayout>
 
                 <LinearLayout
-                    android:layout_width="300dp"
-                    android:layout_height="40dp"
+                    android:layout_width="350dp"
+                    android:layout_height="25dp"
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
 
@@ -167,8 +189,8 @@
                         android:id="@+id/average_duration_text1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Your poops are on average"
-                        android:textSize="16sp"
+                        android:text="Your poops are on average "
+                        android:textSize="10sp"
                         app:layout_constraintStart_toEndOf="@+id/poop_texture"
                         app:layout_constraintTop_toTopOf="@+id/poop_texture" />
 
@@ -177,8 +199,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="0"
-                        android:textSize="20sp"
-                        android:paddingStart="5sp"
+                        android:textSize="12sp"
                         android:textStyle="bold"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="@+id/average_duration_text1" />
@@ -186,14 +207,14 @@
                     <TextView
                         android:id="@+id/average_duration_text2"
                         android:layout_width="500dp"
-                        android:layout_height="22dp"
+                        android:layout_height="13dp"
                         android:text=" minutes"
-                        android:textSize="16sp" />
+                        android:textSize="10sp" />
                 </LinearLayout>
 
                 <LinearLayout
-                    android:layout_width="500dp"
-                    android:layout_height="40dp"
+                    android:layout_width="350dp"
+                    android:layout_height="25dp"
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
 
@@ -201,8 +222,8 @@
                         android:id="@+id/most_logged_hour_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="You pooped most at"
-                        android:textSize="16sp"
+                        android:text="You pooped most at "
+                        android:textSize="10sp"
                         app:layout_constraintStart_toEndOf="@+id/poop_texture"
                         app:layout_constraintTop_toTopOf="@+id/poop_texture" />
 
@@ -211,30 +232,96 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="12:00am"
-                        android:textSize="20sp"
-                        android:paddingStart="5sp"
+                        android:textSize="12sp"
                         android:textStyle="bold"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="@+id/most_logged_hour_text" />
                 </LinearLayout>
 
-                <TextView
-                    android:id="@+id/symptoms_text"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="350dp"
                     android:layout_height="wrap_content"
-                    android:text="Here is a breakdown of your symptoms"
-                    android:textSize="16sp"
-                    app:layout_constraintStart_toEndOf="@+id/poop_texture"
-                    app:layout_constraintTop_toTopOf="@+id/poop_texture" />
+                    android:gravity="center_vertical"
+                    android:orientation="vertical"
+                    android:paddingTop="4dp"
+                    android:paddingBottom="4dp">
 
-                <TextView
-                    android:id="@+id/factors_text"
-                    android:layout_width="wrap_content"
+                    <TextView
+                        android:id="@+id/symptoms_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Here is a breakdown of your symptoms"
+                        android:textSize="10sp"
+                        app:layout_constraintStart_toEndOf="@+id/poop_texture"
+                        app:layout_constraintTop_toTopOf="@+id/poop_texture" />
+
+                    <TextView
+                        android:id="@+id/symptoms"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Symptom: %"
+                        android:textSize="8sp"
+                        android:paddingStart="5dp"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="350dp"
                     android:layout_height="wrap_content"
-                    android:text="Here is a breakdown of your factors"
-                    android:textSize="16sp"
-                    app:layout_constraintStart_toEndOf="@+id/poop_texture"
-                    app:layout_constraintTop_toTopOf="@+id/poop_texture" />
+                    android:gravity="center_vertical"
+                    android:orientation="vertical"
+                    android:paddingTop="4dp"
+                    android:paddingBottom="4dp">
+
+                    <TextView
+                        android:id="@+id/factors_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Here is a breakdown of your factors"
+                        android:textSize="10sp" />
+
+                    <TextView
+                        android:id="@+id/factors"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Factor: %"
+                        android:textSize="8sp"
+                        android:paddingStart="5dp"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="350dp"
+                    android:layout_height="25dp"
+                    android:layout_marginBottom="50dp"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:id="@+id/you_pooped_location_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="You pooped in "
+                        android:textSize="10sp"
+                        app:layout_constraintStart_toStartOf="parent" />
+
+                    <TextView
+                        android:id="@+id/poop_location_num"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="5"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/you_pooped_location_text" />
+
+                    <TextView
+                        android:id="@+id/different_locations"
+                        android:layout_width="392dp"
+                        android:layout_height="13dp"
+                        android:text=" different locations"
+                        android:textSize="10sp" />
+
+                </LinearLayout>
+
             </LinearLayout>
     </LinearLayout>
 
