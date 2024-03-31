@@ -141,7 +141,7 @@ class AddFragment : Fragment() {
             binding.timePickerStart.apply {
                 setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
                 setContent {
-                    TimePickerSwitchable(pickedTimeStart){
+                    TimePickerSwitchable(pickedTimeStart,true, pickedTimeEnd){
                         pickedTimeStart = it
                         Log.d("AddLog", "SelectedDate changed to: $it")
                     }
@@ -151,7 +151,7 @@ class AddFragment : Fragment() {
             binding.timePickerEnd.apply {
                 setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
                 setContent {
-                    TimePickerSwitchable(pickedTimeEnd){
+                    TimePickerSwitchable(pickedTimeEnd, false, pickedTimeStart){
                         pickedTimeEnd = it
                         Log.d("AddLog", "SelectedDate changed to: $it")
                     }

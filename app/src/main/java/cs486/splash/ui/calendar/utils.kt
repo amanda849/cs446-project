@@ -33,6 +33,7 @@ import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.ColorUtils
 import com.kizitonwose.calendar.compose.CalendarLayoutInfo
 import com.kizitonwose.calendar.compose.CalendarState
 import com.kizitonwose.calendar.compose.weekcalendar.WeekCalendarState
@@ -225,4 +226,19 @@ fun DayOfWeek.displayText(uppercase: Boolean = false): String {
     return getDisplayName(TextStyle.SHORT, Locale.ENGLISH).let { value ->
         if (uppercase) value.uppercase(Locale.ENGLISH) else value
     }
+}
+
+fun textColorSelector(bgColor: Color) : Color{
+    if (bgColor == Color.Transparent) {
+        return Color.Black
+    }
+    if (isDark(bgColor.toArgb())) {
+        return Color.White
+    } else {
+        return Color.Black
+    }
+}
+
+fun isDark(color: Int): Boolean {
+    return ColorUtils.calculateLuminance(color) < 0.5
 }

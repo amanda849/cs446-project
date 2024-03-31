@@ -16,6 +16,7 @@ package cs486.splash.ui.add
  * limitations under the License.
  */
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -32,6 +33,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Keyboard
 import androidx.compose.material.icons.outlined.Schedule
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -57,7 +59,9 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.semantics.isContainer
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
@@ -65,6 +69,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.zIndex
+import cs486.splash.R
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.time.LocalDate
@@ -149,7 +154,9 @@ fun TimeInput() {
 @Composable
 fun TimePickerSwitchable(
     currTime : Calendar,
-    onClick: (Calendar) -> Unit
+    start : Boolean,
+    otherTime : Calendar,
+    onClick: (Calendar) -> Unit,
 ) {
     var showTimePicker by remember { mutableStateOf(false) }
     val state = rememberTimePickerState()
@@ -162,9 +169,15 @@ fun TimePickerSwitchable(
     Box(propagateMinConstraints = false) {
         OutlinedButton(
             modifier = Modifier.align(Alignment.CenterStart),
-            onClick = { showTimePicker = true }
+            onClick = { showTimePicker = true },
+            colors =  ButtonColors(Color.White, colorResource(R.color.secondary), Color.Gray, Color.LightGray),
+            border = BorderStroke(2.dp, colorResource(id = R.color.secondary))
         ) {
-            Text("${formatter.format(displayedTime.value.time)}")
+            if (start) {
+                Text("Start: ${formatter.format(displayedTime.value.time)}")
+            } else {
+                Text("End: ${formatter.format(displayedTime.value.time)}")
+            }
         }
         SnackbarHost(hostState = snackState)
     }
@@ -174,13 +187,16 @@ fun TimePickerSwitchable(
             title = if (showingPicker.value) { "Select Time " } else { "Enter Time" },
             onCancel = { showTimePicker = false },
             onConfirm = {
-                val cal = Calendar.getInstance()
-                cal.set(Calendar.HOUR_OF_DAY, state.hour)
-                cal.set(Calendar.MINUTE, state.minute)
-                cal.isLenient = false
-                displayedTime.value = cal
-                showTimePicker = false
-                onClick(cal)
+                val selectedTime = Calendar.getInstance()
+                selectedTime.set(Calendar.HOUR_OF_DAY, state.hour)
+                selectedTime.set(Calendar.MINUTE, state.minute)
+                selectedTime.isLenient = false
+                if ((start && selectedTime <= otherTime) ||
+                    (!start && selectedTime >= otherTime)) {
+                    displayedTime.value = selectedTime
+                    showTimePicker = false
+                    onClick(selectedTime)
+                }
             },
             toggle = {
                 if (configuration.screenHeightDp > 400) {
@@ -309,6 +325,8 @@ fun DateTimePickerComponent(
         modifier = Modifier
             .fillMaxWidth()
             .padding(end = 30.dp, start = 30.dp),
+        colors =  ButtonColors(Color.White, colorResource(R.color.secondary), Color.Gray, Color.LightGray),
+        border = BorderStroke(2.dp, colorResource(id = R.color.secondary))
     ) {
         Text(text = "${sdf.format(pickedDate.time)}")
 
