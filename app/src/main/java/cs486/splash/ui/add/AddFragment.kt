@@ -338,8 +338,8 @@ fun TexturePicker(
     }
 }
 
-val symptomsDef: List<String> = listOf("bloating", "cramps", "pain", "nausea", "fatigue", "urgency", "other")
-val factorsDef: List<String> = listOf("workout", "water", "diet", "fiber", "other")
+val symptomsDef: List<String> = listOf("bloating", "cramps", "pain", "nausea", "fatigue", "urgency")
+val factorsDef: List<String> = listOf("workout", "water", "diet", "fiber")
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
