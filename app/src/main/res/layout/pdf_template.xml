@@ -137,11 +137,12 @@
                         app:layout_constraintTop_toTopOf="@+id/poop_texture" />
 
                     <TextView
-                        android:id="@+id/poop_colour"
+                        android:id="@+id/poop_colours"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Brown"
                         android:textSize="8sp"
+                        android:textStyle="bold"
                         android:paddingStart="5dp"/>
 
                 </LinearLayout>
