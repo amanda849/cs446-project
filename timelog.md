@@ -75,3 +75,4 @@ Date | Amanda | Cindy | Katherine | Reyna | Joanne | Anthony | Task
 03/30/2024 | 1.5 | | | | | | Displaying partial icons for textures in analysis and number of unusual colours changes and fixes
 03/30/2024 | 2 | | | | | | Use coroutine to wait for and display analysis onCreate
 03/30/2024 | | | | 2.5 | | | Calendar visual update
+03/30/2024 | | | | | 5 | | Worked on populating report PDF with real analysis values
