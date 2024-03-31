@@ -95,9 +95,9 @@ class AnalysisData {
     /**
      * Returns the number of blobs and the percentages of logs with each texture
      */
-    fun getPercentageTextures() : Map<Texture, Pair<Int, String>> {
+    fun getPercentageTextures() : Map<Texture, Pair<Float, String>> {
         return percentageTextures.mapValues {
-            Pair((it.value / 10).roundToInt(), "%.2f".format(it.value) + "%")
+            Pair((it.value / 10), "%.2f".format(it.value) + "%")
         }
     }
 
@@ -146,6 +146,8 @@ class AnalysisData {
      */
     fun update(startDate : Date, endDate : Date, logs : List<BowelLog>) {
         if (logs.isEmpty()) return
+
+        numUnusualColours = 0
 
         // Accumulators
         val timesPerDay : MutableList<Int> = mutableListOf(0)
