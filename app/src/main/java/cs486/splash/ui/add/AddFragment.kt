@@ -48,15 +48,19 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import cs486.splash.R
 import cs486.splash.databinding.FragmentAddBinding
+import cs486.splash.models.BowelLog
 import cs486.splash.shared.Colour
 import cs486.splash.shared.colorsDef
 import cs486.splash.shared.FactorTags
 import cs486.splash.shared.SymptomTags
 import cs486.splash.shared.Texture
+import cs486.splash.ui.calendar.CalendarPage
 import cs486.splash.viewmodels.BowelLogViewModel
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -136,27 +140,33 @@ class AddFragment : Fragment() {
                 }
             }
 
-            var pickedTimeStart = Calendar.getInstance()
-            var pickedTimeEnd = Calendar.getInstance()
-            binding.timePickerStart.apply {
-                setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
-                setContent {
-                    TimePickerSwitchable(pickedTimeStart,true, pickedTimeEnd){
-                        pickedTimeStart = it
-                        Log.d("AddLog", "SelectedDate changed to: $it")
+            var pickedTimeStart = MutableLiveData(Calendar.getInstance())
+            var pickedTimeEnd = MutableLiveData(Calendar.getInstance())
+            val endTimeObserver = Observer<Calendar> { endTime ->
+                binding.timePickerStart.apply {
+                    setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+                    setContent {
+                        TimePickerSwitchable(pickedTimeStart.value!!, true, endTime) {
+                            pickedTimeStart.value = it
+                            Log.d("AddLog", "SelectedDate changed to: $it")
+                        }
                     }
                 }
             }
+            pickedTimeEnd.observe(viewLifecycleOwner, endTimeObserver)
 
-            binding.timePickerEnd.apply {
-                setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
-                setContent {
-                    TimePickerSwitchable(pickedTimeEnd, false, pickedTimeStart){
-                        pickedTimeEnd = it
-                        Log.d("AddLog", "SelectedDate changed to: $it")
+            val startTimeObserver = Observer<Calendar> { startTime ->
+                binding.timePickerEnd.apply {
+                    setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+                    setContent {
+                        TimePickerSwitchable(pickedTimeEnd.value!!, false, startTime) {
+                            pickedTimeEnd.value = it
+                            Log.d("AddLog", "SelectedDate changed to: $it")
+                        }
                     }
                 }
             }
+            pickedTimeStart.observe(viewLifecycleOwner, startTimeObserver)
 
             binding.addButton.setOnClickListener {
                 // date things to pre-format
@@ -169,15 +179,15 @@ class AddFragment : Fragment() {
                         month = pickedDate.time.month
                         date = pickedDate.time.date
                         year = pickedDate.time.year
-                        hours = pickedTimeStart.time.hours
-                        minutes = pickedTimeStart.time.minutes
+                        hours = pickedTimeStart.value!!.time.hours
+                        minutes = pickedTimeStart.value!!.time.minutes
                     },
                     endTime.apply {
                         month = pickedDate.time.month
                         date = pickedDate.time.date
                         year = pickedDate.time.year
-                        hours = pickedTimeEnd.time.hours
-                        minutes = pickedTimeEnd.time.minutes
+                        hours = pickedTimeEnd.value!!.time.hours
+                        minutes = pickedTimeEnd.value!!.time.minutes
                     },
                     binding.location.text.toString(),
                     SymptomTags(symptoms),
