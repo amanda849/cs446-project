@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/example_1_bg"
+    android:background="@color/white"
     android:clickable="true"
     android:focusable="true"
     android:orientation="vertical"
@@ -23,7 +23,9 @@
         android:id="@+id/calendar"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="32dp">
+        android:layout_marginBottom="48.dp"
+        android:layout_marginEnd="16.dp"
+        android:layout_marginStart="16.dp">
     </androidx.compose.ui.platform.ComposeView>
 
 </LinearLayout>

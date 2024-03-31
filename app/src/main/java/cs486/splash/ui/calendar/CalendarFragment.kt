@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -21,11 +22,14 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
@@ -126,11 +130,11 @@ fun CalendarPage(bowelLogViewModel : BowelLogViewModel) {
             else bowelLogViewModel.getBowelLogsOnLocalDate(date).orEmpty()
         }
     }
-    StatusBarColorUpdateEffect(color = colorResource(id = R.color.example_1_bg_light))
+    StatusBarColorUpdateEffect(color = colorResource(id = R.color.white))
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(colorResource(id = R.color.example_1_bg_light))
+            .background(colorResource(id = R.color.white))
             .padding(top = 20.dp),
     ) {
         val state = rememberCalendarState(
@@ -146,8 +150,8 @@ fun CalendarPage(bowelLogViewModel : BowelLogViewModel) {
             // Clear selection if we scroll to a new month.
             selection = null
         }
-        // Draw light content on dark background.
-        CompositionLocalProvider(LocalContentColor provides darkColorScheme().onSurface) {
+        // Draw dark content on light background.
+        CompositionLocalProvider(LocalContentColor provides lightColorScheme().onSurface) {
             SimpleCalendarTitle(
                 modifier = Modifier.padding(vertical = 10.dp, horizontal = 8.dp),
                 currentMonth = visibleMonth.yearMonth,
@@ -165,7 +169,7 @@ fun CalendarPage(bowelLogViewModel : BowelLogViewModel) {
             FullScreenCalendar(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(colorResource(id = R.color.example_1_bg))
+                    .background(colorResource(id = R.color.white))
                     .testTag("Calendar"),
                 state = state,
                 dayContent = { day ->
@@ -199,7 +203,7 @@ fun CalendarPage(bowelLogViewModel : BowelLogViewModel) {
                 },
                 monthFooter = {
                     MonthFooter()
-                },
+                }
             )
             Log.d("Calendar", "the selection $selection")
             if(selection != null) {
@@ -294,7 +298,7 @@ private fun MonthHeader(daysOfWeek: List<DayOfWeek>) {
         Modifier
             .fillMaxWidth()
             .testTag("MonthHeader")
-            .background(colorResource(id = R.color.example_1_bg_secondary))
+            .background(Color.White)
             .padding(vertical = 8.dp),
     ) {
         for (dayOfWeek in daysOfWeek) {
@@ -315,7 +319,7 @@ private fun MonthFooter() {
         Modifier
             .fillMaxWidth()
             .testTag("MonthFooter")
-            .background(colorResource(id = R.color.example_1_bg_secondary))
+            .background(Color.White)
             .padding(vertical = 10.dp),
         contentAlignment = Alignment.Center,
     ) {}
@@ -333,12 +337,18 @@ private fun Day(
         Modifier
             .fillMaxWidth()
             .fillMaxHeight()
+            .border(
+                width = 2.dp,
+                color = Color.White,
+                shape = RoundedCornerShape(13.dp, 13.dp, 13.dp, 13.dp)
+            )
             .clip(RectangleShape)
+            .clip(RoundedCornerShape(13.dp, 13.dp, 13.dp, 13.dp))
             .background(
                 color = when {
                     isSelected -> colorResource(R.color.example_1_selection_color)
-                    isToday -> colorResource(id = R.color.white_light)
-                    else -> Color.Transparent
+                    isToday -> colorResource(id = R.color.off_white)
+                    else -> poopColor
                 },
             )
             // Disable clicks on inDates/outDates
@@ -346,31 +356,20 @@ private fun Day(
                 enabled = day.position == DayPosition.MonthDate,
                 onClick = { onClick(day) },
             ),
-        contentAlignment = Alignment.Center,
+        contentAlignment = Alignment.TopEnd,
     ) {
         val textColor = when (day.position) {
             // Color.Unspecified will use the default text color from the current theme
-            DayPosition.MonthDate -> if (isSelected) colorResource(R.color.example_1_bg) else Color.White
-            DayPosition.InDate, DayPosition.OutDate -> colorResource(R.color.white_light)
+            DayPosition.MonthDate -> if (isSelected)
+                textColorSelector(colorResource(R.color.example_1_selection_color)) else
+                    textColorSelector(poopColor)
+            DayPosition.InDate, DayPosition.OutDate -> Color.Gray
         }
         Text(
             text = day.date.dayOfMonth.toString(),
             color = textColor,
-            fontSize = 15.sp,
+            fontSize = 18.sp,
+            modifier = Modifier.padding(10.dp)
         )
-        Column(
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .fillMaxWidth()
-                .padding(bottom = 8.dp),
-            verticalArrangement = Arrangement.spacedBy(6.dp),
-        ) {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(5.dp)
-                    .background(poopColor),
-            )
-        }
     }
 }
