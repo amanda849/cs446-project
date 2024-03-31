@@ -11,6 +11,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,9 +19,12 @@ import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -77,14 +81,6 @@ class AddFragment : Fragment() {
         val root: View = binding.root
 
         try {
-
-            binding.titleCompose.apply {
-                setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
-                setContent {
-                    Title()
-                }
-            }
-
             var colorInt: Int = 0
             binding.colourPicker.apply {
                 setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
@@ -96,7 +92,7 @@ class AddFragment : Fragment() {
                 }
             }
 
-            var textureStr: String = "Pebbles (Hard)"
+            var textureStr: String = "Pebbles"
             binding.texturePicker.apply {
                 setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
                 setContent {
@@ -235,27 +231,6 @@ fun mapToMapStr(map: Map<String, Boolean>): String {
     return map.map {it.key + ": " + it.value.toString()}.joinToString()
 }
 
-@Composable
-fun Title() {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(
-                color = Color(Colour.BROWN1.toColorLong()),
-                shape = RoundedCornerShape(8.dp)
-            ) // Rounded corners
-            .padding(16.dp), // Padding around the text inside the box
-        contentAlignment = Alignment.Center
-    ) {
-        val sdf = SimpleDateFormat("hh:mm a", Locale.CANADA)
-        Text(
-            text = "Enter new Log",
-            textAlign = TextAlign.Center,
-            color = Color.White // Set text color that contrasts well with your background
-        )
-    }
-}
-
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun ColourPicker(
@@ -264,31 +239,35 @@ fun ColourPicker(
     onClick: (Int) -> Unit,
 ) {
     var colour by remember { mutableStateOf(initial) }
-    FlowRow(
-        modifier = Modifier.padding(8.dp),
-        horizontalArrangement = Arrangement.spacedBy(16.dp),
-        verticalArrangement = Arrangement.spacedBy(4.dp)
+    Row(
+        modifier = Modifier.horizontalScroll(rememberScrollState())
     ) {
-        for (i in colours.indices) {
-            // circle button code obtained from: https://stackoverflow.com/questions/74583523/android-jetpack-compose-how-to-create-a-button-with-an-icon-in-it
+        colours.forEachIndexed { index, color ->
+            // Add padding between colors except for the last one
+            if (index < colours.size) {
+                Spacer(modifier = Modifier.width(8.dp))
+            }
+
             Button(
                 onClick = {
-                    onClick(i)
-                    colour = i
+                    onClick(index)
+                    colour = index
                 },
                 shape = CircleShape,
                 modifier = Modifier.size(40.dp),
                 contentPadding = PaddingValues(1.dp),
                 colors = ButtonColors(
-                    colours[i], Color.White,
-                    colours[i], colours[i]
+                    color, Color.White,
+                    color, color
                 )
             ) {
-                if (i == colour) Icon(
-                    imageVector = Icons.Default.Done,
-                    contentDescription = "Favorite",
-                    modifier = Modifier.size(20.dp)
-                )
+                if (index == colour) {
+                    Icon(
+                        imageVector = Icons.Default.Done,
+                        contentDescription = "Favorite",
+                        modifier = Modifier.size(20.dp)
+                    )
+                }
             }
         }
     }
@@ -308,16 +287,18 @@ val texturesDef: Map<Texture, Int> = mapOf(
 @Composable
 fun TexturePicker(
     textures: Map<Texture, Int> = texturesDef,
-    initial: String = "Pebbles (Hard)",
+    initial: String = "Pebbles",
     onClick: (String) -> Unit
 ) {
     var texture by remember { mutableStateOf(initial) }
-    FlowRow(
-        verticalArrangement = Arrangement.spacedBy(4.dp),
-        modifier = Modifier.padding(16.dp),
-        horizontalArrangement = Arrangement.SpaceEvenly
+    Row(
+        modifier = Modifier.horizontalScroll(rememberScrollState())
     ) {
-        for (entry in textures) {
+        textures.entries.forEachIndexed { index, entry ->
+            if (index < textures.entries.size) {
+                Spacer(modifier = Modifier.width(8.dp))
+            }
+
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -336,7 +317,6 @@ fun TexturePicker(
                         onClick(entry.key.toString())
                         texture = entry.key.toString()
                     }
-
             ) {
                 Image(
                     painter = painterResource(id = entry.value),
@@ -360,13 +340,17 @@ fun SelectTags(
     val asMap = tags.map { it to false }
     // sol'n to using snapshotstatemap was found on: https://stackoverflow.com/questions/74766643/how-can-i-see-a-change-in-the-state-of-a-map-if-i-cant-use-mutable-state-of-mut
     val selected: SnapshotStateMap<String, Boolean> = remember { mutableStateMapOf(*asMap.toTypedArray()) }
-    FlowRow (
-        horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.Start),
-        verticalArrangement = Arrangement.spacedBy(8.dp),
+
+    Row(
+        modifier = Modifier.horizontalScroll(rememberScrollState()),
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        for (t in tags) {
-            Row (
-                horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.Start),
+        for ((index, t) in tags.withIndex()) {
+            if (index < tags.size) {
+                Spacer(modifier = Modifier.width(8.dp))
+            }
+
+            Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
                     .border(
@@ -384,11 +368,7 @@ fun SelectTags(
                         onClick(selected.toMap())
                     }
             ) {
-                Image(
-                    painter = painterResource(id = if (selected[t]!!) R.drawable.ic_baseline_check_circle_24 else R.drawable.ic_outline_circle_24),
-                    contentDescription = null
-                )
-                Text (text = t)
+                Text(text = t)
             }
         }
     }
