@@ -13,9 +13,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
@@ -23,6 +25,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -129,14 +132,14 @@ fun RoundedRectangle(
 
 fun genTextureDisplay(
     binding: FragmentAnalysisBinding,
-    textureValues: Map<Texture, Pair<Int, String>> = mapOf(
-        Texture.PEBBLES to Pair(0, "0.00%"),
-        Texture.LUMPY to Pair(0, "0.00%"),
-        Texture.SAUSAGE to Pair(0, "0.00%"),
-        Texture.SMOOTH to Pair(0, "0.00%"),
-        Texture.BLOBS to Pair(0, "0.00%"),
-        Texture.MUSHY to Pair(0, "0.00%"),
-        Texture.LIQUID to Pair(0, "0.00%")
+    textureValues: Map<Texture, Pair<Float, String>> = mapOf(
+        Texture.PEBBLES to Pair(0f, "0.00%"),
+        Texture.LUMPY to Pair(0f, "0.00%"),
+        Texture.SAUSAGE to Pair(0f, "0.00%"),
+        Texture.SMOOTH to Pair(0f, "0.00%"),
+        Texture.BLOBS to Pair(0f, "0.00%"),
+        Texture.MUSHY to Pair(0f, "0.00%"),
+        Texture.LIQUID to Pair(0f, "0.00%")
     )
 ) {
     binding.textureDisplay.apply {
@@ -212,7 +215,7 @@ fun updateAnalysisDisplay(binding: FragmentAnalysisBinding, data: AnalysisData) 
 @Composable
 fun TextureDisplay(
     textures: Map<Texture, Int> = texturesDef,
-    textureValues: Map<Texture, Pair<Int, String>>
+    textureValues: Map<Texture, Pair<Float, String>>
 ) {
     var index = 0;
     FlowRow(
@@ -226,7 +229,9 @@ fun TextureDisplay(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.End
                 ) {
-                    for (i in 0 until textureValues[entry.key]!!.first) {
+                    val numBlobs = textureValues[entry.key]!!.first.toInt()
+                    val remainder = textureValues[entry.key]!!.first - numBlobs
+                    for (i in 0 until numBlobs) {
                         Column {
                             Image(
                                 painter = painterResource(id = entry.value),
@@ -237,6 +242,23 @@ fun TextureDisplay(
                             )
                         }
                     }
+                    if (remainder != 0f) {
+                        Log.d("Analysis", remainder.toString())
+                        val imgSize = (remainder * 32).toInt()
+                        Column {
+                            Image(
+                                painter = painterResource(id = entry.value),
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .width(imgSize.dp)
+                                    .height(32.dp)
+                                    .padding(end = 3.dp),
+                                contentScale = ContentScale.FillHeight,
+                                alignment = Alignment.CenterStart
+                            )
+                        }
+                    }
+
                     Column(modifier = Modifier.padding(start = 2.dp)) {
                         Text(textureValues[entry.key]!!.second)
                     }
