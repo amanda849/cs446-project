@@ -147,6 +147,7 @@ class AnalysisData {
     fun update(startDate : Date, endDate : Date, logs : List<BowelLog>) {
         if (logs.isEmpty()) return
 
+
         // Accumulators
         val timesPerDay : MutableList<Int> = mutableListOf(0)
         val colourCount : MutableMap<Colour, Int> = mutableMapOf(
