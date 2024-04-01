@@ -10,19 +10,39 @@
     android:layout_marginStart="16dp"
     android:layout_marginEnd="16dp">
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textSize="24dp"
+        android:gravity="center"
         android:text="When is your birthday?" />
 
-    <com.google.android.material.textfield.TextInputEditText
-        android:id="@+id/birthDate"
+    <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:focusable="false"
-        android:clickable="true"
-        android:inputType="none"
-    />
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:paddingBottom="8dp">
+        <EditText
+            android:id="@+id/birthDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:focusable="false"
+            android:clickable="true"
+            android:inputType="none"
+            android:hint="dd/mm/yyyy"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
 
     <Button
         android:id="@+id/nextBtn"

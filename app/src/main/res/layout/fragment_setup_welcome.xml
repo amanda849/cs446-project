@@ -4,9 +4,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:orientation="vertical"
-    android:gravity="center"
     android:layout_height="match_parent"
+    android:gravity="center"
     tools:context=".ui.onboarding.SetupWelcomeFragment">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" /> <!-- Spacer to push TextView to the center -->
+
+    <ImageView
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:src="@drawable/splash_logo" />
 
     <TextView
         android:layout_width="match_parent"
@@ -14,7 +24,15 @@
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:textAllCaps="false"
-        android:text="Welcome aboard! Just a few more steps to finish up. Let's get you all set!" />
+        android:textSize="24dp"
+        android:text="Welcome aboard! Just a few more steps to finish up. Let's get you all set!"
+        android:gravity="center"
+        android:paddingTop="16dp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
 
     <Button
         android:id="@+id/setupBtn"
@@ -22,7 +40,6 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        android:textAllCaps="false"
         android:text="Set Up My Profile" />
 
     <Button
@@ -31,7 +48,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        android:textAllCaps="false"
-        android:text="Set Up Later in Profile" />
+        android:theme="@style/Button.Secondary"
+        android:text="Set Up Later" />
 
 </LinearLayout>

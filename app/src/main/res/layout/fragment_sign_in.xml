@@ -7,13 +7,6 @@
     android:gravity="center"
     android:layout_height="match_parent"
     tools:context=".ui.onboarding.SignInFragment">
-
-    <TextView
-        android:text="@string/sign_in"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
         />
 
     <com.google.android.material.textfield.TextInputLayout
@@ -57,12 +50,12 @@
         android:text="@string/sign_in"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAllCaps="false"/>
+        android:layout_marginTop="10dp"/>
 
     <Button
         android:id="@+id/signUpBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/don_t_have_an_account_sign_up"
-        android:textAllCaps="false"/>
+        android:theme="@style/Button.Secondary"
+        android:text="@string/don_t_have_an_account_sign_up"/>
 </LinearLayout>

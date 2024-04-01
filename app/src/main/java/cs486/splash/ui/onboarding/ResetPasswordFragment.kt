@@ -28,6 +28,15 @@ class ResetPasswordFragment : Fragment() {
             lifecycleScope.launch {
                 try {
                     userViewModel.resetPassword(_binding!!.email.text.toString())
+
+                    AlertDialog.Builder(requireContext())
+                        .setTitle("Info")
+                        .setMessage("Check your inbox for the password reset link.")
+                        .setPositiveButton("OK") { dialog, _ ->
+                            dialog.dismiss()
+                        }
+                        .show()
+
                     switchToSignInFrag()
                 } catch (e: Exception) {
                     // Show AlertDialog when exception is caught
