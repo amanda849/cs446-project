@@ -5,10 +5,10 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -41,7 +42,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -253,6 +253,8 @@ fun EditContents(
             }
         }
 
+        Spacer(modifier = Modifier.height(20.dp))
+
         FlowRow (
             modifier = Modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(4.dp),
@@ -330,13 +332,13 @@ fun EditContents(
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        FlowRow (
-            horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.Start),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
+        Row(
+            modifier = Modifier.horizontalScroll(rememberScrollState()),
+            verticalAlignment = Alignment.CenterVertically
         ) {
             symptomsList.forEach { symptom ->
+
                 Row(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.Start),
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
                         .border(
@@ -345,7 +347,7 @@ fun EditContents(
                             shape = RoundedCornerShape(size = 16.dp)
                         )
                         .background(
-                            color = Color(0xFFEDE0D4),
+                            color = if (symptom.second!!) Color(0xFFEDE0D4) else Color(0x00EDE0D4),
                             shape = RoundedCornerShape(size = 8.dp)
                         )
                         .padding(start = 8.dp, top = 8.dp, end = 8.dp, bottom = 8.dp)
@@ -354,12 +356,7 @@ fun EditContents(
                                 if (it.first == symptom.first) it.first to !it.second else it
                             }
                         }
-
                 ) {
-                    Image(
-                        painter = painterResource(id = if (symptom.second!!) R.drawable.ic_baseline_check_circle_24 else R.drawable.ic_outline_circle_24),
-                        contentDescription = null
-                    )
                     Text(text = "${symptom.first}")
                 }
             }
@@ -367,49 +364,44 @@ fun EditContents(
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            Row {
-                Text(
-                    "Factors: ", style = TextStyle(fontWeight = FontWeight.Bold),
-                    modifier = Modifier.align(Alignment.CenterVertically)
-                )
-            }
+        Row {
+            Text(
+                "Factors: ", style = TextStyle(fontWeight = FontWeight.Bold),
+                modifier = Modifier.align(Alignment.CenterVertically)
+            )
+        }
 
-            Spacer(modifier = Modifier.height(20.dp))
+        Spacer(modifier = Modifier.height(20.dp))
 
-            FlowRow (
-                horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.Start),
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-            ) {
-                factorsList.forEach { factor ->
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.Start),
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier
-                            .border(
-                                width = 1.dp,
-                                color = Color(0xFFEDE0D4),
-                                shape = RoundedCornerShape(size = 16.dp)
-                            )
-                            .background(
-                                color = Color(0xFFEDE0D4),
-                                shape = RoundedCornerShape(size = 8.dp)
-                            )
-                            .padding(start = 8.dp, top = 8.dp, end = 8.dp, bottom = 8.dp)
-                            .clickable {
-                                factorsList = factorsList.map { it ->
-                                    if (it.first == factor.first) it.first to !it.second else it
-                                }
-                            }
+        Row(
+            modifier = Modifier.horizontalScroll(rememberScrollState()),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            factorsList.forEach { factor ->
 
-                    ) {
-                        Image(
-                            painter = painterResource(id = if (factor.second!!) R.drawable.ic_baseline_check_circle_24 else R.drawable.ic_outline_circle_24),
-                            contentDescription = null
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .border(
+                            width = 1.dp,
+                            color = Color(0xFFEDE0D4),
+                            shape = RoundedCornerShape(size = 16.dp)
                         )
-                        Text(text = "${factor.first}")
-                    }
+                        .background(
+                            color = if (factor.second!!) Color(0xFFEDE0D4) else Color(0x00EDE0D4),
+                            shape = RoundedCornerShape(size = 8.dp)
+                        )
+                        .padding(start = 8.dp, top = 8.dp, end = 8.dp, bottom = 8.dp)
+                        .clickable {
+                            factorsList = factorsList.map { it ->
+                                if (it.first == factor.first) it.first to !it.second else it
+                            }
+                        }
+                ) {
+                    Text(text = "${factor.first}")
                 }
             }
+        }
 
         Spacer(modifier = Modifier.height(20.dp))
 
