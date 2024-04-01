@@ -79,3 +79,4 @@ Date | Amanda | Cindy | Katherine | Reyna | Joanne | Anthony | Task
 03/31/2024 | | | | | 2 | | Finished PDF generation functionality
 03/31/2024 | 1 | 1 | 1 | 1 | 1 | 1 | Final demo prep & discussion
 03/31/2024 | | | | |  | 0.5 | Some more colour and padding changes
+03/31/2024 | 0.5 | | | | | | Analysis page null check
