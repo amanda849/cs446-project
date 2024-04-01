@@ -15,32 +15,42 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:textStyle="bold"
+        android:textSize="15sp"
         android:text="TERMS AND SERVICES" />
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:scrollbars="none"
         android:layout_weight="1">
 
         <TextView
+            android:id="@+id/termsAndSevices"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/terms_and_services_content" />
+            android:layout_height="wrap_content"/>
     </ScrollView>
 
-
-    <Button
-        android:id="@+id/agreeButton"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Agree" />
+        android:orientation="horizontal">
 
-    <Button
-        android:id="@+id/disagreeButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Disagree" />
+        <Button
+            android:id="@+id/disagreeButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Disagree"
+            android:theme="@style/Button.Secondary"
+            android:layout_marginEnd="20dp"/>
 
-
+        <Button
+            android:id="@+id/agreeButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Agree"
+            android:layout_marginEnd="20dp"/>
+    </LinearLayout>
 
 </LinearLayout>
