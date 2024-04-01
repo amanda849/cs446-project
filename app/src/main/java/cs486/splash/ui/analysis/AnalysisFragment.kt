@@ -438,7 +438,10 @@ fun TextureDisplay(
                     }
 
                     Column(modifier = Modifier.padding(start = 2.dp)) {
-                        Text(textureValues[entry.key]!!.second)
+                        Text(
+                            textureValues[entry.key]!!.second,
+                            color = Color(0xff757575)
+                        )
                     }
                 }
                 index++
@@ -485,7 +488,8 @@ fun FactorOrSymptomDisplay(
                     Text(
                         text = entry.key + ": " + entry.value,
                         fontSize = 20.sp,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0xff757575)
                     )
                 }
             }
