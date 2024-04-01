@@ -87,7 +87,7 @@ class AnalysisFragment : Fragment() {
             res.await()
             val analysisDataWeek = analysisViewModel.getAnalysisDataWeek()
             // display weekly analysis by default on load
-            updateAnalysisDisplay(binding, analysisDataWeek)
+            if (analysisDataWeek.hasSufficientData())  updateAnalysisDisplay(binding, analysisDataWeek)
             Log.d("Analysis", "Weekly analysis data loaded: ${analysisDataWeek.hasSufficientData()}")
         }
 
@@ -377,6 +377,7 @@ fun genFactorsDisplay(
 }
 
 fun updateAnalysisDisplay(binding: FragmentAnalysisBinding, data: AnalysisData) {
+    if (!data.hasSufficientData()) return
     binding.poopTotal.text = data.getTimesTotal()
     binding.poopAvg.text = data.getAverageTimesPerDay()
     genTextureDisplay(binding, data.getPercentageTextures())
