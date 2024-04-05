@@ -71,6 +71,7 @@ Date | Amanda | Cindy | Katherine | Reyna | Joanne | Anthony | Task
 03/29/2024 | | | | |  | 2 | Updating texture, adding in logo and designs, updating colours etc
 03/29/2024 | | | | | 6 | | Researched PDF generation, got PDF generation and saving to user's downloads working with dummy PDF
 03/29/2024 | | | | 3 | | | General bug fixing, reformatting for aesthetic purposes and adding more color options
+03/30/2024 |  | 6 |  |  |  |  | Beautify signin, profile, add page 
 03/30/2024 | | | | | 5 | | Base layout for analysis report PDF
 03/30/2024 | 1.5 | | | | | | Displaying partial icons for textures in analysis and number of unusual colours changes and fixes
 03/30/2024 | 2 | | | | | | Use coroutine to wait for and display analysis onCreate
@@ -81,4 +82,5 @@ Date | Amanda | Cindy | Katherine | Reyna | Joanne | Anthony | Task
 03/31/2024 | | | | |  | 0.5 | Some more colour and padding changes
 03/31/2024 | 0.5 | | | | | | Analysis page null check
 03/31/2024 | | | | | 3 | | D6 analyze how design minimizes coupling + sequence diagram for user scenario 1
+04/05/2024 | | 2 | | | | | Draft up functional, non functional properties and component diagram for D6
 04/05/2024 | 1 | 1 | 1 | 1 | 1 | 1 | Editing and reviewing D6 as a team
