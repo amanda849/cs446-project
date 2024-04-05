@@ -80,3 +80,5 @@ Date | Amanda | Cindy | Katherine | Reyna | Joanne | Anthony | Task
 03/31/2024 | 1 | 1 | 1 | 1 | 1 | 1 | Final demo prep & discussion
 03/31/2024 | | | | |  | 0.5 | Some more colour and padding changes
 03/31/2024 | 0.5 | | | | | | Analysis page null check
+03/31/2024 | | | | | 3 | | D6 analyze how design minimizes coupling + sequence diagram for user scenario 1
+04/05/2024 | 1 | 1 | 1 | 1 | 1 | 1 | Editing and reviewing D6 as a team
