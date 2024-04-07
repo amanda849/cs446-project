@@ -82,6 +82,8 @@ Date | Amanda | Cindy | Katherine | Reyna | Joanne | Anthony | Task
 03/31/2024 | | | | |  | 0.5 | Some more colour and padding changes
 03/31/2024 | 0.5 | | | | | | Analysis page null check
 03/31/2024 | | | | | 3 | | D6 analyze how design minimizes coupling + sequence diagram for user scenario 1
+04/04/2024 |  | | 2 |  |  |  | Wrote up about architectural styles and drew deployment diagram for D6
 04/05/2024 | | 2 | | | | | Draft up functional, non functional properties and component diagram for D6
 04/05/2024 | 1 | 1 | 1 | 1 | 1 | 1 | Editing and reviewing D6 as a team
 04/06/2024 | | 2.5 | | | | | Draft up App Functionalities (Comprehensive onboarding process, Profile page, Persistent data), Harm Mitigation and what was done by me sections for D7
+04/06/2024 |  | | 0.5 |  |  |  | Wrote up app functionalities for the features I worked on, and listed contributions
