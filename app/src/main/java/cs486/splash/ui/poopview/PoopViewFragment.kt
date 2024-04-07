@@ -67,9 +67,6 @@ class PoopViewFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val poopViewViewModel =
-            ViewModelProvider(this).get(PoopViewViewModel::class.java)
-
         val bowelLogViewModel = ViewModelProvider(requireActivity()).get(BowelLogViewModel::class.java)
 
         val poopId = arguments?.getString("poopId") ?: throw IllegalStateException("PoopId must be passed to PoopViewFragment")
