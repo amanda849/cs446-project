@@ -84,10 +84,12 @@ Date | Amanda | Cindy | Katherine | Reyna | Joanne | Anthony | Task
 03/31/2024 |  | | 1 |  |  |  | Made edit page appear consistent with add page
 03/31/2024 | | | | | 3 | | D6 analyze how design minimizes coupling + sequence diagram for user scenario 1
 04/04/2024 |  | | 2 |  |  |  | Wrote up about architectural styles and drew deployment diagram for D6
+04/04/2024 |  | | | 3 | | | Wrote about D6 System Design and Rational + UML Class Diagram
 04/05/2024 | | 2 | | | | | Draft up functional, non functional properties and component diagram for D6
 04/05/2024 | | | | |  | 1 | D6 Wrote about design patterns used, added points about content UI
 04/05/2024 | 1 | 1 | 1 | 1 | 1 | 1 | Editing and reviewing D6 as a team
 04/06/2024 | | 2.5 | | | | | Draft up App Functionalities (Comprehensive onboarding process, Profile page, Persistent data), Harm Mitigation and what was done by me sections for D7
 04/06/2024 |  | | 0.5 |  |  |  | Wrote up app functionalities for the features I worked on, and listed contributions
 04/07/2024 | | | | |  | 1.5 | Writing up app functionalities, listed contributions, making additional content pages
+04/07/2024 | | | | 1 | | | D7 Work
 
