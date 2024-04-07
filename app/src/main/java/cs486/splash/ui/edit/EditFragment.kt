@@ -80,9 +80,6 @@ class EditFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val editViewModel =
-            ViewModelProvider(this).get(EditViewModel::class.java)
-
         val bowelLogViewModel = ViewModelProvider(requireActivity()).get(BowelLogViewModel::class.java)
 
         val poopId = arguments?.getString("poopId") ?: throw IllegalStateException("PoopId must be passed to EditFragment")
