@@ -81,6 +81,7 @@ Date | Amanda | Cindy | Katherine | Reyna | Joanne | Anthony | Task
 03/31/2024 | 1 | 1 | 1 | 1 | 1 | 1 | Final demo prep & discussion
 03/31/2024 | | | | |  | 0.5 | Some more colour and padding changes
 03/31/2024 | 0.5 | | | | | | Analysis page null check
+03/31/2024 |  | | 1 |  |  |  | Made edit page appear consistent with add page
 03/31/2024 | | | | | 3 | | D6 analyze how design minimizes coupling + sequence diagram for user scenario 1
 04/04/2024 |  | | 2 |  |  |  | Wrote up about architectural styles and drew deployment diagram for D6
 04/05/2024 | | 2 | | | | | Draft up functional, non functional properties and component diagram for D6
