@@ -92,4 +92,6 @@ Date | Amanda | Cindy | Katherine | Reyna | Joanne | Anthony | Task
 04/06/2024 |  | | 0.5 |  |  |  | Wrote up app functionalities for the features I worked on, and listed contributions
 04/07/2024 | | | | |  | 1.5 | Writing up app functionalities, listed contributions, making additional content pages
 04/07/2024 | | | | 1 | | | D7 Work
+04/19/2024 | 0.5| 0.5| 0.5| 0.5 |0.5 |0.5 | Recorded video demo
+04/19/2024 || 1| | | | | Edited and uploaded video demo
 
